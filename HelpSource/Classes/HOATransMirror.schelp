@@ -1,0 +1,40 @@
+TITLE:: HOATransMirror
+summary:: Mirroring of a higher order Ambisonics sound field
+categories:: Undocumented classes, UGens>Undocumented
+related:: Guides/HOAguide
+
+DESCRIPTION::
+Mirrors an Ambisonics soundfield along the x,y or z-axis.
+
+
+CLASSMETHODS::
+
+METHOD:: ar
+pseudo Ugen method returning Ugens based on Ambisonics order provided through the first argument.
+
+ARGUMENT:: order
+Ambisonics order 1-5.
+
+ARGUMENT:: in
+b-format as channel array.
+
+ARGUMENT:: front_back
+flips the soundfield front back.
+
+ARGUMENT:: left_right
+flips the soundfield left right.
+
+ARGUMENT:: up_down
+flips the soundfield up down.
+
+returns:: b-format as channel array.
+
+
+INSTANCEMETHODS::
+
+
+EXAMPLES::
+
+code::
+(some example code)
+::

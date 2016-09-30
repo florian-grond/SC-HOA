@@ -1,0 +1,46 @@
+TITLE:: HOABeamDirac2Hoa
+summary:: Mirroring of a higher order Ambisonics sound field
+categories:: Undocumented classes, UGens>Undocumented
+related:: Guides/HOAguide
+
+DESCRIPTION::
+(put long description here)
+
+
+CLASSMETHODS::
+
+METHOD:: ar
+pseudo Ugen method returning Ugens based on Ambisonics order provided through the first argument.
+
+ARGUMENT:: order
+Ambisonics order 1-5.
+
+ARGUMENT:: in
+b-format as channel array.
+
+ARGUMENT:: az
+azimuth angle of beam direction in degree (-180 to 180).
+
+ARGUMENT:: ele
+elevation angle of beam direction in degree (-90 to 90).
+
+ARGUMENT:: level
+level in dB (default 0).
+
+ARGUMENT:: on
+(describe argument here)
+
+ARGUMENT:: crossfade
+(describe argument here)
+
+returns:: b-format as channel array.
+
+
+INSTANCEMETHODS::
+
+
+EXAMPLES::
+
+code::
+(some example code)
+::

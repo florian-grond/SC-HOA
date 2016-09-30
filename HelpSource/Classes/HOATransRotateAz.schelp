@@ -1,0 +1,33 @@
+TITLE:: HOATransRotateAz
+summary:: Mirroring of a higher order Ambisonics sound field
+categories:: Undocumented classes, UGens>Undocumented
+related:: Guides/HOAguide
+
+DESCRIPTION::
+Rotates an Ambisonics soundfield around the z-axis.
+
+CLASSMETHODS::
+
+METHOD:: ar
+pseudo Ugen method returning Ugens based on Ambisonics order provided through the first argument.
+
+ARGUMENT:: order
+Ambisonics order 1-5.
+
+ARGUMENT:: in
+b-format as channel array.
+
+ARGUMENT:: az
+azimut angle in degree.
+
+returns:: b-format as channel array.
+
+
+INSTANCEMETHODS::
+
+
+EXAMPLES::
+
+code::
+(some example code)
+::

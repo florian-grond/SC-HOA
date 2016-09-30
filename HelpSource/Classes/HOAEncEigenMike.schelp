@@ -1,0 +1,50 @@
+TITLE:: HOAEncEigenMike
+summary:: Mirroring of a higher order Ambisonics sound field
+categories:: Undocumented classes, UGens>Undocumented
+related:: Guides/HOAguide
+
+DESCRIPTION::
+(put long description here)
+
+
+CLASSMETHODS::
+
+METHOD:: loadRadialFilters
+(describe method here)
+
+ARGUMENT:: server
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: radialFilters
+(describe method here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: ar
+pseudo Ugen method returning Ugens based on Ambisonics order provided through the first argument.
+
+ARGUMENT:: order
+Ambisonics order 1-5.
+
+ARGUMENT:: in
+microphone signals channel array.
+
+ARGUMENT:: gain
+(describe argument here)
+
+ARGUMENT:: filters
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+
+INSTANCEMETHODS::
+
+
+EXAMPLES::
+
+code::
+(some example code)
+::

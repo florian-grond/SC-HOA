@@ -1,0 +1,50 @@
+TITLE:: HOAEncLebedev50
+summary:: Mirroring of a higher order Ambisonics sound field
+categories:: Undocumented classes, UGens>Undocumented
+related:: Guides/HOAguide
+
+DESCRIPTION::
+(put long description here)
+
+
+CLASSMETHODS::
+
+METHOD:: loadRadialFilters
+(describe method here)
+
+ARGUMENT:: server
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: radialFilters
+(describe method here)
+
+returns:: (describe returnvalue here)
+
+METHOD:: ar
+(describe method here)
+
+ARGUMENT:: order
+(describe argument here)
+
+ARGUMENT:: in
+(describe argument here)
+
+ARGUMENT:: gain
+(describe argument here)
+
+ARGUMENT:: filters
+(describe argument here)
+
+returns:: (describe returnvalue here)
+
+
+INSTANCEMETHODS::
+
+
+EXAMPLES::
+
+code::
+(some example code)
+::
