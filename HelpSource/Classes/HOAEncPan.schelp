@@ -4,7 +4,7 @@ categories:: Undocumented classes, UGens>Undocumented
 related:: Guides/HOAguide
 
 DESCRIPTION::
-(put long description here)
+HOAEncPan pans mono sound sources in a higher order Ambisonics sound field, you can chose between plane and near field spherical wave encoding.
 
 
 CLASSMETHODS::
@@ -19,28 +19,46 @@ ARGUMENT:: in
 b-format as channel array.
 
 ARGUMENT:: az
-(describe argument here)
+azimuth in degree 0 to 360.
 
 ARGUMENT:: elev
-(describe argument here)
+elevation in degree -90 to 90
 
 ARGUMENT:: gain
-(describe argument here)
+in dB
 
 ARGUMENT:: plane_spherical
-(describe argument here)
+0: plane 1: spherical (default: plane)
 
 ARGUMENT:: radius
-(describe argument here)
+distance of the soundsource (only relevant if plane_spherical is set to 1).
 
-returns:: (describe returnvalue here)
+ARGUMENT:: speaker_radius
+radius of the speaker layout of the reproduction system.
 
+returns:: returns encoded HOA scene (4,9,16,25,36 channels depending on the order argument).
 
 INSTANCEMETHODS::
-
 
 EXAMPLES::
 
 code::
-(some example code)
+(
+Server.local = Server.default;
+o = Server.local.options;
+o.numInputBusChannels = 1;
+o.numOutputBusChannels = 36;
+o.numAudioBusChannels = 2048 * 8;
+o.blockSize = 512 ;
+o.numWireBufs = 1024;
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+
+// monitor the first 36 signals (max order 5) with the scope
+s.scope(36);
+)
+
+~order = 4;
+{HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )}.play
 ::
