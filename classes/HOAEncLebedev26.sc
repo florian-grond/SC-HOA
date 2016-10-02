@@ -19,9 +19,9 @@ HOAEncLebedev26{
 			                    in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
 			                    in21, in22, in23, in24, in25, in26 = in;
 
-			                    encoded= FaustHOAEigenMike1.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
+			                    encoded= FaustHOAEncLebedev261.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
 				                                                                      in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
-				                                                                      in21, in22, in23, in24, in25, in26
+				                                                                      in21, in22, in23, in24, in25, in26,
 				                                                                      gain_5: gain);
 
 			if(filters == 0,
@@ -48,10 +48,10 @@ HOAEncLebedev26{
 			                    in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
 			                    in21, in22, in23, in24, in25, in26 = in;
 
-			                    encoded= FaustHOAEigenMike1.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
+			                    encoded= FaustHOAEncLebedev262.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
 				                                                                      in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
-				                                                                      in21, in22, in23, in24, in25, in26
-				                                                                      gain_5: gain);
+				                                                                      in21, in22, in23, in24, in25, in26,
+				                                                                      gain_11: gain);
 
 			if(filters == 0,
 				{ ^encoded},
@@ -74,10 +74,6 @@ HOAEncLebedev26{
 
 
 
-
-
-
-
                {order == 3}
                 		{var   in1,   in2,   in3,   in4,   in5,   in6,   in7,   in8,   in9, in10,
 			                   in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
@@ -87,10 +83,10 @@ HOAEncLebedev26{
 			                    in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
 			                    in21, in22, in23, in24, in25, in26 = in;
 
-			                    encoded= FaustHOAEigenMike1.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
+			                    encoded= FaustHOAEncLebedev263.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
 				                                                                      in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
-				                                                                      in21, in22, in23, in24, in25, in26
-				                                                                      gain_5: gain);
+				                                                                      in21, in22, in23, in24, in25, in26,
+				                                                                      gain_19: gain);
 			if(filters == 0,
 				{ ^encoded},
 				{if(radialFilters == nil,{"please load the radial filters into buffers first (HOAEncLebedev26.loadRadialFilters)".postln; ^encoded},

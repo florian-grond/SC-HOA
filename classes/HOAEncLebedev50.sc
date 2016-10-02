@@ -26,7 +26,7 @@ HOAEncLebedev50{
 			                    in31, in32, in33, in34, in35, in36, in37, in38, in39, in40,
 			                    in41, in42, in43, in44, in45, in46, in47, in48, in49, in50 = in;
 
-			                    encoded= FaustHOAEigenMike1.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
+			                    encoded= FaustHOAEncLebedev501.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
 				                                                                      in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
 				                                                                      in21, in22, in23, in24, in25, in26, in27, in28, in29, in30,
 				                                                                      in31, in32, in33, in34, in35, in36, in37, in38, in39, in40,
@@ -60,12 +60,12 @@ HOAEncLebedev50{
 			                    in31, in32, in33, in34, in35, in36, in37, in38, in39, in40,
 			                    in41, in42, in43, in44, in45, in46, in47, in48, in49, in50 = in;
 
-			                    encoded= FaustHOAEigenMike1.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
+			                    encoded= FaustHOAEncLebedev502.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
 				                                                                      in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
 				                                                                      in21, in22, in23, in24, in25, in26, in27, in28, in29, in30,
 				                                                                      in31, in32, in33, in34, in35, in36, in37, in38, in39, in40,
 				                                                                      in41, in42, in43, in44, in45, in46, in47, in48, in49, in50,
-				                                                                      gain_5: gain);
+				                                                                      gain_11: gain);
 
 			if(filters == 0,
 				{ ^encoded},
@@ -99,12 +99,12 @@ HOAEncLebedev50{
 			                    in31, in32, in33, in34, in35, in36, in37, in38, in39, in40,
 			                    in41, in42, in43, in44, in45, in46, in47, in48, in49, in50 = in;
 
-			                    encoded= FaustHOAEigenMike1.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
+			                    encoded= FaustHOAEncLebedev503.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
 				                                                                      in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
 				                                                                      in21, in22, in23, in24, in25, in26, in27, in28, in29, in30,
 				                                                                      in31, in32, in33, in34, in35, in36, in37, in38, in39, in40,
 				                                                                      in41, in42, in43, in44, in45, in46, in47, in48, in49, in50,
-				                                                                      gain_5: gain);
+				                                                                      gain_19: gain);
 
 			if(filters == 0,
 				{ ^encoded},
@@ -145,12 +145,12 @@ HOAEncLebedev50{
 			                    in31, in32, in33, in34, in35, in36, in37, in38, in39, in40,
 			                    in41, in42, in43, in44, in45, in46, in47, in48, in49, in50 = in;
 
-			                    encoded= FaustHOAEigenMike1.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
+			                    encoded= FaustHOAEncLebedev504.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
 				                                                                      in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
 				                                                                      in21, in22, in23, in24, in25, in26, in27, in28, in29, in30,
 				                                                                      in31, in32, in33, in34, in35, in36, in37, in38, in39, in40,
 				                                                                      in41, in42, in43, in44, in45, in46, in47, in48, in49, in50,
-				                                                                      gain_5: gain);
+				                                                                      gain_29: gain);
 
 			if(filters == 0,
 				{ ^encoded},
@@ -200,12 +200,12 @@ HOAEncLebedev50{
 			                    in31, in32, in33, in34, in35, in36, in37, in38, in39, in40,
 			                    in41, in42, in43, in44, in45, in46, in47, in48, in49, in50 = in;
 
-			                    encoded= FaustHOAEigenMike1.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
+			                    encoded= FaustHOAEncLebedev505.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
 				                                                                      in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
 				                                                                      in21, in22, in23, in24, in25, in26, in27, in28, in29, in30,
 				                                                                      in31, in32, in33, in34, in35, in36, in37, in38, in39, in40,
 				                                                                      in41, in42, in43, in44, in45, in46, in47, in48, in49, in50,
-				                                                                      gain_5: gain);
+				                                                                      gain_41: gain);
 
 			if(filters == 0,
 				{ ^encoded},

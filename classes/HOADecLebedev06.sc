@@ -2,20 +2,34 @@ HOADecLebedev06{
 classvar <hrirFilters;
 
 		*loadHrirFilters {|server|
-		hrirFilters = 6.collect({|i|	[Buffer.read(server, Platform.userExtensionDir++"/HOA/FIR/hrir/hrir_lebedev50/"++"hrir_"++i++"_L.wav"),
-			                                     Buffer.read(server, Platform.userExtensionDir++"/HOA/FIR/hrir/hrir_lebedev50/"++"hrir_"++i++"_R.wav")] });
+		hrirFilters = 6.collect({|i|	[Buffer.read(server, Platform.userExtensionDir++"/HOA/FIR/hrir/hrir_lebedev50/"++"hrir_"++(i+1)++"_L.wav"),
+			                                     Buffer.read(server, Platform.userExtensionDir++"/HOA/FIR/hrir/hrir_lebedev50/"++"hrir_"++(i+1)++"_R.wav")] });
 	}
 
-	*ar { |order, in, input_gains = 0, output_gains = 0, yes = 1, speakers_radius = 1|
+	*ar { |order, in, input_gains = 0, output_gains = 0, yes = 1, speakers_radius = 1, hrir_Filters = 0|
 		case{order == 1}
                 		{ var in1, // declare variables for the b-format array
-			                    in2, in3, in4;
+			                    in2, in3, in4, decoded;
                                #in1, // distribute the channels from the array
 			                     in2, in3, in4 = in;
-			              ^HOADecLebedev06.ar(in1, // return the Ugen
+			              decoded = FaustHOADecLebedev061.ar(in1, // return the Ugen
 				                                            in2, in3, in4,
-				                                            inputs_gain_5: input_gains, outputs_gain_5: output_gains, yes_5: yes, speakers_radius_5: speakers_radius )}
+				                                            inputs_gain_5: input_gains, outputs_gain_5: output_gains, yes_5: yes, speakers_radius_5: speakers_radius );
 
+			if(hrir_Filters == 0,
+				{ ^decoded},
+				{if(hrirFilters == nil,{"please load the HRIR filters into buffers first (HOADecLebedev06.loadHrirFilters(s))".postln; ^decoded},
+					      {// return the HRIR convolved binaural signal
+						    decoded = decoded.collect({|item,i|
+							                               [ Convolution2.ar(  item, 	hrirFilters[i][0], 0, 4096, 1), // left channel
+								                             Convolution2.ar( item, 	hrirFilters[i][1], 0, 4096, 1)] // right channel
+						                        }).sum; // sum the [[L,R],[L,R],[L,R],...[L,R]] array
+						^decoded
+						}
+				     )
+				}
+			   )
+		}
 				{"this order is not implemented".postln}
 	}
 

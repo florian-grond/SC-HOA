@@ -13,8 +13,8 @@ HOAEncLebedev06{
 
                               #in1, in2, in3, in4, in5, in6 = in;
 
-			                    encoded= FaustHOAEigenMike1.ar(in1, in2, in3, in4, in5, in6
-				                                                                      gain_5: gain);
+			                    encoded= FaustHOAEncLebedev061.ar(in1, in2, in3, in4, in5, in6,
+				                                                                      gain_5:gain);
 
 			if(filters == 0,
 				{ ^encoded},
