@@ -17,7 +17,7 @@ o.numInputBusChannels = 1; // Set Input to number of Mikes
 o.numInputBusChannels.postln; // Post the number of input channels
 o.numOutputBusChannels = 36;
 o.numAudioBusChannels = 2048 * 8;
-o.blockSize = 512 ;
+o.blockSize = 512;
 o.numWireBufs = 1024 * 16;
 o.memSize = 2.pow(18);
 o.sampleRate = 48000;
@@ -28,9 +28,9 @@ s.boot;
 )
 
 // monitor the signals with the scope
-s.scope(50);
+s.scope(36);
 
-~order = 4;
+~order = 5;
 // Pan WhiteNoise with the HOAEncPan
 {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )}.play
 
@@ -127,15 +127,82 @@ HOADecLebedev50.hrirFilters;
 
 
 
-~orchestra = Buffer.read(s, "/Users/floriangrond/pool/eigen_ACN_N3D_092216_140414_piano.wav");
+
+
+
+HOADecLebedev06.loadHrirFilters(s);
+HOADecLebedev26.loadHrirFilters(s);
+HOADecLebedev50.loadHrirFilters(s);
+
+
+
+
 
 (
 var order = 3;
-{HOADecLebedev26.ar(order,
+{HOADecLebedev50.ar(order,
 	     HOABeamDirac2Hoa.ar(order,
+		HOAEncEigenMike.ar(order, Resonz.ar(Decay.ar({Dust.ar(1,PinkNoise.ar(1))}!32,0.01), ({|i| i}!32).linexp(0,32,300,1000), 0.01), 40, filters:1),
+		                       MouseX.kr(    0, 360 ),
+		                       MouseY.kr(-90, 90 ),
+		                      on: 1 ),
+	hrir_Filters: 1  )
+	}.play;
+)
+
+
+s.scope(2);
+
+~orchestra = Buffer.read(s, "/Users/floriangrond/pool/eigen_ACN_N3D_092216_140414_piano.wav");
+
+~orchestraEigen = Buffer.read(s, "/Users/floriangrond/pool/in_092016_114028_piano.wav");
+
+
+(
+var order = 3;
+~b_player = {|frontback, leftright, updown|
+	     HOADecLebedev26.ar(order,
+	     HOABeamDirac2Hoa.ar(order,
+		 HOATransMirror.ar(order,
 		                      HPF.ar(
 			                    PlayBuf.ar(16, ~orchestra, 1, loop:1 ),
 			                      200),
+			                      frontback, leftright, updown),
+		                       Lag.ar(K2A.ar(MouseX.kr( 0, 360)), 0.5),
+		                       Lag.ar(K2A.ar(MouseY.kr(-90, 90 )), 0.5)
+		                        , on: 0 ),
+	hrir_Filters: 1  )
+	}.play;
+)
+
+
+(
+var order = 4;
+~b_player = {|frontback, leftright, updown|
+	     HOADecLebedev50.ar(order,
+	     HOABeamDirac2Hoa.ar(order,
+		 HOATransMirror.ar(order,
+		                      HPF.ar(
+					HOAEncEigenMike.ar(order, PlayBuf.ar(32, ~orchestraEigen, 1, loop:1 ), 20, filters: 0),
+			                      200),
+			                      frontback, leftright, updown),
+		                       Lag.ar(K2A.ar(MouseX.kr( 0, 360)), 0.5),
+		                       Lag.ar(K2A.ar(MouseY.kr(-90, 90 )), 0.5)
+		                        , on: 0 ),
+	hrir_Filters: 1  )
+	}.play;
+)
+
+(
+var order = 3;
+~b_player = {|frontback, leftright, updown|
+	     HOADecLebedev50.ar(order,
+	     HOABeamDirac2Hoa.ar(order,
+		 HOATransMirror.ar(order,
+		                      HPF.ar(
+			                    PlayBuf.ar(16, ~orchestra, 1, loop:1 ),
+			                      200),
+			                      frontback, leftright, updown),
 		                       Lag.ar(K2A.ar(MouseX.kr( 0, 360)), 0.5),
 		                       Lag.ar(K2A.ar(MouseY.kr(-90, 90 )), 0.5)
 		                        , on: 1 ),
@@ -143,6 +210,20 @@ var order = 3;
 	}.play;
 )
 
+
+// Rotating the orchestra
+(
+var order = 3;
+~b_player = {|frontback, leftright, updown|
+	     HOADecLebedev26.ar(order,
+		 HOATransRotateAz.ar(order,
+		                      HPF.ar(
+			                    PlayBuf.ar(16, ~orchestra, 1, loop:1 ),
+			                      200),
+		                       MouseX.kr( 0, 360)),
+	hrir_Filters: 1  )
+	}.play;
+)
 
 
 {HOADecLebedev26.ar(~order, HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) ),    hrir_Filters: 1  )}.play;
