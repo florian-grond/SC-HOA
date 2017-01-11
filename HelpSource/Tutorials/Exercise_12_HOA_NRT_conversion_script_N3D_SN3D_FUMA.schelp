@@ -1,0 +1,15 @@
+title:: HOA Tutorial Exercise 12
+summary:: NRT conversion script between N3D, SN3D, and FuMa.
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Guides/HOAguide
+
+
+The code below is a non-real-time (NRT) script to convert a b-format file between the normalizations and channel orderings N3D, SN3D, and FuMa.
+
+
+code::
+
+
+
+
+::

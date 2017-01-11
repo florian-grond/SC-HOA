@@ -1,0 +1,17 @@
+title:: HOA Tutorial Exercise 13
+summary:: NRT script to decode the b-format to speaker arrays.
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Guides/HOAguide
+
+
+The code below is a non-real-time NRT script to decode your compositions for a given speaker array.
+The HOA library provides decoders for a set of standard speaker layouts.
+For non standard speaker arrays we recommend the Ambisonics decoder Toolbox from Aaron Heller.
+
+
+code::
+
+
+
+
+::

@@ -1,0 +1,14 @@
+title:: HOA Tutorial Exercise 09
+summary::  Some decoders for standard speaker arrays.
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Guides/HOAguide
+
+
+The code examples below show how to decode HOA b-format for standard speakers Arrays.
+
+code::
+
+
+
+
+::

@@ -1,0 +1,14 @@
+title:: HOA Tutorial Exercise 01
+summary:: Creating spatialized sounds in HOA b-format.
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Guides/HOAguide
+
+
+The code examples below show how to generate b-format sounds and how to monitor them in the oscilloscope.
+
+code::
+
+
+
+
+::

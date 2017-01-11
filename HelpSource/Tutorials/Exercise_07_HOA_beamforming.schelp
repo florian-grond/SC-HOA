@@ -1,0 +1,20 @@
+title:: HOA Tutorial Exercise 07
+summary:: Spatial filtering of HOA sound scenes.
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Guides/HOAguide
+
+The examples below demonstarte how to use the classes
+
+LIST::
+## link::Classes/HOABeamDirac2Hoa:: - filters along a specifed direction (truncated Dirac), returns b-format.
+## link::Classes/HOABeamHCard2Hoa:: - filters along a specifed direction (hyper cardioid pattern), returns b-format.
+## link::Classes/HOABeamHCard2Mono:: - filters along a specifed direction (hyper cardioid pattern), returns a mono signal.
+::
+
+
+code::
+
+
+
+
+::

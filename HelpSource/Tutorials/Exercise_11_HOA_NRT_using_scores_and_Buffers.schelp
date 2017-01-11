@@ -1,0 +1,15 @@
+title:: HOA Tutorial Exercise 11
+summary:: NRT synthesis, working with Buffers.
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Guides/HOAguide
+
+
+The code below is a non-real-time (NRT) script showing how to work with Buffers and the Score class, to make for instance dense spatialized granular synthesisin HOA.
+The code is adapted from the NRT example of the ATK toolkit.
+
+code::
+
+
+
+
+::

@@ -1,0 +1,20 @@
+title:: HOA Tutorial Exercise 06
+summary:: monitoring (decoding) b format sounds
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Guides/HOAguide
+
+
+The examples below demonstarte how to use the classes
+
+LIST::
+## link::Classes/HOATransMirror:: - mirror the sound field along x,y or z.
+## link::Classes/HOATransRotateAz:: - rotate the soundfield around the z axis.
+::
+
+
+code::
+
+
+
+
+::

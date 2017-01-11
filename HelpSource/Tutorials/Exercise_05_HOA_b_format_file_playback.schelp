@@ -1,0 +1,15 @@
+title:: HOA Tutorial Exercise 05
+summary:: Playing back higher order b-format files.
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Guides/HOAguide
+
+
+Below are some simple examples that show how to play back a multichannel HOA b-format sound file and listen to it through headphones.
+
+
+code::
+
+
+
+
+::

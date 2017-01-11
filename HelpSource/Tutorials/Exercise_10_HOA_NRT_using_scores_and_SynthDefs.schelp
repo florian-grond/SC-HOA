@@ -1,0 +1,15 @@
+title:: HOA Tutorial Exercise 10
+summary:: NRT synthesis, working with SynthDefs.
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Guides/HOAguide
+
+
+The code below is a non-real-time (NRT) script showing how to work with SynthDefs and the Score class for complex algorithmic compositions.
+The code is adapted from the NRT example of the ATK toolkit.
+
+code::
+
+
+
+
+::

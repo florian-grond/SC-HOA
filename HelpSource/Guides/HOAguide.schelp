@@ -1,29 +1,31 @@
 TITLE:: HOA Guide
 SUMMARY:: a small guide about the use of the HOA classes
 CATEGORIES:: Libraries>HOA
+related:: Tutorials/HOA_Tutorial_Overview
 
 The HOA library provides classes to encode, transform and decode Higher Order Ambisonics sound signals up to order 5.
-The Ugens on which this library is based are compiled from Faustcode by Pierre Lecomte, and the documentation is based in part on this document  link::https://github.com/sekisushai/ambitools/blob/master/Documentation/documentation.pdf::.
+The Ugens on which this library is based are compiled from Faustcode made by Pierre Lecomte, and the documentation is based in part on this document  link::https://github.com/sekisushai/ambitools/blob/master/Documentation/documentation.pdf::.
 
 The SC library, was written by Florian Grond.
-The library also includes soundfield recordings made together with Julien Boissinot and Romain Dumoulin using the Eigenmike at CIRMMT link:: http://www.cirmmt.org::.
+The library also includes soundfield recordings made together with Romain Dumoulin using the Eigenmike at CIRMMT link:: http://www.cirmmt.org::.
 
-The classes provided here are wrapper classes that return the correct Ugen depending on which order and which normalization is given in the arguments. The b-format is handled as an channel array.
-All arguments follow the channel expansion paradigm.
+The classes provided here are wrapper classes that return the correct Ugen depending on the ambisonics order which is provided as an argument.
+The b-format is handled as a channel array, which makes the SC code flexible to experiment with different orders depending on computational resources.
+All arguments obey the channel expansion paradigm.
 
 Some practical notes for working with higher order b-format signals:
 
 If you want to familiarize yourself with the b-format conventions please consult:
 link:: http://ambisonics.ch/standards/channels::.
 
-The b-format of this library follows the ACN channel order convention
-Two different normalizations are available N3D and SN3D.
-N3D has the advantage that all signals are orthonormal.
-SN3D has the advantage that none of the higher order signals exceeds the level of the the W channel.
+The b-format of this library follows the ACN channel order convention and defaults to N3D.
+N3D, SN3D and FuMa are all availble through a conversion tool.
 See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#Normalisation::.
+See also the tutorial for more information on channel ordering and normalizations.
 
-This library also alows to encode and decode spherical waves by using near field filters. For the correct use of these filters, which are unstable by nature, take care about the following parameters in the encoding and decoding step.
-
+This library also alows to encode and decode spherical waves by using near field filters.
+For the correct use of these filters, which are unstable by nature, take care about the distance parameters in the encoding and decoding step.
+See the tutorial for more information on spherical and planewaves.
 
 SECTION:: Classes
 
@@ -57,18 +59,3 @@ LIST::
 ## link::Classes/HOADecLebedev26:: - decodes the b-format signal into virtual speakers positioned on 26 Lebedev nodes.
 ## link::Classes/HOADecLebedev50:: - decodes the b-format signal into virtual speakers positioned on 50 Lebedev nodes.
 ::
-
-EXAMPLES::
-code::
-
-~order = 1;
-s.scope(16);
-
-
-{HOAPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(-180, 180 ), MouseY.kr(-90, 90 ) )}.play
-{HOAMirror.ar(~order,  HOAPan.ar(~order, WhiteNoise.ar(1)), 0, 1, 1 ) }.play
-{HOARotateAz.ar(~order,  HOAPan.ar(~order, WhiteNoise.ar(1)), MouseX.kr(0, 360 ) )}.play
-
-
-::
-

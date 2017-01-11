@@ -24,7 +24,6 @@ o.sampleRate = 48000;
 // o.threads_(8);
 s.makeWindow;
 s.boot;
-
 )
 
 // monitor the signals with the scope

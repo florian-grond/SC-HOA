@@ -1,0 +1,15 @@
+title:: HOA Tutorial Exercise 04
+summary:: Plane versus spherical wave encoding.
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Guides/HOAguide
+
+
+The examples below demonstarte the difference between plane and spherical waves.
+Sperical waves apply nearfield filters to account not only for directions but also for distance of sound sources.
+
+code::
+
+
+
+
+::

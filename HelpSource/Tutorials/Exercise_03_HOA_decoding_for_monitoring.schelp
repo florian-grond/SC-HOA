@@ -1,0 +1,14 @@
+title:: HOA Tutorial Exercise 03
+summary:: Listening (headphone decoding) of b-format soundfiles.
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Guides/HOAguide
+
+
+The examples below show how to monitor the playback of HOA b-format via headphones.
+
+code::
+
+
+
+
+::

@@ -1,7 +1,7 @@
 TITLE:: HOATransMirror
 summary:: Mirroring of a higher order Ambisonics sound field
 categories:: Undocumented classes, UGens>Undocumented
-related:: Guides/HOAguide
+related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
 
 DESCRIPTION::
 pseudo Ugen method returning Ugens based on Ambisonics order provided through the first argument.
