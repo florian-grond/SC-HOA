@@ -7,8 +7,39 @@ related:: Guides/HOAguide, Guides/HOAguide
 The code examples below show how to generate b-format sounds and how to monitor them in the oscilloscope.
 
 code::
+// start the sound server
+s.boot
+
+~order = 2; // try different orders up to 5 and watch the scope window.
+
+// make an oszilloscope showing all the channels for the given order
+s.scope((~order+1).pow(2));
 
 
 
+// Let's try some white noise first
+// sounds only in the x y plane
+{HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), 0 )}.play;
 
+// sounds only in the z direction
+{HOAEncPan.ar(~order, WhiteNoise.ar(1), 0, MouseY.kr(-90, 90 ) )}.play;
+
+// move sounds in x,y,z with the mouse
+{HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )}.play;
+
+
+// Now the same with a very slow Sine wave
+// so that we can observe the phase relations
+// chose a freq so that the scope stands still (only if you keep the default zoom value of 1 @ 44100)
+~freq = 44100 / 512;
+// change direction in the x y plane
+{HOAEncPan.ar(~order, SinOsc.ar(~freq ), MouseX.kr(0, 360), 0 )}.play;
+
+// change only the z direction, fix in x,y
+{HOAEncPan.ar(~order, SinOsc.ar(~freq ), 0, MouseY.kr(-90, 90 ) )}.play;
+
+// move sound direction in x,y,z with the mouse
+{HOAEncPan.ar(~order, SinOsc.ar(~freq ), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )}.play;
 ::
+
+
