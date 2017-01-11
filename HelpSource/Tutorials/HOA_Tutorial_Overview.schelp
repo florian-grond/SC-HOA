@@ -4,7 +4,7 @@ categories:: Libraries>HOA
 related:: Guides/HOAguide
 
 This tutorial explains step by step how to use the classes from the HOA library allowing you to encode, transform, beamform, convert and decode ambisonics signals.
-This tutorial makes extensive use of the proxyspace.
+NOTE::   This tutorial makes extensive use of the proxyspace. Make sure to install the JITLibExtensions Quark. ::
 
 LIST::
 ## link::Tutorials/Exercise_01_HOA_b_format::  - Creating spatialized sounds in HOA b-format.
