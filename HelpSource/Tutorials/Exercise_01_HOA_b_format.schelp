@@ -38,6 +38,7 @@ s.scope((~order+1).pow(2));
 // change only the z direction, fix in x,y
 {HOAEncPan.ar(~order, SinOsc.ar(~freq ), 0, MouseY.kr(-90, 90 ) )}.play;
 
+
 // move sound direction in x,y,z with the mouse
 {HOAEncPan.ar(~order, SinOsc.ar(~freq ), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )}.play;
 ::
