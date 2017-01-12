@@ -5,8 +5,47 @@ related:: Guides/HOAguide, Guides/HOAguide
 
 
 The examples below show how to monitor the playback of HOA b-format via headphones.
+Use for this purpose the spehrical decoders on Lebedv Grids
+link:: https://en.wikipedia.org/wiki/Lebedev_quadrature:: .
+
 
 code::
+
+// Let's use proxies for this:
+~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
+~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), 45, 45 )};
+~hoaSignal.fadeTime = 1;
+~hoaSignal.play(0, ~hoaNumChannels);
+
+// select in and out Format
+~inFormat =;
+~outFormat =;
+
+// and evaluate the new source of the proxy
+~hoaSignal.source = {HOAConvert.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1), 45, 45 ), ~inFormat, ~outFormat)}
+
+~order = 1;
+{HOADecLebedev06.ar(~order, HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) ))}.play
+HOADecLebedev06.loadHrirFilters(s);
+HOADecLebedev06.hrirFilters;
+~order = 1;
+{HOADecLebedev06.ar(~order, HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) ),    hrir_Filters: 1  )}.play
+
+~order = 3;
+{HOADecLebedev26.ar(~order, HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) ))}.play
+HOADecLebedev26.loadHrirFilters(s);
+HOADecLebedev26.hrirFilters;
+~order = 3;
+{HOADecLebedev26.ar(~order, HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) ),    hrir_Filters: 1  )}.play
+
+
+~order = 5;
+{HOADecLebedev50.ar(~order, HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) ))}.play
+HOADecLebedev50.loadHrirFilters(s);
+HOADecLebedev50.hrirFilters;
+~order = 2;
+{HOADecLebedev50.ar(~order, HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) ),    hrir_Filters: 1  )}.play
+
 
 
 

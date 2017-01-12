@@ -1,0 +1,62 @@
+TITLE:: HOATransMirror
+summary:: Mirroring of a higher order Ambisonics sound field
+categories:: Undocumented classes, UGens>Undocumented
+related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
+
+DESCRIPTION::
+pseudo Ugen method returning Ugens based on Ambisonics order provided through the first argument.
+HOATransMirror mirros an HOA scene: Axes left-right, front-back, up-down can be reversed by changing the sign of particular spherical harmonics.
+
+References: Kronlachner, M. (2014). Spatial Transformations for the Alteration of Ambisonic Recordings. Graz University Of Technology, Austria. p.46-47
+
+CLASSMETHODS::
+
+METHOD:: ar
+Pseudo Ugen method returning Ugens based on Ambisonics order provided through the first argument.
+
+ARGUMENT:: order
+Ambisonics order 1-5.
+
+ARGUMENT:: in
+b-format as channel array.
+
+ARGUMENT:: front_back
+flips the soundfield front back.
+
+ARGUMENT:: left_right
+flips the soundfield left right.
+
+ARGUMENT:: up_down
+flips the soundfield up down.
+
+returns:: b-format as channel array (4,9,16,25,36 channels depending on the order argument).
+
+INSTANCEMETHODS::
+
+EXAMPLES::
+
+code::
+(
+Server.local = Server.default;
+o = Server.local.options;
+o.numInputBusChannels = 1;
+o.numOutputBusChannels = 36;
+o.numAudioBusChannels = 2048 * 8;
+o.blockSize = 512 ;
+o.numWireBufs = 1024;
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+
+// monitor the first 36 signals (max order 5) with the scope
+s.scope(36);
+)
+
+~order = 4; // try different orders up to 5 and watch the scope window.
+// Rotate an auditory scene around z with HOATransRotateAz
+// Mirror an auditory scene with HOATransMirror
+{HOATransMirror.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1)), 0, 0, 0 ) }.play; // original
+{HOATransMirror.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1)), 1, 0, 0 ) }.play; // front-back flip
+{HOATransMirror.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1)), 0, 1, 0 ) }.play; // left-right flip
+{HOATransMirror.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1)), 0, 0, 1 ) }.play; // up-down flip
+::
