@@ -25,7 +25,6 @@ See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#Normal
 See also the tutorial for more information on channel ordering and normalizations.
 
 This library also alows to encode and decode spherical waves by using near field filters.
-For the correct use of these filters, which are unstable by nature, take care about the distance parameters in the encoding and decoding step.
 See the tutorial for more information on spherical and planewaves.
 
 SECTION:: Classes

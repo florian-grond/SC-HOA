@@ -10,44 +10,67 @@ link:: https://en.wikipedia.org/wiki/Lebedev_quadrature:: .
 
 
 code::
+// start the sound server we will configure it first
+s.quit
+(
+ServerOptions.devices;
+s = Server.local;
+Server.local = Server.default;
+o = Server.local.options; // Get the local server's options
+o.numInputBusChannels = 2; // Set Input to number of Inputs
+o.numOutputBusChannels = 36; // lets start after chan 36 so as not to see the mic input
+o.numAudioBusChannels = 2048;
+o.blockSize = 512;
+o.numWireBufs = 1024 * 16;
+o.memSize = 2.pow(18);
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+)
 
-// Let's use proxies for this:
+(
+~order = 4;
+~hoaNumChannels = (~order+1).pow(2);
+// make an oszilloscope showing all the channels for the order from above
+s.scope(~hoaNumChannels);
+)
+
+// Let's make a node that generates a HOA signal ( white noise ) control the direction with the mouse.
+// we won't see it since we don't monitor it.
+(
 ~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
-~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), 45, 45 )};
+~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
 ~hoaSignal.fadeTime = 1;
-~hoaSignal.play(0, ~hoaNumChannels);
+)
 
-// select in and out Format
-~inFormat =;
-~outFormat =;
+// Let's make a node that can take in (multichannel) HOA signals.
+(
+~decoder = NodeProxy.new(s, \audio, 26);
+~decoder.source = {var in; in = \in.ar(0!(~hoaNumChannels)); in};
+~decoder.fadeTime = 1;
+~decoder.play(0, 26);
+)
 
-// and evaluate the new source of the proxy
-~hoaSignal.source = {HOAConvert.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1), 45, 45 ), ~inFormat, ~outFormat)}
+// still we don't see anything in the scope because ~hoaSignal  and ~decoder are not connected yet
+~hoaSignal <>> ~decoder;  // now you see in the scope the ~hoaSignal going untransformed through ~decoder
 
-~order = 1;
-{HOADecLebedev06.ar(~order, HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) ))}.play
-HOADecLebedev06.loadHrirFilters(s);
-HOADecLebedev06.hrirFilters;
-~order = 1;
-{HOADecLebedev06.ar(~order, HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) ),    hrir_Filters: 1  )}.play
+// Here is where the advantages of proxyspace with Ambisonics come is handy.
+// Lets change the  NodeProxies one step at a time
+// First the ~hoaSignal itself
+~hoaSignal.source = {HOAEncPan.ar(~order, SinOsc.ar(48000 / 1024), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
+~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
 
-~order = 3;
-{HOADecLebedev26.ar(~order, HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) ))}.play
+// Then the decoder, first we decode into a Lebedev Grid with 26 positions, which is enough points for order 3
+s.scope(26); // lets see all channels
+~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, output_gains: 24) };
+
+// now let's load HRIR filters for each of the 26 channels
 HOADecLebedev26.loadHrirFilters(s);
-HOADecLebedev26.hrirFilters;
-~order = 3;
-{HOADecLebedev26.ar(~order, HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) ),    hrir_Filters: 1  )}.play
+HOADecLebedev26.hrirFilters.size;
+// and change the decoder.source again
+~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, hrir_Filters:1) };
 
-
-~order = 5;
-{HOADecLebedev50.ar(~order, HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) ))}.play
-HOADecLebedev50.loadHrirFilters(s);
-HOADecLebedev50.hrirFilters;
-~order = 2;
-{HOADecLebedev50.ar(~order, HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) ),    hrir_Filters: 1  )}.play
-
-
-
-
-
+// now you might want to change the HOA signal again to hear something
+~hoaSignal.source = {HOAEncPan.ar(~order, SinOsc.ar(48000 / 64), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
+~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
 ::

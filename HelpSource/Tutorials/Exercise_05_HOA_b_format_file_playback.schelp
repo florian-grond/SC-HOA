@@ -10,6 +10,62 @@ Below are some simple examples that show how to play back a multichannel HOA b-f
 code::
 
 
+s.quit
+(
+ServerOptions.devices;
+s = Server.local;
+Server.local = Server.default;
+o = Server.local.options; // Get the local server's options
+o.numInputBusChannels = 2; // Set Input to number of Inputs
+o.numOutputBusChannels = 36; // lets start after chan 36 so as not to see the mic input
+o.numAudioBusChannels = 2048;
+o.blockSize = 512;
+o.numWireBufs = 1024 * 16;
+o.memSize = 2.pow(18);
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+)
+
+
+(
+~order = 3;
+~hoaNumChannels = (~order+1).pow(2);
+// make an oszilloscope showing all the channels for the order from above
+s.scope(2);
+)
+
+~hoaSoundFile = Buffer.read(s, "//Users/floriangrond/Library/Application Support/SuperCollider/Extensions/eigen_ACN_N3D_Montreal_Metro_cello.wav");
+~hoaSoundFile = Buffer.read(s, "//Users/floriangrond/Library/Application Support/SuperCollider/Extensions/eigen_ACN_N3D_Montreal_Metro.wav");
+
+
+~hoaSoundFile = Buffer.read(s, "/Users/floriangrond/Library/Application Support/SuperCollider/Extensions/HOA/HelpSource/Tutorials/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
+
+
+~hoaSoundFile.numChannels;
+
+// Let's make a node that generates a HOA signal ( white noise ) control the direction with the mouse.
+// we won't see it since we don't monitor it.
+(
+~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
+~hoaSignal.source = { HPF.ar(PlayBuf.ar( ~hoaSoundFile.numChannels,  ~hoaSoundFile, loop:1  ), 100)   };
+~hoaSignal.fadeTime = 1;
+)
+
+
+// Let's make a node that can take in (multichannel) HOA signals.
+// now let's load HRIR filters for each of the 26 channels
+HOADecLebedev26.loadHrirFilters(s);
+HOADecLebedev26.hrirFilters.size;
+(
+~decoder = NodeProxy.new(s, \audio, 26);
+~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, hrir_Filters:1) };
+~decoder.fadeTime = 1;
+~decoder.play(0, 26);
+)
+
+// and we connect them
+~hoaSignal <>> ~decoder;
 
 
 ::
