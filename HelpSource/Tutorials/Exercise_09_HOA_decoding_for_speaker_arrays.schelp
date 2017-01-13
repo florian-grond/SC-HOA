@@ -3,12 +3,16 @@ summary::  Some decoders for standard speaker arrays.
 categories:: Libraries>HOA
 related:: Guides/HOAguide, Guides/HOAguide
 
+STRONG:: Previous:::
+link::Tutorials/Exercise_08_HOA_proxyspace_recording::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_10_HOA_NRT_using_scores_and_SynthDefs::
 
 The code examples below show how to decode HOA b-format for standard speakers Arrays.
 
-code::
+STRONG:: Previous:::
+link::Tutorials/Exercise_08_HOA_proxyspace_recording::
 
-
-
-
-::
+STRONG:: Next:::
+link::Tutorials/Exercise_10_HOA_NRT_using_scores_and_SynthDefs::

@@ -4,6 +4,13 @@ categories:: Libraries>HOA
 related:: Guides/HOAguide, Guides/HOAguide
 
 
+STRONG:: Previous:::
+link::Tutorials/Exercise_03_HOA_decoding_for_monitoring::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_05_HOA_b_format_file_playback::
+
+
 The examples below demonstarte the difference between plane and spherical waves.
 Sperical waves apply nearfield filters to account not only for directions but also for distance of sound sources.
 For the correct use of these filters, which are unstable by nature, take care about the distance parameters in the encoding and decoding step.
@@ -67,3 +74,9 @@ HOADecLebedev26.hrirFilters.size;
 	MouseX.kr(0, 360), elev:0, gain:0, plane_spherical:1, radius: MouseY.kr(0, 4 ) )};
 )
 ::
+
+STRONG:: Previous:::
+link::Tutorials/Exercise_03_HOA_decoding_for_monitoring::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_05_HOA_b_format_file_playback::

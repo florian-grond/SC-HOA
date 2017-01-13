@@ -4,12 +4,17 @@ categories:: Libraries>HOA
 related:: Guides/HOAguide, Guides/HOAguide
 
 
+STRONG:: Previous:::
+link::Tutorials/Exercise_11_HOA_NRT_using_scores_and_Buffers::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_13_HOA_NRT_decoding_script::
+
 The code below is a non-real-time (NRT) script to convert a b-format file between the normalizations and channel orderings N3D, SN3D, and FuMa.
 
 
-code::
+STRONG:: Previous:::
+link::Tutorials/Exercise_11_HOA_NRT_using_scores_and_Buffers::
 
-
-
-
-::
+STRONG:: Next:::
+link::Tutorials/Exercise_13_HOA_NRT_decoding_script::

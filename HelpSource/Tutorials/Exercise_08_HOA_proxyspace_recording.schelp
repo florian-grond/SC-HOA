@@ -4,6 +4,13 @@ categories:: Libraries>HOA
 related:: Guides/HOAguide, Guides/HOAguide
 
 
+STRONG:: Previous:::
+link::Tutorials/Exercise_07_HOA_beamforming::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_09_HOA_decoding_for_speaker_arrays::
+
+
 The example below shows how to record the b-format within the proxy space.
 
 code::
@@ -83,3 +90,9 @@ HOADecLebedev26.loadHrirFilters(s);
 // and we want to just pass the signal through the transformer
 ~hoaTransformer.source = {var in; in = \in.ar(0!~hoaNumChannels); in };
 ::
+
+STRONG:: Previous:::
+link::Tutorials/Exercise_07_HOA_beamforming::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_09_HOA_decoding_for_speaker_arrays::

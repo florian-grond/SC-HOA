@@ -4,14 +4,13 @@ categories:: Libraries>HOA
 related:: Guides/HOAguide, Guides/HOAguide
 
 
+STRONG:: Previous:::
+link::Tutorials/Exercise_12_HOA_NRT_conversion_script_N3D_SN3D_FUMA::
+
 The code below is a non-real-time NRT script to decode your compositions for a given speaker array.
 The HOA library provides decoders for a set of standard speaker layouts.
 For non standard speaker arrays we recommend the Ambisonics decoder Toolbox from Aaron Heller.
 
 
-code::
-
-
-
-
-::
+STRONG:: Previous:::
+link::Tutorials/Exercise_12_HOA_NRT_conversion_script_N3D_SN3D_FUMA::

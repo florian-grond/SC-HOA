@@ -3,17 +3,19 @@ summary:: Creating spatialized sounds in HOA b-format.
 categories:: Libraries>HOA
 related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
 
+STRONG:: Next:::
+link::Tutorials/Exercise_02_HOA_converting_SN3D_N3D_FuMa::
 
 In ambisonics, a sound field is approximated with spherical harmonics of a given order, the multichannel signal  associated with the spherical harmonics is called the b-format.
 For order 0, consisting of one channel, no directional information is available, one can think of it as a mono signal with the characteristics of an omni spherical microphone also know as the W channel (see top of the pyramid in the image below).
 For order 1, top of the pyramid and second row, the spherical harmonics have shapes reminiscent of microphone patterns (figure 8) and are known as Y Z and X channel. Combinations of the W channel and the Y (or X) channel are the basis of the MS microphone technique.
 Similar to the MS technique, a weighted combination of the channels from the b-format is used to generate speaker signals for the reconstruction of the approxiamted soundfield.
 
-A given order n  results in (n+1)^2 channels in the b-format.
+A given order TELETYPE:: n ::  results in TELETYPE:: (n+1)^2 :: channels in the b-format.
 
 
 table::
-    ##  order   || channels
+    ##  order   || number of channels
     ##    0       ||   1
     ##    1       ||   4
     ##    2       ||   9
@@ -22,11 +24,13 @@ table::
     ##    5       ||   36
 ::
 
+For a listing of spherical harmonics and their equations see link::http://ambisonics.ch/standards/channels/index::.
+
 image::Spherical_Harmonics_deg5_small.png# Spherical Harmonics up to degree 5, as used in fifth-order, Image made by Dr. Franz Zotter, taken from Wikipedia ::
 link::https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#Prerequisites_for_successful_data_exchange::
 
 The code examples below show how to generate b-format signals and how to monitor them in the oscilloscope.
-First let's start the sound server, which we configure first to get more audio buses and to have 36 output channels
+First let's start the sound server, which we configure first to get more audio buses and to have 36 output channels.
 
 code::
 s.quit; // quit the server first if it is still running
@@ -99,3 +103,5 @@ code::
 ::
 
 
+STRONG:: Next:::
+link::Tutorials/Exercise_02_HOA_converting_SN3D_N3D_FuMa::

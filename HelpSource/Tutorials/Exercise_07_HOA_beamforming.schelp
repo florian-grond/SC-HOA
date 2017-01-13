@@ -3,6 +3,15 @@ summary:: Spatial filtering of HOA sound scenes.
 categories:: Libraries>HOA
 related:: Guides/HOAguide, Guides/HOAguide
 
+
+STRONG:: Previous:::
+link::Tutorials/Exercise_06_HOA_scenes_simple_manipulations::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_08_HOA_proxyspace_recording::
+
+
+
 The examples below demonstarte how to use the classes
 
 LIST::
@@ -83,3 +92,9 @@ HOADecLebedev26.hrirFilters.size;
 // and we connect them
 ~hoaSignal <>> ~hoaTransformer  <>>  ~decoder;
 ::
+
+STRONG:: Previous:::
+link::Tutorials/Exercise_06_HOA_scenes_simple_manipulations::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_08_HOA_proxyspace_recording::

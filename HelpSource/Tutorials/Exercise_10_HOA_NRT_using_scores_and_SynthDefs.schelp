@@ -4,12 +4,17 @@ categories:: Libraries>HOA
 related:: Guides/HOAguide, Guides/HOAguide
 
 
+STRONG:: Previous:::
+link::Tutorials/Exercise_09_HOA_decoding_for_speaker_arrays::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_11_HOA_NRT_using_scores_and_Buffers::
+
 The code below is a non-real-time (NRT) script showing how to work with SynthDefs and the Score class for complex algorithmic compositions.
 The code is adapted from the NRT example of the ATK toolkit.
 
-code::
+STRONG:: Previous:::
+link::Tutorials/Exercise_09_HOA_decoding_for_speaker_arrays::
 
-
-
-
-::
+STRONG:: Next:::
+link::Tutorials/Exercise_11_HOA_NRT_using_scores_and_Buffers::

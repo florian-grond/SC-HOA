@@ -4,6 +4,13 @@ categories:: Libraries>HOA
 related:: Guides/HOAguide, Guides/HOAguide
 
 
+STRONG:: Previous:::
+link::Tutorials/Exercise_05_HOA_b_format_file_playback::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_07_HOA_beamforming::
+
+
 The examples below demonstarte how to use the classes
 
 LIST::
@@ -82,3 +89,10 @@ HOADecLebedev26.hrirFilters.size;
 // and we connect them
 ~hoaSignal <>> ~hoaTransformer  <>>  ~decoder;
 ::
+
+
+STRONG:: Previous:::
+link::Tutorials/Exercise_05_HOA_b_format_file_playback::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_07_HOA_beamforming::

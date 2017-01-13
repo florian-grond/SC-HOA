@@ -1,7 +1,14 @@
 title:: HOA Tutorial Exercise 02
-summary:: Converting between N3D, SN3D, MaxN and ACN and FuMa.
+summary:: Converting between N3D, SN3D, MaxN and ACN FuMa.
 categories:: Libraries>HOA
 related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
+
+
+STRONG:: Previous:::
+link::Tutorials/Exercise_01_HOA_b_format::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_03_HOA_decoding_for_monitoring::
 
 In order to correctly reconstruct a sound field from the channels of the B-format, it is important to know about standard normalisation methods for the spherical harmonic components, as well as channel ordering conventions. Two main channel ordering conventions exist:
 
@@ -12,29 +19,24 @@ FuMa channel ordering comes with maxN normalization.
 See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#maxN::.
 The FuMa format has been widely and is still in use but is increasingly replaced by:
      ## ACN
-||The Ambisonic Channel Number (ACN)[5] has reached wide consensus for future higher-order systems. See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#ACN::, and compare with the image from link::Tutorials/Exercise_01_HOA_b_format::. ACN channel ordering comes with N3D and SN3D normalization. See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#SN3D::.
+||The Ambisonic Channel Number (ACN) ordering has reached wide consensus for future higher-order systems. See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#ACN::, and compare with the image from link::Tutorials/Exercise_01_HOA_b_format::.
 ::
-
-N3D has the advantage that all signals are orthonormal.
-SN3D has the advantage that none of the higher order signals exceeds the level of the W channel (ACN 0).
-
-NOTE: This library uses internally the ACN channel ordering with N3D normalization. In order to transform and reconstruct an ambisonics soundfield correctly, you need to know what convention you are working with. The HOAConvert class is versatile but mostly meant to convert b-format recordings into ACN N3D for b-format transformations of this library and to convert back to other conventions when rendering and saving sounds for other production contexts.
-
-The examples below show the difference of the three b-format conventions with respect to channel ordering (ACN, FuMa) and normalization (N3D, SN3D, and MaxN)
-
 
 Channel numbers and names up to order 3:
 table::
-    ## ACN   || FuMa || name
+    ## ACN channel number   || FuMa as ACN channel number || FuMa name
     ##    0     || 0       || W
+    ##           ||          ||
     ##    1     || 2       || Y
     ##    2     || 3       || Z
     ##    3     || 1       || X
+    ##           ||          ||
     ##    4     || 8       || V
     ##    5     || 6       || T
     ##    6     || 4       || R
     ##    7     || 5       || S
     ##    8     || 7       || U
+    ##           ||          ||
     ##    9     || 15     || Q
     ##    10   || 13     || O
     ##    11   || 11     || M
@@ -44,29 +46,86 @@ table::
     ##    15   || 14     || P
 ::
 
+B-formats above order 3 typically follow the ACN convention.
+
+The normalization options for ACN are:
+
+definitionlist::
+     ## N3D
+|| In the full three-D normalisation, all signals are orthonormal. This has advantages for transformations of the B-format, which rely on its orthonormality (XYZ rotations, beamforming, etc. ).
+See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#N3D ::.
+     ## SN3D
+|| The Schmidt semi-normalisation has the advantage that none of the higher order signals exceeds the level of the W channel (ACN 0), which is useful when monitoring levels in recording situations.
+See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#SN3D ::.
+::
+
+NOTE:: STRONG::This library uses internally the ACN channel ordering with N3D normalization.:: In order to transform and reconstruct an ambisonics soundfield correctly, you need to know what convention you are working with. The HOAConvert class is versatile but mostly meant to convert b-format recordings into ACN N3D for b-format transformations of this library and to convert back to other conventions when rendering and saving sounds for other production contexts.::
+
+The examples below show the difference of the three b-format conventions with respect to channel ordering and normalization the supported combinations are:
+
+LIST::
+     ## ACN N3D
+     ## ACN SN3D
+     ## FuMa MaxN
+::
+
+In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses and to have 36 output channels
 
 code::
-// start the sound server
-s.boot
+s.quit; // quit the server first if it is still running with another configuration.
+(
+ServerOptions.devices;
+s = Server.local;
+Server.local = Server.default;
+o = Server.local.options; // Get the local server's options
+o.numInputBusChannels = 2; // Set Input to number of Inputs
+o.numOutputBusChannels = 36; // lets start after chan 36 so as not to see the mic input
+o.numAudioBusChannels = 2048;
+o.blockSize = 512;
+o.numWireBufs = 1024 * 16;
+o.memSize = 2.pow(18);
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+)
+::
 
+Start the oscilloscope showing all the channels for the selected order of the b-format.
+
+code::
 (
 // try different orders up to 5
-~order = 5;
+~order = 4;
 ~hoaNumChannels = (~order+1).pow(2);
-// make an oszilloscope showing all the channels for the order from above
 s.scope(~hoaNumChannels);
 )
+::
 
-// Let's use proxies for this:
+Let's use a proxies for the creation of a B-format signal:
+
+code::
+(
 ~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
 ~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), 45, 45 )};
 ~hoaSignal.fadeTime = 1;
 ~hoaSignal.play(0, ~hoaNumChannels);
+)
+::
 
-// select in and out Format
-~inFormat =;
-~outFormat =;
+Change between normalization within ACN and compare the amplitudes of the channels.
+code::
+~hoaSignal.source = {HOAConvert.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1), 45, 45 ), ~inFormat, ~outFormat)};
+~hoaSignal.source = {HOAConvert.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1), 45, 45 ), ~inFormat, ~outFormat)};
+::
 
-// and evaluate the new source of the proxy
+Change to FuMa.
+code::
 ~hoaSignal.source = {HOAConvert.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1), 45, 45 ), ~inFormat, ~outFormat)}
 ::
+
+
+STRONG:: Previous:::
+link::Tutorials/Exercise_01_HOA_b_format::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_03_HOA_decoding_for_monitoring::

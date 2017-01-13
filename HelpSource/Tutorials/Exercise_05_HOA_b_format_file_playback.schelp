@@ -4,6 +4,12 @@ categories:: Libraries>HOA
 related:: Guides/HOAguide, Guides/HOAguide
 
 
+STRONG:: Previous:::
+link::Tutorials/Exercise_04_HOA_plane_versus_spherical_waves::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_06_HOA_scenes_simple_manipulations::
+
 Below are some simple examples that show how to play back a multichannel HOA b-format sound file and listen to it through headphones.
 
 
@@ -63,3 +69,10 @@ HOADecLebedev26.hrirFilters.size;
 // and we connect them
 ~hoaSignal <>> ~decoder;
 ::
+
+
+STRONG:: Previous:::
+link::Tutorials/Exercise_04_HOA_plane_versus_spherical_waves::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_06_HOA_scenes_simple_manipulations::
