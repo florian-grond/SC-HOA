@@ -1,20 +1,27 @@
 title:: HOA Tutorial Exercise 02
-summary:: Converting between N3D, SN3D, and FuMa.
+summary:: Converting between N3D, SN3D, MaxN and ACN and FuMa.
 categories:: Libraries>HOA
-related:: Guides/HOAguide, Guides/HOAguide
+related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
 
+In order to correctly reconstruct a sound field from the channels of the B-format, it is important to know about standard normalisation methods for the spherical harmonic components, as well as channel ordering conventions. Two main channel ordering conventions exist:
+
+definitionlist::
+     ## FuMa
+|| The original Furse-Malham higher-order format, an extension of traditional second order B-format up to third order (16 channels). See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#Furse-Malham::.
+FuMa channel ordering comes with maxN normalization.
+See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#maxN::.
+The FuMa format has been widely and is still in use but is increasingly replaced by:
+     ## ACN
+||The Ambisonic Channel Number (ACN)[5] has reached wide consensus for future higher-order systems. See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#ACN::, and compare with the image from link::Tutorials/Exercise_01_HOA_b_format::. ACN channel ordering comes with N3D and SN3D normalization. See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#SN3D::.
+::
+
+N3D has the advantage that all signals are orthonormal.
+SN3D has the advantage that none of the higher order signals exceeds the level of the W channel (ACN 0).
+
+NOTE: This library uses internally the ACN channel ordering with N3D normalization. In order to transform and reconstruct an ambisonics soundfield correctly, you need to know what convention you are working with. The HOAConvert class is versatile but mostly meant to convert b-format recordings into ACN N3D for b-format transformations of this library and to convert back to other conventions when rendering and saving sounds for other production contexts.
 
 The examples below show the difference of the three b-format conventions with respect to channel ordering (ACN, FuMa) and normalization (N3D, SN3D, and MaxN)
 
-The HOA library defaults to the ACN channel oder convention.
-In the ACN order N3D and SN3D is typically used for normalization.
-The HOA library defauts to N3D.
-N3D has the advantage that all signals are orthonormal.
-SN3D has the advantage that none of the higher order signals exceeds the level of the the W channel.
-
-For FuMa channel ordering the MaxN normalization is used (with the exception of a -3dB correction factor for the W channel).
-
-See also: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#Normalisation::.
 
 Channel numbers and names up to order 3:
 table::
