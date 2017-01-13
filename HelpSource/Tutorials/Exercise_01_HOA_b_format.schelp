@@ -22,7 +22,22 @@ image::foo.png# Spherical Harmonics up to degree 5, as used in fifth-order, Imag
 
 code::
 // start the sound server
-s.boot
+(
+ServerOptions.devices;
+s = Server.local;
+Server.local = Server.default;
+o = Server.local.options; // Get the local server's options
+o.numInputBusChannels = 2; // Set Input to number of Inputs
+o.numOutputBusChannels = 36; // lets start after chan 36 so as not to see the mic input
+o.numAudioBusChannels = 2048;
+o.blockSize = 512;
+o.numWireBufs = 1024 * 16;
+o.memSize = 2.pow(18);
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+)
+
 
 (
 // try different orders up to 5
@@ -36,27 +51,33 @@ s.scope(~hoaNumChannels);
 // Let's try some white noise first
 // sounds only in the x y plane, observe constant signal in channel 1
 // varying signal in channel 2 (x) and 4 (y), 3 is silent.
-{HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), 0 )}.play;
+(
+~hoaSignal = NodeProxy.new(s, \audio, 26);
+~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), 0 )};
+~hoaSignal.fadeTime = 1;
+)
 
-// sounds only in the z direction (fixed in the x,y plane)
-{HOAEncPan.ar(~order, WhiteNoise.ar(1), 0, MouseY.kr(-90, 90 ) )}.play;
+~hoaSignal.play(0, ~hoaNumChannels, vol: 0.1, fadeTime:1.0);
+
+
+// sounds moving only in the z direction (fixed in the x,y plane), switching between + 90 and -90
+~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), 0, MouseY.kr(0, 1).round.linlin(0,1,-90,90) )};
 
 // move sounds in x,y,z with the mouse
-{HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )}.play;
-
+~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90)  )};
 
 // Now the same with a very slow Sine wave
 // so that we can observe the phase relations in the channles, compare with the spherical harmonics from above
 // chose a freq so that the scope stands still (only if you keep the default zoom value of 1 @ 44100)
 ~freq = 44100 / 1024;
 // change direction in the x y plane
-{HOAEncPan.ar(~order, SinOsc.ar(~freq ), MouseX.kr(0, 360), 0 )}.play;
+~hoaSignal.source  = {HOAEncPan.ar(~order, SinOsc.ar(~freq ), MouseX.kr(0, 360), 0 )};
 
 // change only the z direction, fix in x,y
-{HOAEncPan.ar(~order, SinOsc.ar(~freq ), 0, MouseY.kr(-90, 90 ) )}.play;
+~hoaSignal.source  = {HOAEncPan.ar(~order, SinOsc.ar(~freq ), 0, MouseY.kr(-90, 90 ) )};
 
 // move sound direction in x,y,z with the mouse
-{HOAEncPan.ar(~order, SinOsc.ar(~freq ), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )}.play;
+~hoaSignal.source  = {HOAEncPan.ar(~order, SinOsc.ar(~freq ), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
 ::
 
 
