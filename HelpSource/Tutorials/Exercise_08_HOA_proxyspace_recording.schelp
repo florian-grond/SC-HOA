@@ -24,7 +24,6 @@ s.makeWindow;
 s.boot;
 )
 
-
 (
 ~order = 3;
 ~hoaNumChannels = (~order+1).pow(2);
@@ -32,48 +31,55 @@ s.boot;
 s.scope(2);
 )
 
-~hoaSoundFile = Buffer.read(s, "/Users/floriangrond/Library/Application Support/SuperCollider/Extensions/HOA/HelpSource/Tutorials/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
-
-
-~hoaSoundFile.numChannels;
-
-// Let's make a node that generates a HOA signal ( white noise ) control the direction with the mouse.
-// we won't see it since we don't monitor it.
+// Let's make a node that picks up the SoundIn (microphone) and spatializes it in a  HOA signal
+// we spatialize it a spherical wave and we have it move vertically and change the distance with oscillators
 (
 ~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
-~hoaSignal.source = { HPF.ar(PlayBuf.ar( ~hoaSoundFile.numChannels,  ~hoaSoundFile, loop:1  ), 100)   };
+~hoaSignal.source = {HOAEncPan.ar(~order, SoundIn.ar(0), // this picks up the Microphone
+	                                                                                   0,  // no azimuth movement
+	                                                     SinOsc.ar(0.3, 0, 90 ),  // changing elevation
+	                                                           plane_spherical:1,  // we want it to be a spherical wave
+	                                          radius:SinOsc.ar(0.4, 0, 2, 2 )  // and change the radius
+                                 )};
 ~hoaSignal.fadeTime = 1;
 )
 
+// Then we make a node that spatializes this signal in the x/y plane
+// This is the node that we want to record from, that's why we use a RecNodeProxy
 (
-~hoaTransformer = NodeProxy.new(s, \audio, ~hoaNumChannels);
-~hoaTransformer.source = {|front_back =1, left_right = 0, up_down = 0| var in; in = \in.ar(0!~hoaNumChannels); HOATransMirror.ar(~order, in, front_back, left_right, up_down) };
+~hoaTransformer =  RecNodeProxy.new(s, \audio, ~hoaNumChannels);
+~hoaTransformer.source = {var in; in = \in.ar(0!~hoaNumChannels); HOATransRotateAz.ar(~order, in,  SinOsc.ar(0.5, 0, 180, 180 )  ) };
 ~hoaTransformer.fadeTime = 1;
 )
 
-~hoaTransformer.source = {|front_back =1, left_right = 0, up_down = 0| var in; in = \in.ar(0!~hoaNumChannels); HOATransMirror.ar(~order, in, front_back, left_right, up_down) };
-~hoaTransformer.set(\front_back, 0);
-~hoaTransformer.set(\front_back, 1);
-
-~hoaTransformer.set(\left_right, 0);
-~hoaTransformer.set(\left_right, 1);
-
-~hoaTransformer.set(\up_down, 0);
-~hoaTransformer.set(\up_down, 1);
-
-~hoaTransformer.source = {|front_back =1, left_right = 0, up_down = 0| var in; in = \in.ar(0!~hoaNumChannels); HOATransRotateAz.ar(~order, in, MouseX.kr(0, 360)) };
-
-// Let's make a node that can take in (multichannel) HOA signals.
-// now let's load HRIR filters for each of the 26 channels
+// Let's make a node to decode and listen.
 HOADecLebedev26.loadHrirFilters(s);
-HOADecLebedev26.hrirFilters.size;
 (
-~decoder = NodeProxy.new(s, \audio, 26);
+~decoder = NodeProxy.new(s, \audio, 2);
 ~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, hrir_Filters:1) };
 ~decoder.fadeTime = 1;
-~decoder.play(0, 26);
+~decoder.play(0, 2);
 )
 
 // and we connect them
 ~hoaSignal <>> ~hoaTransformer  <>>  ~decoder;
+
+// open the recording file
+~hoaTransformer.open( thisProcess.platform.userHomeDir++"/recordingTest.wav", "wav", "float" ); // lets record it in float
+~hoaTransformer.record // start recording (paused)
+~hoaTransformer.unpause // unpause
+~hoaTransformer.pause // pause again
+~hoaTransformer.close // close the file
+
+// Normalize the resulting sound file
+~buffer2Normalize = Buffer.read(s, thisProcess.platform.userHomeDir++"/recordingTest.wav");
+~buffer2Normalize.normalize.write(thisProcess.platform.userHomeDir++"/recordingTestN.wav", "wav", "int16"); // and safe it as "int16" to safe space
+
+// Now let's listen to the recorded sound file
+~hoaSoundFile = Buffer.read(s, thisProcess.platform.userHomeDir++"/recordingTestN.wav");
+
+// we change the ~hoaSignal.source to play back the sound file
+~hoaSignal.source = { HPF.ar(PlayBuf.ar( ~hoaSoundFile.numChannels,  ~hoaSoundFile, loop:1  ), 100)   };
+// and we want to just pass the signal through the transformer
+~hoaTransformer.source = {var in; in = \in.ar(0!~hoaNumChannels); in };
 ::
