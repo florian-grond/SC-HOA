@@ -22,6 +22,7 @@ image::foo.png# Spherical Harmonics up to degree 5, as used in fifth-order, Imag
 
 code::
 // start the sound server
+s.quit;
 (
 ServerOptions.devices;
 s = Server.local;
