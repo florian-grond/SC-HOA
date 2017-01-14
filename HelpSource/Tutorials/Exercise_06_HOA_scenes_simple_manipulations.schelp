@@ -10,16 +10,20 @@ link::Tutorials/Exercise_05_HOA_b_format_file_playback::
 STRONG:: Next:::
 link::Tutorials/Exercise_07_HOA_beamforming::
 
-
-The examples below demonstarte how to use the classes
+After playing back HOA soundfiles, the examples below demonstarte how to use the classes
 
 LIST::
 ## link::Classes/HOATransMirror:: - mirror the sound field along x,y or z.
 ## link::Classes/HOATransRotateAz:: - rotate the soundfield around the z axis.
+## link::Classes/HOATransRotateXYZ:: - rotate the soundfield around the xyz axis.
 ::
 
+in order to manipulate the HOA B-format.
+
+In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses and to have 36 output channels.
+
 code::
-s.quit
+s.quit; // quit the server first if it is still running with another configuration.
 (
 ServerOptions.devices;
 s = Server.local;
@@ -35,48 +39,46 @@ o.sampleRate = 48000;
 s.makeWindow;
 s.boot;
 )
+::
 
+Start the oscilloscope showing all the channels for the selected order of the b-format.
 
+code::
 (
 ~order = 3;
 ~hoaNumChannels = (~order+1).pow(2);
-// make an oszilloscope showing all the channels for the order from above
-s.scope(2);
+s.scope(2); // let's use only two channels as we will monitor it with headphones
 )
+::
 
+We will load a very short sound file that we loop so that we can observe the soundfield transformations:
+code::
 ~hoaSoundFile = Buffer.read(s, "/Users/floriangrond/Library/Application Support/SuperCollider/Extensions/HOA/HelpSource/Tutorials/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
-
-
 ~hoaSoundFile.numChannels;
+::
 
-// Let's make a node that generates a HOA signal ( white noise ) control the direction with the mouse.
-// we won't see it since we don't monitor it.
+Let's make a node that can play back the 3rd order HOA sound file.
+code::
 (
 ~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
 ~hoaSignal.source = { HPF.ar(PlayBuf.ar( ~hoaSoundFile.numChannels,  ~hoaSoundFile, loop:1  ), 100)   };
 ~hoaSignal.fadeTime = 1;
 )
+::
 
+Here we use HOATransMirror to simply mirror the sound field along the x, y, and z axis.
+
+code::
 (
 ~hoaTransformer = NodeProxy.new(s, \audio, ~hoaNumChannels);
 ~hoaTransformer.source = {|front_back =1, left_right = 0, up_down = 0| var in; in = \in.ar(0!~hoaNumChannels); HOATransMirror.ar(~order, in, front_back, left_right, up_down) };
 ~hoaTransformer.fadeTime = 1;
 )
+::
 
-~hoaTransformer.source = {|front_back =1, left_right = 0, up_down = 0| var in; in = \in.ar(0!~hoaNumChannels); HOATransMirror.ar(~order, in, front_back, left_right, up_down) };
-~hoaTransformer.set(\front_back, 0);
-~hoaTransformer.set(\front_back, 1);
+Then we make the decoder as before.
 
-~hoaTransformer.set(\left_right, 0);
-~hoaTransformer.set(\left_right, 1);
-
-~hoaTransformer.set(\up_down, 0);
-~hoaTransformer.set(\up_down, 1);
-
-~hoaTransformer.source = {|front_back =1, left_right = 0, up_down = 0| var in; in = \in.ar(0!~hoaNumChannels); HOATransRotateAz.ar(~order, in, MouseX.kr(0, 360)) };
-
-// Let's make a node that can take in (multichannel) HOA signals.
-// now let's load HRIR filters for each of the 26 channels
+code::
 HOADecLebedev26.loadHrirFilters(s);
 HOADecLebedev26.hrirFilters.size;
 (
@@ -85,10 +87,34 @@ HOADecLebedev26.hrirFilters.size;
 ~decoder.fadeTime = 1;
 ~decoder.play(0, 26);
 )
+::
 
-// and we connect them
+And we connect the NodeProxies to hear something
+
+code::
 ~hoaSignal <>> ~hoaTransformer  <>>  ~decoder;
 ::
+
+Now we can flip the sound field:
+
+code::
+~hoaTransformer.set(\front_back, 0);
+~hoaTransformer.set(\front_back, 1);
+
+~hoaTransformer.set(\left_right, 0);
+~hoaTransformer.set(\left_right, 1);
+
+~hoaTransformer.set(\up_down, 0);
+~hoaTransformer.set(\up_down, 1);
+::
+
+
+Here we have an example with HOATransRotateAz where we rotate the sound scene around the z-axis.
+
+code::
+~hoaTransformer.source = {|front_back =1, left_right = 0, up_down = 0| var in; in = \in.ar(0!~hoaNumChannels); HOATransRotateAz.ar(~order, in, MouseX.kr(0, 360)) };
+::
+
 
 
 STRONG:: Previous:::

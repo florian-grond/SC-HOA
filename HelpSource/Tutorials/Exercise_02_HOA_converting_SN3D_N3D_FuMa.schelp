@@ -17,7 +17,7 @@ definitionlist::
 || The original Furse-Malham higher-order format, an extension of traditional second order B-format up to third order (16 channels). See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#Furse-Malham::.
 FuMa channel ordering comes with maxN normalization.
 See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#maxN::.
-The FuMa format has been widely and is still in use but is increasingly replaced by:
+The FuMa format has been widely used and is still in use but is increasingly replaced by:
      ## ACN
 ||The Ambisonic Channel Number (ACN) ordering has reached wide consensus for future higher-order systems. See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#ACN::, and compare with the image from link::Tutorials/Exercise_01_HOA_b_format::.
 ::

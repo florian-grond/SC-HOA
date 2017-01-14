@@ -9,10 +9,9 @@ link::Tutorials/Exercise_02_HOA_converting_SN3D_N3D_FuMa::
 In ambisonics, a sound field is approximated with spherical harmonics of a given order, the multichannel signal  associated with the spherical harmonics is called the b-format.
 For order 0, consisting of one channel, no directional information is available, one can think of it as a mono signal with the characteristics of an omni spherical microphone also know as the W channel (see top of the pyramid in the image below).
 For order 1, top of the pyramid and second row, the spherical harmonics have shapes reminiscent of microphone patterns (figure 8) and are known as Y Z and X channel. Combinations of the W channel and the Y (or X) channel are the basis of the MS microphone technique.
-Similar to the MS technique, a weighted combination of the channels from the b-format is used to generate speaker signals for the reconstruction of the approxiamted soundfield.
+Similar to the MS technique, a weighted combination of the channels from the b-format is used to generate speaker signals for the reconstruction of the approximated soundfield.
 
 A given order TELETYPE:: n ::  results in TELETYPE:: (n+1)^2 :: channels in the b-format.
-
 
 table::
     ##  order   || number of channels

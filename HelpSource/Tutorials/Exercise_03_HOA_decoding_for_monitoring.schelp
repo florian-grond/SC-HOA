@@ -9,7 +9,7 @@ link::Tutorials/Exercise_02_HOA_converting_SN3D_N3D_FuMa::
 STRONG:: Next:::
 link::Tutorials/Exercise_04_HOA_plane_versus_spherical_waves::
 
-Having mostly looked at HOA B-format multichannel sounds so far. This exercise is about listening to them.
+Having mostly looked at HOA B-format multichannel sounds so far, this exercise is about listening to them.
 To this end, the HOA library provides 3 different spherical decoders based on Lebedev Grids
 link:: https://en.wikipedia.org/wiki/Lebedev_quadrature::.
 Lebedev Grids are equidistant points on sphere, in the case of a decoder they correspond to virtual speaker positions.
@@ -99,8 +99,21 @@ HOADecLebedev26.loadHrirFilters(s);
 HOADecLebedev26.hrirFilters.size;
 // and change the decoder.source again
 ~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, hrir_Filters:1) };
+::
 
-// now you might want to change the HOA signal again to hear something
+This is likely quite havy on the CPU because it means 52 (26 * 2) convolutions with an FFT.
+For monitoring puroses you might want to listen to the first order, for which you can use HOADecLebedev06.
+which results in 12 FFT convolutions.
+
+code::
+HOADecLebedev06.loadHrirFilters(s);
+HOADecLebedev06.hrirFilters.size;
+~decoder.source = {var in; in = \in.ar(0!4); HOADecLebedev06.ar(1, in, hrir_Filters:1) };
+// for 1st order take only 4 \in channels and set the first argument of HOADecLebedev06 (order) to 1.
+::
+
+Now you might want to change the HOA signal again to hear something.
+code::
 ~hoaSignal.source = {HOAEncPan.ar(~order, SinOsc.ar(48000 / 64), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
 ~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
 ::

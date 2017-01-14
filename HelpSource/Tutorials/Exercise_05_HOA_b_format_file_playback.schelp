@@ -11,10 +11,12 @@ STRONG:: Next:::
 link::Tutorials/Exercise_06_HOA_scenes_simple_manipulations::
 
 Below are some simple examples that show how to play back a multichannel HOA b-format sound file and listen to it through headphones.
+The 3rd order field recordings have been made with the Eigenmike Link::https://mhacoustics.com/products:: with the kind support ofthe Centre for Interdisciplinary Research in Music Media and Technology, housed at the Schulich School of Music at McGill University (CIRMMT) Link:: http://www.cirmmt.org/:: a microphone array with 32 capsules.
 
+In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses and to have 36 output channels.
 
 code::
-s.quit
+s.quit; // quit the server first if it is still running with another configuration.
 (
 ServerOptions.devices;
 s = Server.local;
@@ -30,33 +32,37 @@ o.sampleRate = 48000;
 s.makeWindow;
 s.boot;
 )
+::
 
+Start the oscilloscope showing all the channels for the selected order of the b-format.
 
+code::
 (
 ~order = 3;
 ~hoaNumChannels = (~order+1).pow(2);
-// make an oszilloscope showing all the channels for the order from above
-s.scope(2);
+s.scope(2); // let's use only two channels as we will monitor it with headphones
 )
+::
 
+Let's load some 16 channels 3rd order soundfiles, the filenames indicate the channel ordering as well as the normalization (ACN, N3D):
+code::
 ~hoaSoundFile = Buffer.read(s, "//Users/floriangrond/Library/Application Support/SuperCollider/Extensions/eigen_ACN_N3D_Montreal_Metro_cello.wav");
 ~hoaSoundFile = Buffer.read(s, "//Users/floriangrond/Library/Application Support/SuperCollider/Extensions/eigen_ACN_N3D_Montreal_Metro.wav");
 ~hoaSoundFile = Buffer.read(s, "/Users/floriangrond/Library/Application Support/SuperCollider/Extensions/HOA/HelpSource/Tutorials/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
-
-
 ~hoaSoundFile.numChannels;
+::
 
-// Let's make a node that generates a HOA signal ( white noise ) control the direction with the mouse.
-// we won't see it since we don't monitor it.
+Let's make a node that can play back the 3rd order HOA sound file.
+code::
 (
 ~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
 ~hoaSignal.source = { HPF.ar(PlayBuf.ar( ~hoaSoundFile.numChannels,  ~hoaSoundFile, loop:1  ), 100)   };
 ~hoaSignal.fadeTime = 1;
 )
+::
 
-
-// Let's make a node that can take in (multichannel) HOA signals.
-// now let's load HRIR filters for each of the 26 channels
+Let's make the decoder:
+code::
 HOADecLebedev26.loadHrirFilters(s);
 HOADecLebedev26.hrirFilters.size;
 (
@@ -65,8 +71,10 @@ HOADecLebedev26.hrirFilters.size;
 ~decoder.fadeTime = 1;
 ~decoder.play(0, 26);
 )
+::
 
-// and we connect them
+And then we connect them:
+code::
 ~hoaSignal <>> ~decoder;
 ::
 
