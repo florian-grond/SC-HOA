@@ -1,5 +1,5 @@
 title:: HOA Tutorial Exercise 06
-summary:: monitoring (decoding) b format sounds
+summary:: simple transformations of the B-format, mirroring and rotation.
 categories:: Libraries>HOA
 related:: Guides/HOAguide, Guides/HOAguide
 
@@ -10,7 +10,7 @@ link::Tutorials/Exercise_05_HOA_b_format_file_playback::
 STRONG:: Next:::
 link::Tutorials/Exercise_07_HOA_beamforming::
 
-After playing back HOA soundfiles, the examples below demonstarte how to use the classes
+After learning how to play back HOA soundfiles, the examples below demonstarte how to use the classes
 
 LIST::
 ## link::Classes/HOATransMirror:: - mirror the sound field along x,y or z.
@@ -18,7 +18,14 @@ LIST::
 ## link::Classes/HOATransRotateXYZ:: - rotate the soundfield around the xyz axis.
 ::
 
-in order to manipulate the HOA B-format.
+in order to manipulate the HOA B-format. For the details of the mirroring and rotation transformations please refer to:
+[1] M. Kronlachner, “Spatial Transformations for the Alteration of Ambisonic Recordings,” Graz University Of Technology, Austria, 2014 p.46-47.
+
+The x,y,z (roll, pitch, yaw) rotator of the HOA scene  uses the  for the matrix definition from [2] with implentation according to [1]
+for details about the corrections in the implementation see underlying Faust code by Pierre Lecomte:
+https://github.com/sekisushai/ambitools/blob/master/Faust/src/hoa_rotator.dsp
+[2] J. Ivanic and K. Ruedenberg, “Rotation matrices for real spherical harmonics. Direct determination by recursion,” J. Phys. Chem., vol. 100, no. 15, pp. 6342–6347, 1996.
+
 
 In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses and to have 36 output channels.
 

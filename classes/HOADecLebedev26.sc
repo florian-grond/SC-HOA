@@ -2,8 +2,8 @@ HOADecLebedev26{
 classvar <hrirFilters;
 
 		*loadHrirFilters {|server|
-		hrirFilters = 26.collect({|i|	[Buffer.read(server, Platform.userExtensionDir++"/HOA/FIR/hrir/hrir_lebedev50/"++"hrir_"++(i+1)++"_L.wav"),
-			                                     Buffer.read(server, Platform.userExtensionDir++"/HOA/FIR/hrir/hrir_lebedev50/"++"hrir_"++(i+1)++"_R.wav")] });
+		hrirFilters = 26.collect({|i|	[Buffer.read(server, HOA.userKernelDir++"/FIR/hrir/hrir_lebedev50/"++"hrir_"++(i+1)++"_L.wav"),
+			                                     Buffer.read(server, HOA.userKernelDir++"/FIR/hrir/hrir_lebedev50/"++"hrir_"++(i+1)++"_R.wav")] });
 	}
 
 	*ar { |order, in, input_gains = 0, output_gains = 0, yes = 1, speakers_radius = 1, hrir_Filters = 0|

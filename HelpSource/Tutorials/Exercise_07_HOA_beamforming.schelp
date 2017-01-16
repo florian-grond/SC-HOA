@@ -11,18 +11,39 @@ STRONG:: Next:::
 link::Tutorials/Exercise_08_HOA_proxyspace_recording::
 
 
-
-The examples below demonstarte how to use the classes
+The examples in this exercise demonstarte how to use the three different beamforming classes below for filtering everything out in a HOA scene except specific directions.
+For implementation of the classes and the references see the links provided:
 
 LIST::
-## link::Classes/HOABeamDirac2Hoa:: - filters along a specifed direction (truncated Dirac), returns b-format.
-## link::Classes/HOABeamHCard2Hoa:: - filters along a specifed direction (hyper cardioid pattern), returns b-format.
+## link::Classes/HOABeamDirac2Hoa:: - filters along a specifed direction (truncated Dirac), returns HOA B-format.
+
+This tool helps to explore the HOA scene with a "flashlight".
+It applies a directionnal filter (Dirac function) to the HOA scene and filters out everything else except the chosen direction, see:
+[1] P. Lecomte, P.-A. Gauthier, C. Langrenne, A. Berry, and A. Garcia, “Filtrage directionnel dans un scène sonore 3D par une utilisation conjointe de Beamforming et d’Ambisonie d’ordre elevés,” in CFA / VISHNO 2016, 2016, pp. 169–175.
+link::https://github.com/sekisushai/ambitools/blob/master/Faust/src/hoa_beamforming_dirac_to_hoa.dsp::
+
+## link::Classes/HOABeamHCard2Hoa:: - filters along a specifed direction (hyper cardioid pattern), returns HOA B-format.
+
+Description: This tool applies a hypercardioid beampattern to the HOA scene to enhances some directions according to the chosen beampattern.
+See [1] for more details.
+The proposed beampattern are regular hypercardioid as described in [2].
+The higher the order of the beampattern the more selective is the directionnal filtering.
+[2] J. Meyer and G. Elko, “A highly scalable spherical microphone array based on an orthonormal decomposition of the soundfield,” in IEEE International Conference on Acoustics, Speech, and Signal Processing, 2002, vol. 2, pp. 1781–1784.
+link::https://github.com/sekisushai/ambitools/blob/master/Faust/src/hoa_beamforming_hypercardioid_to_hoa.dsp::
+
 ## link::Classes/HOABeamHCard2Mono:: - filters along a specifed direction (hyper cardioid pattern), returns a mono signal.
+
+This tool helps to extract a monophonic signal from the HOA scene with a beampatern.
+The HOA channels are combined to produce a monophonic output as if the capture was done with a directionnal microphone.
+The beampatern provided are regular hypercardioid up to order 5 compare [2] from above.
+link::https://github.com/sekisushai/ambitools/blob/master/Faust/src/hoa_beamforming_hypercardioid_to_mono.dsp::
 ::
 
 
+In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses and to have 36 output channels.
+
 code::
-s.quit
+s.quit; // quit the server first if it is still running with another configuration.
 (
 ServerOptions.devices;
 s = Server.local;
@@ -38,16 +59,23 @@ o.sampleRate = 48000;
 s.makeWindow;
 s.boot;
 )
+::
 
-
+Start the oscilloscope showing all the channels for the selected order of the b-format.
+code::
 (
 ~order = 3;
 ~hoaNumChannels = (~order+1).pow(2);
-// make an oszilloscope showing all the channels for the order from above
-s.scope(2);
+s.scope(2); // let's use only two channels as we will monitor it with headphones
 )
+::
 
-~hoaSoundFile = Buffer.read(s, "/Users/floriangrond/Library/Application Support/SuperCollider/Extensions/HOA/HelpSource/Tutorials/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
+
+code::
+~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
+~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro.wav");
+~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
+~hoaSoundFile.numChannels;
 
 
 ~hoaSoundFile.numChannels;
@@ -59,6 +87,27 @@ s.scope(2);
 ~hoaSignal.source = { HPF.ar(PlayBuf.ar( ~hoaSoundFile.numChannels,  ~hoaSoundFile, loop:1  ), 100)   };
 ~hoaSignal.fadeTime = 1;
 )
+
+HOADecLebedev26.loadHrirFilters(s);
+HOADecLebedev26.hrirFilters.size;
+
+(
+~beamFormer = NodeProxy.new(s, \audio, ~hoaNumChannels);
+~beamFormer.source = {var in;
+	                                         in = \in.ar(0!~hoaNumChannels);
+	HOADecLebedev26.ar(~order,
+	HOABeamDirac2Hoa.ar(~order, in,
+		                                                 Lag.ar(K2A.ar(MouseX.kr( 0, 360)), 0.5),
+		                                                 Lag.ar(K2A.ar(MouseY.kr(-90, 90 )), 0.5),
+		                                                 on:1),
+			hrir_Filters: 1  )
+};
+~beamFormer.fadeTime = 1;
+~beamFormer.play(0, 26);
+)
+
+~hoaSignal <>> ~beamFormer;
+
 
 (
 ~hoaTransformer = NodeProxy.new(s, \audio, ~hoaNumChannels);

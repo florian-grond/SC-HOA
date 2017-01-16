@@ -9,19 +9,19 @@ link::Tutorials/Exercise_02_HOA_converting_SN3D_N3D_FuMa::
 STRONG:: Next:::
 link::Tutorials/Exercise_04_HOA_plane_versus_spherical_waves::
 
-Having mostly looked at HOA B-format multichannel sounds so far, this exercise is about listening to them.
+Having mostly looked at HOA B-format multichannel signals so far, this exercise is about listening to them.
 To this end, the HOA library provides 3 different spherical decoders based on Lebedev Grids
 link:: https://en.wikipedia.org/wiki/Lebedev_quadrature::.
-Lebedev Grids are equidistant points on sphere, in the case of a decoder they correspond to virtual speaker positions.
+Lebedev Grids are equidistant points on a sphere, in the case of a decoder they correspond to virtual speaker positions.
 Each signal of the virtual speakers is then convolved with corresponding HRIR kernels to yield two headphone signals.
 
 
 The examples below show how to monitor the playback of HOA b-format via headphones.
 
-In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses and to have 36 output channels
+In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses and 36 output channels
 
 code::
-s.quit; // quit the server first if it is still running with another configuration.
+s.quit; // quit the server first if it is still running
 (
 ServerOptions.devices;
 s = Server.local;
@@ -29,10 +29,10 @@ Server.local = Server.default;
 o = Server.local.options; // Get the local server's options
 o.numInputBusChannels = 2; // Set Input to number of Inputs
 o.numOutputBusChannels = 36; // lets start after chan 36 so as not to see the mic input
-o.numAudioBusChannels = 2048;
+o.numAudioBusChannels = 1024 * 2; // default is 1024
 o.blockSize = 512;
-o.numWireBufs = 1024 * 16;
-o.memSize = 2.pow(18);
+o.numWireBufs = 64 * 16;  // for more complex SynthDefs
+o.memSize = 2.pow(16);  // default 2.pow(13)
 o.sampleRate = 48000;
 s.makeWindow;
 s.boot;
@@ -71,10 +71,10 @@ code::
 )
 ::
 
-Still we don't see anything yet in the scope because ~hoaSignal  and ~decoder are not connected yet
+Still we don't see anything yet in the scope because ~hoaSignal  and ~decoder are not connected yet.
 
 code::
-~hoaSignal <>> ~decoder;
+~hoaSignal <>> ~decoder; // watch the oscilloscope
 ::
 
 Now you see in the scope the B-format from ~hoaSignal going untransformed through ~decoder.
@@ -82,13 +82,15 @@ Here is where the advantages of proxyspace with Ambisonics come is handy.
 Lets change the  NodeProxies one step at a time. First the ~hoaSignal itself:
 
 code::
+// standing sinewave
 ~hoaSignal.source = {HOAEncPan.ar(~order, SinOsc.ar(48000 / 1024), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
+// White noise
 ~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
 ::
 
 Then the decoder, first we decode into a Lebedev Grid with 26 positions, which is enough points for order 3:
 code::
-s.scope(26); // lets see all channels
+s.scope(26); // To see all channels we add one more to the oscilloscope
 ~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, output_gains: 24) };
 ::
 
@@ -101,8 +103,8 @@ HOADecLebedev26.hrirFilters.size;
 ~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, hrir_Filters:1) };
 ::
 
-This is likely quite havy on the CPU because it means 52 (26 * 2) convolutions with an FFT.
-For monitoring puroses you might want to listen to the first order, for which you can use HOADecLebedev06.
+This is likely quite havy on the CPU, because it means 52 (26 * 2) convolutions with an FFT.
+For monitoring purposes you might want to listen to the first order, for which you can use HOADecLebedev06.
 which results in 12 FFT convolutions.
 
 code::
@@ -112,7 +114,7 @@ HOADecLebedev06.hrirFilters.size;
 // for 1st order take only 4 \in channels and set the first argument of HOADecLebedev06 (order) to 1.
 ::
 
-Now you might want to change the HOA signal again to hear something.
+Now you might want to change the HOA signal again to hear something. Watch the phase and amplitude shifts.
 code::
 ~hoaSignal.source = {HOAEncPan.ar(~order, SinOsc.ar(48000 / 64), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
 ~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};

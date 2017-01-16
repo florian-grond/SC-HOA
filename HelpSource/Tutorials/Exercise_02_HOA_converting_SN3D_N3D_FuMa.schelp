@@ -59,7 +59,7 @@ See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#N3D ::
 See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#SN3D ::.
 ::
 
-NOTE:: STRONG::This library uses internally the ACN channel ordering with N3D normalization.:: In order to transform and reconstruct an ambisonics soundfield correctly, you need to know what convention you are working with. The HOAConvert class is versatile but mostly meant to convert b-format recordings into ACN N3D for b-format transformations of this library and to convert back to other conventions when rendering and saving sounds for other production contexts.::
+NOTE:: STRONG::This library uses internally the ACN channel ordering with N3D normalization.:: In order to transform and reconstruct an ambisonics soundfield correctly, you need to know what convention you are working with. The HOAConvert class is versatile and mostly meant to convert b-format recordings into ACN N3D for b-format transformations of this library and to convert back to other conventions when rendering and saving sounds for other production contexts.::
 
 The examples below show the difference of the three b-format conventions with respect to channel ordering and normalization the supported combinations are:
 
@@ -69,10 +69,10 @@ LIST::
      ## FuMa MaxN
 ::
 
-In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses and to have 36 output channels
+In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses and 36 output channels.
 
 code::
-s.quit; // quit the server first if it is still running with another configuration.
+s.quit; // quit the server first if it is still running
 (
 ServerOptions.devices;
 s = Server.local;
@@ -80,10 +80,10 @@ Server.local = Server.default;
 o = Server.local.options; // Get the local server's options
 o.numInputBusChannels = 2; // Set Input to number of Inputs
 o.numOutputBusChannels = 36; // lets start after chan 36 so as not to see the mic input
-o.numAudioBusChannels = 2048;
+o.numAudioBusChannels = 1024 * 2; // default is 1024
 o.blockSize = 512;
-o.numWireBufs = 1024 * 16;
-o.memSize = 2.pow(18);
+o.numWireBufs = 64 * 16;  // for more complex SynthDefs
+o.memSize = 2.pow(16);  // default 2.pow(13)
 o.sampleRate = 48000;
 s.makeWindow;
 s.boot;
@@ -101,7 +101,7 @@ s.scope(~hoaNumChannels);
 )
 ::
 
-Let's use a proxies for the creation of a B-format signal:
+Let's use a proxy for the creation of a B-format signal:
 
 code::
 (
@@ -112,7 +112,8 @@ code::
 )
 ::
 
-Change between normalization within ACN and compare the amplitudes of the channels.
+Change between normalization within ACN and compare the amplitudes of the channels in the oscilloscope.
+
 code::
 ~hoaSignal.source = {HOAConvert.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1), 45, 45 ), ~inFormat, ~outFormat)};
 ~hoaSignal.source = {HOAConvert.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1), 45, 45 ), ~inFormat, ~outFormat)};

@@ -46,7 +46,7 @@ s.scope(2); // let's use only two channels as we will monitor it with headphones
 )
 ::
 
-Let's make a node that generates a HOA signal ( white noise ) control the direction with the mouse.
+Let's make a node that generates a plane wave HOA signal (white noise), control the direction with the mouse.
 We won't see it since we don't monitor it.
 code::
 (
@@ -83,7 +83,7 @@ code::
 ~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
 ::
 
-Another sound:
+Try with another sound:
 
 code::
 (
@@ -92,6 +92,26 @@ code::
 	MouseX.kr(0, 360), elev:0, gain:0, plane_spherical:1, radius: MouseY.kr(0.1, 4 ) )};
 )
 ::
+
+If you wanna work with recorded sounds. Load a soundfile into a buffer:
+
+code::
+~buffer = Buffer.read(s, Platform.resourceDir +/+ "sounds/a11wlk01.wav";)
+::
+
+And play it back. Move the sound source as in the example from above.
+
+code::
+(
+~hoaSignal.source = {HOAEncPan.ar(~order,
+	 PlayBuf.ar(1, ~buffer, BufRateScale.kr(~buffer) , loop:1),
+	MouseX.kr(0, 360), elev:0, gain:0, plane_spherical:1, radius: MouseY.kr(0.1, 4 ) )};
+)
+::
+
+
+
+
 
 STRONG:: Previous:::
 link::Tutorials/Exercise_03_HOA_decoding_for_monitoring::
