@@ -103,7 +103,7 @@ code::
 
 Then we change the ~hoaSignal.source to play back the sound file, and we want to just pass the signal through the transformer without additional rotation:
 code::
-(--
+(
 ~hoaSignal.source = { HPF.ar(PlayBuf.ar( ~hoaSoundFile.numChannels,  ~hoaSoundFile, loop:1  ), 100)   };
 ~hoaTransformer.source = {var in; in = \in.ar(0!~hoaNumChannels); in };
 )
