@@ -74,7 +74,7 @@ code::
 ~hoaSignal.play(0, ~hoaNumChannels, vol: 0.1, fadeTime:1.0);
 ::
 
-Change the source of the node ~hoaSignal and it will fade into a spatialized sound that let's you move the white noise in x,y,z.
+Change the source of the node ~hoaSignal and it will fade into a spatialized sound which allows you to move the white noise in x,y,z.
 code::
 // move sounds in x,y,z with the mouse
 ~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90)  )};

@@ -13,8 +13,10 @@ link::Tutorials/Exercise_09_HOA_decoding_for_speaker_arrays::
 
 The example below shows how to record the b-format within the proxy space.
 
+In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses and to have 36 output channels.
+
 code::
-s.quit
+s.quit; // quit the server first if it is still running with another configuration.
 (
 ServerOptions.devices;
 s = Server.local;
@@ -30,16 +32,20 @@ o.sampleRate = 48000;
 s.makeWindow;
 s.boot;
 )
+::
 
+Start the oscilloscope showing all the channels for the selected order of the b-format.
+code::
 (
 ~order = 3;
 ~hoaNumChannels = (~order+1).pow(2);
-// make an oszilloscope showing all the channels for the order from above
-s.scope(2);
+s.scope(2); // let's use only two channels as we will monitor it with headphones
 )
+::
 
-// Let's make a node that picks up the SoundIn (microphone) and spatializes it in a  HOA signal
-// we spatialize it a spherical wave and we have it move vertically and change the distance with oscillators
+Let's make a node that picks up the SoundIn (microphone) and spatializes it in a  HOA signal
+we spatialize it a spherical wave and we have it move vertically and change the distance with oscillators
+code::
 (
 ~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
 ~hoaSignal.source = {HOAEncPan.ar(~order, SoundIn.ar(0), // this picks up the Microphone
@@ -51,45 +57,64 @@ s.scope(2);
 ~hoaSignal.fadeTime = 1;
 )
 
-// Then we make a node that spatializes this signal in the x/y plane
-// This is the node that we want to record from, that's why we use a RecNodeProxy
+Then we make a node that rotates this signal in the x/y plane.
+This is the node that we want to record from, that's why we use a RecNodeProxy:
+code::
 (
 ~hoaTransformer =  RecNodeProxy.new(s, \audio, ~hoaNumChannels);
 ~hoaTransformer.source = {var in; in = \in.ar(0!~hoaNumChannels); HOATransRotateAz.ar(~order, in,  SinOsc.ar(0.5, 0, 180, 180 )  ) };
 ~hoaTransformer.fadeTime = 1;
 )
+::
 
-// Let's make a node to decode and listen.
+Then we make the usual decoding and listening node and we connect them
+code::
 HOADecLebedev26.loadHrirFilters(s);
 (
 ~decoder = NodeProxy.new(s, \audio, 2);
 ~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, hrir_Filters:1) };
 ~decoder.fadeTime = 1;
 ~decoder.play(0, 2);
-)
 
-// and we connect them
+
 ~hoaSignal <>> ~hoaTransformer  <>>  ~decoder;
+)
+::
 
-// open the recording file
-~hoaTransformer.open( thisProcess.platform.userHomeDir++"/recordingTest.wav", "wav", "float" ); // lets record it in float
+Open the recording file, start recording, unpause, pause and, when finished, close the file:
+code::
+~hoaTransformer.open( thisProcess.platform.userHomeDir++"/HOArecordingTest.wav", "wav", "float" ); // lets record it in float
 ~hoaTransformer.record // start recording (paused)
 ~hoaTransformer.unpause // unpause
 ~hoaTransformer.pause // pause again
 ~hoaTransformer.close // close the file
-
-// Normalize the resulting sound file
-~buffer2Normalize = Buffer.read(s, thisProcess.platform.userHomeDir++"/recordingTest.wav");
-~buffer2Normalize.normalize.write(thisProcess.platform.userHomeDir++"/recordingTestN.wav", "wav", "int16"); // and safe it as "int16" to safe space
-
-// Now let's listen to the recorded sound file
-~hoaSoundFile = Buffer.read(s, thisProcess.platform.userHomeDir++"/recordingTestN.wav");
-
-// we change the ~hoaSignal.source to play back the sound file
-~hoaSignal.source = { HPF.ar(PlayBuf.ar( ~hoaSoundFile.numChannels,  ~hoaSoundFile, loop:1  ), 100)   };
-// and we want to just pass the signal through the transformer
-~hoaTransformer.source = {var in; in = \in.ar(0!~hoaNumChannels); in };
 ::
+
+Normalize the resulting sound file, evaluate line by line:
+code::
+~buffer2Normalize = Buffer.read(s, thisProcess.platform.userHomeDir++"/HOArecordingTest.wav");
+~buffer2Normalize.normalize.write(thisProcess.platform.userHomeDir++"/HOArecordingTestN.wav", "wav", "int16"); // and safe it as "int16" to safe space
+::
+
+Now let's listen to the recorded sound file by opening it first:
+code::
+~hoaSoundFile = Buffer.read(s, thisProcess.platform.userHomeDir++"/HOArecordingTestN.wav");
+::
+
+Then we change the ~hoaSignal.source to play back the sound file, and we want to just pass the signal through the transformer without additional rotation:
+code::
+(--
+~hoaSignal.source = { HPF.ar(PlayBuf.ar( ~hoaSoundFile.numChannels,  ~hoaSoundFile, loop:1  ), 100)   };
+~hoaTransformer.source = {var in; in = \in.ar(0!~hoaNumChannels); in };
+)
+::
+
+Finally we delete the files:
+code::
+File.delete(thisProcess.platform.userHomeDir++"/HOArecordingTest.wav");
+File.delete(thisProcess.platform.userHomeDir++"/HOArecordingTestN.wav");
+::
+
 
 STRONG:: Previous:::
 link::Tutorials/Exercise_07_HOA_beamforming::

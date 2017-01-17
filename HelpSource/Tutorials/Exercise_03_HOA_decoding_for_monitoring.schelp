@@ -10,11 +10,16 @@ STRONG:: Next:::
 link::Tutorials/Exercise_04_HOA_plane_versus_spherical_waves::
 
 Having mostly looked at HOA B-format multichannel signals so far, this exercise is about listening to them.
-To this end, the HOA library provides 3 different spherical decoders based on Lebedev Grids
-link:: https://en.wikipedia.org/wiki/Lebedev_quadrature::.
-Lebedev Grids are equidistant points on a sphere, in the case of a decoder they correspond to virtual speaker positions.
-Each signal of the virtual speakers is then convolved with corresponding HRIR kernels to yield two headphone signals.
+To this end, the HOA library provides 3 different spherical decoders based on Lebedev grids
 
+The basic decoder (mode-matching) for Lebedev grid with 50 nodes, is working up to order 5 [1].
+Possibility to choose with or without near-field compensation [2].
+
+[1] Lecomte, P., Gauthier, P.-A., Langrenne, C., Garcia, A., & Berry, A. (2015). On the use of a Lebedev grid for Ambisonics. In Audio Engineering Society Convention 139. New York.
+
+[2] Lecomte, P., & Gauthier, P.-A. (2015). Real-Time 3D Ambisonics using Faust, Processing, Pure Data, And OSC. In 15th International Conference on Digital Audio Effects (DAFx-15). Trondheim, Norway.
+
+Lebedev Grids link:: https://en.wikipedia.org/wiki/Lebedev_quadrature::. are equidistant points on a sphere, in the case of a decoder they correspond to virtual speaker positions. Each signal of the virtual speakers is then convolved with corresponding HRIR kernels to yield two headphone signals.
 
 The examples below show how to monitor the playback of HOA b-format via headphones.
 
