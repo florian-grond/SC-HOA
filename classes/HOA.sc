@@ -1,3 +1,8 @@
+/*
+This class is based on the ATK class, in fact it only changes the name to HOA ;-) Thank you ATK!
+*/
+
+
 HOA {
 	classvar <userSupportDir, <userSoundsDir, <userKernelDir;
 	classvar <systemSupportDir, <systemSoundsDir, <systemKernelDir;
@@ -25,13 +30,13 @@ HOA {
 		File.exists(Atk.userSupportDir).if({
 			HOA.userSupportDir.openOS;
 		}, {
-			"User Support Dir may not exist. Run \n\tAtk.createUserSupportDir\nto create it".warn
+			"User Support Dir may not exist. Run \n\tHOA.createUserSupportDir\nto create it".warn
 		})
 	}
 
 	*createUserSupportDir {
 		File.mkdir(HOA.userSupportDir);
-//		("mkdir \"" ++ Atk.userSupportDir ++ "\"").unixCmd;
+//		("mkdir \"" ++ HOA.userSupportDir ++ "\"").unixCmd;
 	}
 
 	*openSystemSupportDir {
