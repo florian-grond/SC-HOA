@@ -5,6 +5,8 @@ related:: Tutorials/HOA_Tutorial_Overview
 
 The HOA library provides classes to encode, transform and decode Higher Order Ambisonics sound signals up to order 5.
 The Ugens on which this library is based are compiled from Faustcode made by Pierre Lecomte, and the documentation is based in part on this document  link::https://github.com/sekisushai/ambitools/blob/master/Documentation/documentation.pdf::.
+link::Tutorials/documentation::
+
 
 The SC library, was written by Florian Grond.
 The library also includes soundfield recordings made together with Romain Dumoulin using the Eigenmike at CIRMMT link:: http://www.cirmmt.org::.
