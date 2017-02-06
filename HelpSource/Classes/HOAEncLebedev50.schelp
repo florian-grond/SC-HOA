@@ -1,7 +1,7 @@
 TITLE:: HOAEncLebedev50
 summary:: Mirroring of a higher order Ambisonics sound field
-categories:: Undocumented classes, UGens>Undocumented
-related:: Guides/HOAguide
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
 
 DESCRIPTION::
 (put long description here)

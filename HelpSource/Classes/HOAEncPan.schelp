@@ -1,7 +1,7 @@
 TITLE:: HOAEncPan
 summary:: Panning sounds sources in a higher order Ambisonics sound field
-categories:: Undocumented classes, UGens>Undocumented
-related:: Guides/HOAguide
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
 
 DESCRIPTION::
 HOAEncPan pans mono sound sources in a higher order Ambisonics sound field, you can chose between plane and near field spherical wave encoding.

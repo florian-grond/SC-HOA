@@ -1,0 +1,52 @@
+TITLE:: HOA
+summary::  a class that stores global variables for the HOA library.
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
+
+DESCRIPTION::
+The HOA class defines variables that may be used by the rest of the HOA library, including resources for kernel encoding and decoding and sample soundfile paths.
+It is modeled after the Atk class.
+
+
+CLASSMETHODS::
+
+METHOD:: userSupportDir
+set the user support dir where HOA resources are located
+
+argument:: userSupportDirIn
+the path to the HOA folder containing your HOA support files
+
+METHOD:: userSupportDir
+
+returns::the path to the HOA support dir. Defaults to:
+code::Platform.userAppSupportDir.dirname ++ "/HOA";::
+
+METHOD:: userSoundsDir
+
+returns:: a path to the 'sounds' dir inside the HOA support dir
+
+METHOD:: userKernelDir
+
+returns:: a path to the 'kernel' dir inside the ATK support dir
+
+METHOD:: systemSupportDir
+
+returns::the path to the HOA support dir. Defaults to:
+code::Platform.systemAppSupportDir.dirname ++ "/HOA";::
+
+METHOD:: systemSoundsDir
+
+returns:: a path to the 'sounds' dir inside the HOA system support dir
+
+METHOD:: systemKernelDir
+
+returns:: a path to the 'kernel' dir inside the HOA system support dir
+
+METHOD:: openUserSupportDir
+runs a unixCmd to open the userAppSupport dir. Uses 'open' (OS X only)
+
+METHOD:: createUserSupportDir
+runs a unix cmd to create the user support dir for HOA
+
+METHOD:: openSystemSupportDir
+runs a unixCmd to open the systemAppSupport dir. Uses 'open' (OS X only)
