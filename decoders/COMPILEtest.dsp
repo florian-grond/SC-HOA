@@ -17,7 +17,7 @@
 
 
 // start decoder configuration
-declare name	"CIRMMT_22_2_O3";
+declare name	"COMPILEtest";
 
 // bands
 nbands = 2;
