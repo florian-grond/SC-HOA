@@ -14,7 +14,7 @@ classvar <hrirFilters;
 			                     in2, in3, in4 = in;
 			              decoded = FaustHOADecLebedev501.ar(in1, // return the Ugen
 				                                            in2, in3, in4,
-				                                            inputs_gain_5: input_gains, outputs_gain_5: output_gains, yes_5: yes, speakers_radius_5: speakers_radius );
+				                                            inputs_gain: input_gains, outputs_gain: output_gains, yes: yes, speakers_radius: speakers_radius );
 
 			if(hrir_Filters == 0,
 				{ ^decoded},
@@ -38,7 +38,7 @@ classvar <hrirFilters;
 			              decoded = FaustHOADecLebedev502.ar(in1,
 				                                            in2, in3, in4,
 				                                            in5, in6, in7, in8, in9,
-				                                              inputs_gain_11: input_gains, outputs_gain_11: output_gains, yes_11: yes, speakers_radius_11: speakers_radius);
+				                                              inputs_gain: input_gains, outputs_gain: output_gains, yes: yes, speakers_radius: speakers_radius);
 
 			if(hrir_Filters == 0,
 				{ ^decoded},
@@ -65,7 +65,7 @@ classvar <hrirFilters;
 				                                           in2, in3, in4,
 				                                           in5, in6, in7, in8, in9,
 				                                           in10, in11, in12, in13, in14, in15, in16,
-				                                            inputs_gain_19: input_gains, outputs_gain_19: output_gains, yes_19: yes, speakers_radius_19: speakers_radius);
+				                                            inputs_gain: input_gains, outputs_gain: output_gains, yes: yes, speakers_radius: speakers_radius);
 
 			if(hrir_Filters == 0,
 				{ ^decoded},
@@ -96,7 +96,7 @@ classvar <hrirFilters;
 				                                           in5, in6, in7, in8, in9,
 				                                           in10, in11, in12, in13, in14, in15, in16,
 				                                           in17, in18, in19, in20, in21, in22, in23, in24, in25,
-				                                           inputs_gain_29: input_gains, outputs_gain_29: output_gains, yes_29: yes, speakers_radius_29: speakers_radius);
+				                                           inputs_gain: input_gains, outputs_gain: output_gains, yes: yes, speakers_radius: speakers_radius);
 
 						if(hrir_Filters == 0,
 				{ ^decoded},
@@ -129,7 +129,7 @@ classvar <hrirFilters;
 				                                           in10, in11, in12, in13, in14, in15, in16,
 				                                           in17, in18, in19, in20, in21, in22, in23, in24, in25,
 				                                           in26, in27, in28, in29, in30, in31, in32, in33, in34, in35, in36,
-				                                            inputs_gain_41: input_gains, outputs_gain_41: output_gains, yes_41: yes, speakers_radius_41: speakers_radius);
+				                                            inputs_gain: input_gains, outputs_gain: output_gains, yes: yes, speakers_radius: speakers_radius);
 
 						if(hrir_Filters == 0,
 				{ ^decoded},

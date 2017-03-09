@@ -14,12 +14,11 @@ HOAEncLebedev06{
                               #in1, in2, in3, in4, in5, in6 = in;
 
 			                    encoded= FaustHOAEncLebedev061.ar(in1, in2, in3, in4, in5, in6,
-				                                                                      gain_5:gain);
+				                                                                      gain:gain);
 
 			if(filters == 0,
-				{ ^encoded},
-				{if(radialFilters == nil,{"please load the radial filters into buffers first (HOAEncLebedev06.loadRadialFilters)".postln; ^encoded},
-
+				{ ^encoded },
+				{if(radialFilters == nil,{"please load the radial filters into buffers first (HOAEncLebedev06.loadRadialFilters), \n retuning unfiltered bformat".postln; ^encoded},
 					                {// return the encoded b-format convolved with the correct radial filter
 				  	                 ^[ Convolution2.ar(  encoded[0], 	radialFilters[0], 0, 4096, 1),
 		                                 Convolution2.ar(  encoded[1], 	radialFilters[1], 0, 4096, 1),

@@ -17,7 +17,7 @@
 
 
 // start decoder configuration
-declare name	"COMPILEtest";
+declare name	"HOAtest";
 
 // bands
 nbands = 2;

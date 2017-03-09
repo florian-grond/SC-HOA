@@ -14,7 +14,7 @@ classvar <hrirFilters;
 			                     in2, in3, in4 = in;
 			              decoded = FaustHOADecLebedev061.ar(in1, // return the Ugen
 				                                            in2, in3, in4,
-				                                            inputs_gain_5: input_gains, outputs_gain_5: output_gains, yes_5: yes, speakers_radius_5: speakers_radius );
+				                                            inputs_gain: input_gains, outputs_gain: output_gains, yes: yes, speakers_radius: speakers_radius );
 
 			if(hrir_Filters == 0,
 				{ ^decoded},

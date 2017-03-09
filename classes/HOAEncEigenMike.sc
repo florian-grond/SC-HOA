@@ -23,11 +23,11 @@ HOAEncEigenMike{
 			                    in21, in22, in23, in24, in25, in26, in27, in28, in29, in30,
 			                    in31, in32 = in;
 
-			                    encoded= FaustHOAEigenmike321.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
+			                    encoded= FaustHOAEncEigenMike1.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
 				                                                                      in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
 				                                                                      in21, in22, in23, in24, in25, in26, in27, in28, in29, in30,
 				                                                                      in31, in32,
-				                                                                      gain_5: gain);
+				                                                                      gain: gain);
 
 			if(filters == 0,
 				{ ^encoded},
@@ -53,11 +53,11 @@ HOAEncEigenMike{
 			                    in21, in22, in23, in24, in25, in26, in27, in28, in29, in30,
 			                    in31, in32 = in;
 
-			                    encoded= FaustHOAEigenmike322.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
+			                    encoded= FaustHOAEncEigenMike2.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
 				                                                                      in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
 				                                                                      in21, in22, in23, in24, in25, in26, in27, in28, in29, in30,
 				                                                                      in31, in32,
-				                                                                      gain_11: gain);
+				                                                                      gain: gain);
 
 			if(filters == 0,
 				{ ^encoded},
@@ -88,11 +88,11 @@ HOAEncEigenMike{
 			                    in21, in22, in23, in24, in25, in26, in27, in28, in29, in30,
 			                    in31, in32 = in;
 
-                                encoded= FaustHOAEigenmike323.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
+                                encoded= FaustHOAEncEigenMike3.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
 				                                                                      in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
 				                                                                      in21, in22, in23, in24, in25, in26, in27, in28, in29, in30,
 				                                                                      in31, in32,
-				                                                                      gain_19: gain);
+				                                                                      gain: gain);
 
 			if(filters == 0,
 				{ ^encoded},
@@ -130,11 +130,11 @@ HOAEncEigenMike{
 			                    in21, in22, in23, in24, in25, in26, in27, in28, in29, in30,
 			                    in31, in32 = in;
 
-			                    encoded= FaustHOAEigenmike324.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
+			                    encoded= FaustHOAEncEigenMike4.ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10,
 				                                                                      in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
 				                                                                      in21, in22, in23, in24, in25, in26, in27, in28, in29, in30,
 				                                                                      in31, in32,
-				                                                                      gain_29: gain);
+				                                                                      gain: gain);
 
 			if(filters == 0,
 				{ ^encoded},

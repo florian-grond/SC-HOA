@@ -165,11 +165,11 @@ var order = 3;
 		 HOATransMirror.ar(order,
 		                      HPF.ar(
 			                    PlayBuf.ar(16, ~orchestra, 1, loop:1 ),
-			                      200),
+			                      50),
 			                      frontback, leftright, updown),
-		                       Lag.ar(K2A.ar(MouseX.kr( 0, 360)), 0.5),
+		                       Lag.ar(K2A.ar(MouseX.kr( -pi, pi)), 0.5),
 		                       Lag.ar(K2A.ar(MouseY.kr(-90, 90 )), 0.5)
-		                        , on: 0 ),
+		                        , on: 1 ),
 	hrir_Filters: 1  )
 	}.play;
 )
