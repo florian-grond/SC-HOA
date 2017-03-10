@@ -1,4 +1,4 @@
-TITLE:: HOAEncPan
+TITLE:: HOAEncoder
 summary:: Panning sounds sources in a higher order Ambisonics sound field
 categories:: Libraries>HOA
 related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
@@ -21,10 +21,10 @@ ARGUMENT:: in
 b-format as channel array.
 
 ARGUMENT:: az
-azimuth in degree 0 to 360.
+azimuth in degree -pi to pi.
 
 ARGUMENT:: elev
-elevation in degree -90 to 90
+elevation in degree -pi/2 to pi/2
 
 ARGUMENT:: gain
 in dB

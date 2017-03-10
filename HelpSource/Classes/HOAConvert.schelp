@@ -1,4 +1,4 @@
-TITLE:: HOATransMirror
+TITLE:: HOAConvert
 summary:: Mirroring of a higher order Ambisonics sound field
 categories:: Libraries>HOA
 related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
@@ -9,29 +9,23 @@ HOATransMirror mirros an HOA scene: Axes left-right, front-back, up-down can be 
 
 References: Kronlachner, M. (2014). Spatial Transformations for the Alteration of Ambisonic Recordings. Graz University Of Technology, Austria. p.46-47
 
+First code examples:
+
+code::
+_some_example_code_
+::
+
 CLASSMETHODS::
 
 METHOD:: ar
-Pseudo Ugen method returning Ugens based on Ambisonics order provided through the first argument.
+argument:: order
+argument:: in
+argument:: inFormat
+argument:: outFormat
 
-ARGUMENT:: order
-Ambisonics order 1-5.
-
-ARGUMENT:: in
-b-format as channel array.
-
-ARGUMENT:: front_back
-flips the soundfield front back.
-
-ARGUMENT:: left_right
-flips the soundfield left right.
-
-ARGUMENT:: up_down
-flips the soundfield up down.
-
-returns:: b-format as channel array (4,9,16,25,36 channels depending on the order argument).
 
 INSTANCEMETHODS::
+
 
 EXAMPLES::
 

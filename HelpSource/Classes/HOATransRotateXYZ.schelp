@@ -1,0 +1,59 @@
+TITLE:: HOATransRotateXYZ
+summary::Rotation of a higher order Ambisonics sound field in x, y, z,
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
+
+DESCRIPTION::
+Rotates an Ambisonics soundfield around the x, y and z-axis.
+
+
+References: M. Kronlachner, “Spatial Transformations for the Alteration of Ambisonic Recordings,” Graz University Of Technology, Austria, 2014.
+
+CLASSMETHODS::
+
+METHOD:: ar
+Pseudo Ugen method returning Ugens based on Ambisonics order provided through the first argument.
+
+
+ARGUMENT:: order
+Ambisonics order 1-5.
+
+ARGUMENT:: in
+b-format as channel array.
+
+ARGUMENT:: pitch
+pitch angle (-pi to pi).
+
+ARGUMENT:: roll
+roll angle (-pi to pi).
+
+ARGUMENT:: yaw
+yaw angle (-pi to pi).
+
+returns:: b-format as channel array (4,9,16,25,36 channels depending on the order argument).
+
+INSTANCEMETHODS::
+
+EXAMPLES::
+
+code::
+(
+Server.local = Server.default;
+o = Server.local.options;
+o.numInputBusChannels = 1;
+o.numOutputBusChannels = 36;
+o.numAudioBusChannels = 2048 * 8;
+o.blockSize = 512 ;
+o.numWireBufs = 1024;
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+)
+
+// Rotate an audio scene around pitch yaw and roll
+( ~order = 2; // try different orders up to 5 and watch the scope window.
+s.scope((~order+1).pow(2));
+{ HOATransRotateXYZ.ar(~order,  HOAEncoder.ar(~order, WhiteNoise.ar(1.0)),  LFTri.ar(0.1, 0, pi),  LFTri.ar(0.1, 0, pi),  LFTri.ar(0.1, 0, pi)  ) }.play
+)
+
+::

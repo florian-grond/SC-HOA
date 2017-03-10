@@ -35,6 +35,9 @@ ARGUMENT:: yes
 ARGUMENT:: speakers_radius
 (describe argument here)
 
+ARGUMENT:: hrir_Filters
+(describe argument here)
+
 returns:: channel array of 50 virtual speakers (50 nodes on the Lebedev grid).
 
 METHOD:: loadHrirFilters
