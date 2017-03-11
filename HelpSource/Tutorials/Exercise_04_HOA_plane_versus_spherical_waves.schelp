@@ -51,7 +51,7 @@ We won't see it since we don't monitor it.
 code::
 (
 ~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
-~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), MouseY.kr(-pi * 0.5, pi * 0.5)  )};
 ~hoaSignal.fadeTime = 1;
 )
 ::
@@ -78,18 +78,18 @@ Now, let's change the NodeProxies of the ~hoaSignal, now with distance filters c
 You'll hear a loudness change but also an increase in the lower frequencies as the source comes closer.
 
 code::
-~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), elev:0, gain:0, plane_spherical:1, radius: MouseY.kr(0.1, 4 ) )};
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), elev:0, gain:0, plane_spherical:1, radius: MouseY.kr(0.1, 4 ) )};
 // same as before
-~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), MouseY.kr(-pi * 0.5, pi * 0.5) )};
 ::
 
 Try with another sound:
 
 code::
 (
-~hoaSignal.source = {HOAEncPan.ar(~order,
+~hoaSignal.source = {HOAEncoder.ar(~order,
 	Klank.ar(`[[800, 1071, 1153, 1723], nil, [2.0, 1.0, 0.5, 0.25]], Decay.ar( Impulse.ar(2, 0, 0.1), 0.05, ClipNoise.ar(1))  ),
-	MouseX.kr(0, 360), elev:0, gain:0, plane_spherical:1, radius: MouseY.kr(0.1, 4 ) )};
+	MouseX.kr(-pi, pi), elev:0, gain:0, plane_spherical:1, radius: MouseY.kr(0.1, 4 ) )};
 )
 ::
 
@@ -103,7 +103,7 @@ And play it back. Move the sound source as in the example from above.
 
 code::
 (
-~hoaSignal.source = {HOAEncPan.ar(~order,
+~hoaSignal.source = {HOAEncoder.ar(~order,
 	 PlayBuf.ar(1, ~buffer, BufRateScale.kr(~buffer) , loop:1),
 	MouseX.kr(0, 360), elev:0, gain:0, plane_spherical:1, radius: MouseY.kr(0.1, 4 ) )};
 )

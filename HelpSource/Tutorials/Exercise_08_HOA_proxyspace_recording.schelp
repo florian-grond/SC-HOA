@@ -48,7 +48,7 @@ we spatialize it a spherical wave and we have it move vertically and change the 
 code::
 (
 ~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
-~hoaSignal.source = {HOAEncPan.ar(~order, SoundIn.ar(0), // this picks up the Microphone
+~hoaSignal.source = {HOAEncoder.ar(~order, SoundIn.ar(0), // this picks up the Microphone
 	                                                                                   0,  // no azimuth movement
 	                                                     SinOsc.ar(0.3, 0, 90 ),  // changing elevation
 	                                                           plane_spherical:1,  // we want it to be a spherical wave
@@ -62,7 +62,7 @@ This is the node that we want to record from, that's why we use a RecNodeProxy:
 code::
 (
 ~hoaTransformer =  RecNodeProxy.new(s, \audio, ~hoaNumChannels);
-~hoaTransformer.source = {var in; in = \in.ar(0!~hoaNumChannels); HOATransRotateAz.ar(~order, in,  SinOsc.ar(0.5, 0, 180, 180 )  ) };
+~hoaTransformer.source = {var in; in = \in.ar(0!~hoaNumChannels); HOATransRotateAz.ar(~order, in,  SinOsc.ar(0.5, 0, pi )  ) };
 ~hoaTransformer.fadeTime = 1;
 )
 ::

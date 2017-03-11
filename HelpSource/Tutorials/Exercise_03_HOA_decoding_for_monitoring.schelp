@@ -60,7 +60,7 @@ we won't see it since we don't monitor it.
 code::
 (
 ~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
-~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
 ~hoaSignal.fadeTime = 1;
 )
 ::
@@ -88,9 +88,9 @@ Lets change the  NodeProxies one step at a time. First the ~hoaSignal itself:
 
 code::
 // standing sinewave
-~hoaSignal.source = {HOAEncPan.ar(~order, SinOsc.ar(48000 / 1024), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
+~hoaSignal.source = {HOAEncoder.ar(~order, SinOsc.ar(48000 / 1024), MouseX.kr(-pi, pi), MouseY.kr(-pi * 0.5, pi * 0.5) )};
 // White noise
-~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), MouseY.kr(-pi * 0.5, pi * 0.5) )};
 ::
 
 Then the decoder, first we decode into a Lebedev Grid with 26 positions, which is enough points for order 3:
@@ -108,7 +108,7 @@ HOADecLebedev26.hrirFilters.size;
 ~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, hrir_Filters:1) };
 ::
 
-This is likely quite havy on the CPU, because it means 52 (26 * 2) convolutions with an FFT.
+This is likely quite heavy on the CPU, because it means 52 (26 * 2) convolutions with an FFT.
 For monitoring purposes you might want to listen to the first order, for which you can use HOADecLebedev06.
 which results in 12 FFT convolutions.
 
@@ -121,8 +121,8 @@ HOADecLebedev06.hrirFilters.size;
 
 Now you might want to change the HOA signal again to hear something. Watch the phase and amplitude shifts.
 code::
-~hoaSignal.source = {HOAEncPan.ar(~order, SinOsc.ar(48000 / 64), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
-~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
+~hoaSignal.source = {HOAEncoder.ar(~order, SinOsc.ar(48000 / 64), MouseX.kr(-pi, pi), MouseY.kr(-pi * 0.5, pi * 0.5) )};
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), MouseY.kr(-pi * 0.5, pi * 0.5) )};
 ::
 
 

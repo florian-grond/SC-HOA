@@ -104,8 +104,8 @@ code::
 	                                        HOADecLebedev26.ar(~order,
 	                                                     HOABeamDirac2Hoa.ar(~order,
 			                                             in,
-		                                                 Lag.ar(K2A.ar(MouseX.kr( 0, 360)), 0.5),
-		                                                 Lag.ar(K2A.ar(MouseY.kr(-90, 90 )), 0.5),
+		                                                 Lag.ar(K2A.ar(MouseX.kr( -pi, pi)), 0.5),
+		                                                 Lag.ar(K2A.ar(MouseY.kr( -pi * 0.5, -pi * 0.5 )), 0.5),
 		                                                 on:1),
 			                                hrir_Filters: 1)
 };
@@ -114,6 +114,35 @@ code::
 )
 
 ~hoaSignal <>> ~beamFormer;
+::
+
+
+code::
+(
+var cardioid = 1;
+~beamFormer.source = {var in;
+	                                         in = \in.ar(0!~hoaNumChannels);
+	                                        HOADecLebedev26.ar(~order,
+	                                                     HOABeamHCard2Hoa.ar(~order,
+			                                             in,
+		                                                 Lag.ar(K2A.ar(MouseX.kr( -pi, pi)), 0.5),
+		                                                 Lag.ar(K2A.ar(MouseY.kr( -pi * 0.5, -pi * 0.5 )), 0.5),
+			                                             cardOrder: cardioid ),
+			                                hrir_Filters: 1)
+};
+)
+::
+
+code::
+(
+~beamFormer.source = {var in;
+	                                         in = \in.ar(0!~hoaNumChannels);
+	                                                     HOABeamHCard2Mono.ar(~order,
+			                                             in,
+		                                                 Lag.ar(K2A.ar(MouseX.kr( -pi, pi)), 0.5),
+		                                                 Lag.ar(K2A.ar(MouseY.kr( -pi * 0.5, -pi * 0.5 )), 0.5))!2
+};
+)
 ::
 
 

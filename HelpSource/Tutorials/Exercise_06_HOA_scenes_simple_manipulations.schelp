@@ -119,8 +119,23 @@ code::
 Here we have an example with HOATransRotateAz where we rotate the sound scene around the z-axis.
 
 code::
-~hoaTransformer.source = {|front_back =1, left_right = 0, up_down = 0| var in; in = \in.ar(0!~hoaNumChannels); HOATransRotateAz.ar(~order, in, MouseX.kr(0, 360)) };
+~hoaTransformer.source = { var in; in = \in.ar(0!~hoaNumChannels); HOATransRotateAz.ar(~order, in, MouseX.kr(-pi, pi)) };
 ::
+
+
+Here we have an example with HOATransRotateXYZ where we rotate the sound scene around all three axis.
+
+code::
+(
+~hoaTransformer.source = { var in; in = \in.ar(0!~hoaNumChannels);
+	               HOATransRotateXYZ.ar(~order, in,
+		                                          LFTri.ar(0.01, 0, pi), // pitch
+		                                          LFTri.ar(0.01, 0, pi), // roll
+		                                          LFTri.ar(0.01, 0, pi)  // yaw
+) };
+)
+::
+
 
 
 
