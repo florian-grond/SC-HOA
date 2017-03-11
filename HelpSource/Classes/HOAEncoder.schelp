@@ -56,11 +56,11 @@ o.numWireBufs = 1024;
 o.sampleRate = 48000;
 s.makeWindow;
 s.boot;
-
-// monitor the first 36 signals (max order 5) with the scope
-s.scope(36);
 )
 
-~order = 4; // try different orders up to 5 and watch the scope window.
+// Rotate an audio scene around pitch yaw and roll
+( ~order = 2; // try different orders up to 5 and watch the scope window.
+s.scope((~order+1).pow(2));
 {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )}.play;
+)
 ::

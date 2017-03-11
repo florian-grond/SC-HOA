@@ -22,7 +22,7 @@ ARGUMENT:: in
 b-format as channel array.
 
 ARGUMENT:: az
-azimut angle in degree (0 to 360).
+azimut angle in degree (-pi to pi).
 
 returns:: b-format as channel array (4,9,16,25,36 channels depending on the order argument).
 
@@ -42,12 +42,11 @@ o.numWireBufs = 1024;
 o.sampleRate = 48000;
 s.makeWindow;
 s.boot;
-
-// monitor the first 36 signals (max order 5) with the scope
-s.scope(36);
 )
 
-~order = 4; // try different orders up to 5 and watch the scope window.
-// Rotate an auditory scene around z with HOATransRotateAz
+// Rotate an audio scene around pitch yaw and roll
+( ~order = 2; // try different orders up to 5 and watch the scope window.
+s.scope((~order+1).pow(2));
 {HOATransRotateAz.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1)), MouseX.kr(0, 360 ) )}.play
+)
 ::

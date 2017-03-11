@@ -47,16 +47,13 @@ o.numWireBufs = 1024;
 o.sampleRate = 48000;
 s.makeWindow;
 s.boot;
-
-// monitor the first 36 signals (max order 5) with the scope
-s.scope(36);
 )
 
-~order = 4; // try different orders up to 5 and watch the scope window.
-// Rotate an auditory scene around z with HOATransRotateAz
-// Mirror an auditory scene with HOATransMirror
-{HOATransMirror.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1)), 0, 0, 0 ) }.play; // original
-{HOATransMirror.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1)), 1, 0, 0 ) }.play; // front-back flip
-{HOATransMirror.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1)), 0, 1, 0 ) }.play; // left-right flip
-{HOATransMirror.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1)), 0, 0, 1 ) }.play; // up-down flip
+// Rotate an audio scene around pitch yaw and roll
+( ~order = 2; // try different orders up to 5 and watch the scope window.
+s.scope((~order+1).pow(2)); )
+{HOAConvert.ar(~order,  HOAEncPan.ar(~order, SinOsc.ar(4800/512) ), 0, 0, 0 ) }.play; // original
+{HOAConvert.ar(~order,  HOAEncPan.ar(~order, SinOsc.ar(4800/512) ), 1, 0, 0 ) }.play; // front-back flip
+{HOAConvert.ar(~order,  HOAEncPan.ar(~order, SinOsc.ar(4800/512) ), 0, 1, 0 ) }.play; // left-right flip
+{HOAConvert.ar(~order,  HOAEncPan.ar(~order, SinOsc.ar(4800/512) ), 0, 0, 1 ) }.play; // up-down flip
 ::

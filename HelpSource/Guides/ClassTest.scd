@@ -46,13 +46,13 @@ s.scope(4);
 ~order = 2;
 
 ( s.scope((~order+1).pow(2));
-{ HOAConvert.ar(~order,  HOAEncoder.ar(~order, WhiteNoise.ar(1.0)),  1, 1  ) }.play )
+{ HOAConvert.ar(~order,  HOAEncoder.ar(~order, WhiteNoise.ar(1.0)),  \ACN_N3D , \ACN_SN3D  ) }.play )
 
 ( s.scope((~order+1).pow(2));
-{ HOAConvert.ar(~order,  HOAEncoder.ar(~order, WhiteNoise.ar(1.0)),  1, 2  ) }.play )
+{ HOAConvert.ar(~order,  HOAEncoder.ar(~order, WhiteNoise.ar(1.0)),  \ACN_N3D , \ACN_N3D  ) }.play )
 
 ( s.scope((~order+1).pow(2));
-{ HOAConvert.ar(~order,  HOAEncoder.ar(~order, WhiteNoise.ar(1.0)),  1, 3  ) }.play )
+{ HOAConvert.ar(~order,  HOAEncoder.ar(~order, WhiteNoise.ar(1.0)),  \ACN_N3D , \FuMa  ) }.play )
 
 
 // Decoding

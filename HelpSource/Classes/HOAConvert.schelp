@@ -18,11 +18,17 @@ _some_example_code_
 CLASSMETHODS::
 
 METHOD:: ar
-argument:: order
-argument:: in
-argument:: inFormat
-argument:: outFormat
+ARGUMENT:: order
+Ambisonics order 1-5.
 
+ARGUMENT:: in
+b-format as channel array.
+
+argument:: inFormat
+ choose from "ACN_N3D" "ACN_SN3D" or "FuMa"
+
+argument:: outFormat
+ choose from "ACN_N3D" "ACN_SN3D" or "FuMa"
 
 INSTANCEMETHODS::
 
