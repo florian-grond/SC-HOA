@@ -1,26 +1,26 @@
 TITLE:: HOAEncEigenMike
-summary:: Mirroring of a higher order Ambisonics sound field
+summary:: Encoding the microphone signals of the Eigenmike into the b-format.
 categories:: Libraries>HOA
 related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
 
 DESCRIPTION::
-(put long description here)
+This PseudoUgen encodes microphone signals from the Eigenmike into the b-format.
 
 
 CLASSMETHODS::
 
 METHOD:: loadRadialFilters
-(describe method here)
+load the radial filters to the server.
 
 ARGUMENT:: server
-(describe argument here)
+the server, where the filetrs are loaded, typically s.
 
-returns:: (describe returnvalue here)
+returns:: the object.
 
 METHOD:: radialFilters
-(describe method here)
+an array of Buffers for the radial filters.
 
-returns:: (describe returnvalue here)
+returns:: an array
 
 METHOD:: ar
 pseudo Ugen method returning Ugens based on Ambisonics order provided through the first argument.
@@ -29,15 +29,15 @@ ARGUMENT:: order
 Ambisonics order 1-5.
 
 ARGUMENT:: in
-microphone signals channel array.
+microphone signals 32 channel array.
 
 ARGUMENT:: gain
-(describe argument here)
+b-format gain
 
 ARGUMENT:: filters
-(describe argument here)
+0 to 1 whether or not to apply the radial filters.
 
-returns:: (describe returnvalue here)
+returns:: returns the b-format.
 
 
 INSTANCEMETHODS::
@@ -46,5 +46,21 @@ INSTANCEMETHODS::
 EXAMPLES::
 
 code::
-(some example code)
+(
+Server.local = Server.default;
+o = Server.local.options;
+o.numInputBusChannels = 1;
+o.numOutputBusChannels = 36;
+o.numAudioBusChannels = 2048 * 8;
+o.blockSize = 512 ;
+o.numWireBufs = 1024;
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+)
+
+// Eigenmike Encoding
+~order = 3;
+{HOAEncEigenMike.ar(~order, WhiteNoise.ar(1.0)!32, filters: 0)}.play // same noise on all 32 chans
+{HOAEncEigenMike.ar(~order, {WhiteNoise.ar(1.0)}!32, filters: 0)}.play // decorrelated noise on all 32 chans
 ::

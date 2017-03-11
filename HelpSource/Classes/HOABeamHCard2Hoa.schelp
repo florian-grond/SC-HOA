@@ -19,10 +19,10 @@ ARGUMENT:: in
 b-format as channel array.
 
 ARGUMENT:: az
-azimuth angle of beam direction in degree (-180 to 180).
+azimuth angle of beam direction in degree (-pi to pi).
 
 ARGUMENT:: ele
-elevation angle of beam direction in degree (-90 to 90).
+elevation angle of beam direction in degree (-pi * 0.5 to pi * 0.5).
 
 ARGUMENT:: level
 level in dB (default 0).
@@ -42,5 +42,23 @@ INSTANCEMETHODS::
 EXAMPLES::
 
 code::
-(some example code)
+(some example code)(
+Server.local = Server.default;
+o = Server.local.options;
+o.numInputBusChannels = 1;
+o.numOutputBusChannels = 36;
+o.numAudioBusChannels = 2048 * 8;
+o.blockSize = 512 ;
+o.numWireBufs = 1024;
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+)
+
+(~order = 3; // 1 to 3
+~cardiodOrder = 3; // 1 to 3
+{ HOABeamHCard2Hoa.ar(~order,
+	                HOAEncLebedev50.ar(~order, {|i| SinOsc.ar( 50* (i+1) )}!50, filters: 0),
+	                    az: MouseX.kr(-pi, pi ) , ele: MouseY.kr(-pi * 0.5, pi * 0.5), cardOrder:~cardiodOrder) }.play
+)
 ::

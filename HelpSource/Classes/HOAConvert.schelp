@@ -25,10 +25,10 @@ ARGUMENT:: in
 b-format as channel array.
 
 argument:: inFormat
- choose from "ACN_N3D" "ACN_SN3D" or "FuMa"
+ choose from \ACN_N3D \ACN_SN3D or \FuMa
 
 argument:: outFormat
- choose from "ACN_N3D" "ACN_SN3D" or "FuMa"
+ choose from \ACN_N3D \ACN_SN3D or \FuMa
 
 INSTANCEMETHODS::
 
@@ -47,16 +47,14 @@ o.numWireBufs = 1024;
 o.sampleRate = 48000;
 s.makeWindow;
 s.boot;
-
-// monitor the first 36 signals (max order 5) with the scope
-s.scope(36);
 )
 
-~order = 4; // try different orders up to 5 and watch the scope window.
-// Rotate an auditory scene around z with HOATransRotateAz
-// Mirror an auditory scene with HOATransMirror
-{HOATransMirror.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1)), 0, 0, 0 ) }.play; // original
-{HOATransMirror.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1)), 1, 0, 0 ) }.play; // front-back flip
-{HOATransMirror.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1)), 0, 1, 0 ) }.play; // left-right flip
-{HOATransMirror.ar(~order,  HOAEncPan.ar(~order, WhiteNoise.ar(1)), 0, 0, 1 ) }.play; // up-down flip
+( s.scope((~order+1).pow(2));
+{ HOAConvert.ar(~order,  HOAEncoder.ar(~order, WhiteNoise.ar(1.0)),  \ACN_N3D , \ACN_SN3D  ) }.play )
+
+( s.scope((~order+1).pow(2));
+{ HOAConvert.ar(~order,  HOAEncoder.ar(~order, WhiteNoise.ar(1.0)),  \ACN_N3D , \ACN_N3D  ) }.play )
+
+( s.scope((~order+1).pow(2));
+{ HOAConvert.ar(~order,  HOAEncoder.ar(~order, WhiteNoise.ar(1.0)),  \ACN_N3D , \FuMa  ) }.play )
 ::
