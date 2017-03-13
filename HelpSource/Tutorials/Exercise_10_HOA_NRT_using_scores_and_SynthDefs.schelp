@@ -49,14 +49,14 @@ There is one caveat, since the HOAEncPan is a pseudo Ugen you cannot set the HOA
 There are two possible workarounds to keep your code flexible: you can change the order and recompile, or in the case of NRT you can render in the maximum order (5 for now in this library) and later extract only the channels from the rendered file for the order you actually need.
 code::
 (
-var hoaOrder = ~order;
-SynthDef("littleHOAPing",{ arg freq = 440, az = 0, el = 0, rad = 1,dur = 1, amp = 1;
-    var sine, envelope, signal, outsig;
-	sine     = SinOsc.ar(freq, 0, amp)  *  AmpCompA.ir(freq, 50);
-	envelope = Line.ar(1, 0, freq.reciprocal * dur, doneAction: 2);
-	signal   = sine * envelope;
-	outsig   = HOAEncPan.ar(hoaOrder, signal, az, el, radius:rad);
-	OffsetOut.ar(0, outsig)
+SynthDef("littleHOAPing",{ arg freq = 440, az = 0, el = 0, rad = 1,dur = 1, amp = 1, out = 0;
+    var substrate, envelope, signal, outsig;
+	substrate     = Resonz.ar(ClipNoise.ar(100), freq, 0.0001)  ;
+	envelope = EnvGen.ar( Env.perc(0.01, freq.reciprocal * dur, 1, -8), 1, doneAction: 2);
+	signal   = substrate * envelope;
+	// you need to pass the Order as an Integer
+	outsig   = HOAEncoder.ar(~order.asInteger, signal, az:az, elev:el, radius:rad);
+	OffsetOut.ar(out, outsig)
 }).load(s);
 )
 ::
@@ -64,46 +64,48 @@ SynthDef("littleHOAPing",{ arg freq = 440, az = 0, el = 0, rad = 1,dur = 1, amp 
 
 Now you can play the Synth, but you won't hear a properly decoded sound but only the W and the Y channel in the stereo panorama:
 code::
-Synth(\littleHOAPing, [\freq, 880 * 2, \dur, 20])
+Synth(\littleHOAPing, [\freq, 880 * 2, \dur, 20, \amp, 1])
 ::
 
 
-So let's make the usual decoding and listening node:
+So let's make decoder, that is playing the decoded signal on the first 2 channels (0,1) and is listening on channel (2,3,4,5) for a b-format:
 code::
-HOADecLebedev26.loadHrirFilters(s);
-(
-~decoder = NodeProxy.new(s, \audio, 2);
-~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, hrir_Filters:1) };
-~decoder.fadeTime = 1;
-~decoder.play(0, 2);
+HOADecLebedev26.loadHrirFilters(s); // load the HRIR filters first
+( // pass the arguments as Integers
+~decoderSynth = {Out.ar(0, HOADecLebedev26.ar(~order.asInteger,  In.ar(2, ~hoaNumChannels.asInteger), hrir_Filters:1)) }.play;
 )
 ::
 
-And in order to properly decode the Synth, we need to play it before the ~decoder node:
+And in order to properly decode the Synth, we need to play it before the ~decoderSynth:
 code::
-Synth.before(~decoder, \littleHOAPing, [\freq, 880 * 6, \dur, 100, \az, 360.rand, \el, 90.rand2, \rad, 4.rand])
+Synth.before(~decoderSynth, \littleHOAPing, [\freq, 1000.rand + 100, \dur, 100, \az, pi.rand2, \el, (pi * 0.5).rand2, \rad, 1, \out, 2]);
 ::
 
 Then we make a Score and we add to the Score OSC messages invoking the SynthDef we have made earlier.
 code::
 (
 var numNotes, seconds;
-numNotes = 20000;
+numNotes = 10000;  // reduce the number of sine grains if needed
 seconds = 15;
 ~myScore = Score.new();
 numNotes.do({|i|
-	~myScore = ~myScore.add([i.explin(0.1, numNotes, 0.1, seconds - 5),
-		                       [\s_new, \littleHOAPing, 1000 + i, 0, 0,
-			                           \freq, i.linexp(0, numNotes, 100, 20000).rand + 50,
-			                           \az, i.linlin(0,numNotes, 0 , 360*3).mod(360),
-			                           \el, i.linlin(0,numNotes, -90, 90),
-		                               \dur, i.linexp(0.0, numNotes, 20, 800),
-			                           \amp, i.linlin(0.0, numNotes, 0, -20).dbamp
-                               ]
+	~myScore = ~myScore.add([i.explin(0.1, numNotes, 0.1, seconds - 5),  // here we calculate the time for each sound event to be played back
+		                              [\s_new, //  this is the OSC command sent to the server to invoke a synth
+			                           \littleHOAPing, 1000 + i, 0, 0, // the name of the Synth and each Synth needs a unique ID (1000 + i) on the server
+			                           \freq, i.linexp(0, numNotes, 500, 7000).rand, // mapping frequency
+			                           \az, i.linlin(0,numNotes, -pi*1.5 , pi*1.5).mod(pi), // mapping  azimuth
+			                           \el, i.linlin(0,numNotes, -pi, pi), // mapping elevation
+		                               \dur, i.linexp(0.0, numNotes, 100, 800), // mapping duration
+			                           \amp, i.linlin(0.0, numNotes, 0, -25).dbamp // mapping the amplitude
+                                     ]
                      ])
        });
 ~myScore.add([seconds, [\c_set, 0, 0]]); // finish
 )
+
+
+// look at the first 20 entries in the Score you have created:
+~myScore.score.copyRange(0,20).do({|item,i| item.postln;  })
 ::
 
 
@@ -161,9 +163,9 @@ HOADecLebedev26.loadHrirFilters(s);
 ~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, hrir_Filters:1) };
 ~decoder.fadeTime = 1;
 ~decoder.play(0, 2);
-)
 
 ~hoaSignal <>>  ~decoder;
+)
 ::
 
 Finally, we can delete the files:

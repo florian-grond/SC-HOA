@@ -79,7 +79,7 @@ You'll hear a loudness change but also an increase in the lower frequencies as t
 
 code::
 ~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), elev:0, gain:0, plane_spherical:1, radius: MouseY.kr(0.1, 4 ) )};
-// same as before
+// same as before Mouse Y now mapped to elevation
 ~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), MouseY.kr(-pi * 0.5, pi * 0.5) )};
 ::
 
@@ -87,9 +87,19 @@ Try with another sound:
 
 code::
 (
-~hoaSignal.source = {HOAEncoder.ar(~order,
+~hoaSignal.source = {|azimuth = 0, radius = 1| HOAEncoder.ar(~order,
 	Klank.ar(`[[800, 1071, 1153, 1723], nil, [2.0, 1.0, 0.5, 0.25]], Decay.ar( Impulse.ar(2, 0, 0.1), 0.05, ClipNoise.ar(1))  ),
-	MouseX.kr(-pi, pi), elev:0, gain:0, plane_spherical:1, radius: MouseY.kr(0.1, 4 ) )};
+	azimuth, elev:0, gain:0, plane_spherical:1, radius: radius )};
+
+w = Window("Slider2D", Rect(100, 100, 300, 300));
+t = Slider2D(w, Rect(20, 20, 260, 260))
+        .action_({|sl| var position;
+	position = Cartesian(sl.y.linlin(0,1,-5,5), sl.x.linlin(0,1,5,-5), 0); [\x, position.x, \y, position.y].postln;
+	position = position.asSpherical;  [\radius, position.rho, \azimuth, position.theta].postln;
+	~hoaSignal.set(\azimuth, position.theta, \radius, position.rho);
+        });
+w.front;
+
 )
 ::
 
@@ -103,9 +113,20 @@ And play it back. Move the sound source as in the example from above.
 
 code::
 (
-~hoaSignal.source = {HOAEncoder.ar(~order,
+~hoaSignal.source = {|azimuth = 0, radius = 1| HOAEncoder.ar(~order,
 	 PlayBuf.ar(1, ~buffer, BufRateScale.kr(~buffer) , loop:1),
-	MouseX.kr(0, 360), elev:0, gain:0, plane_spherical:1, radius: MouseY.kr(0.1, 4 ) )};
+	azimuth, elev:0, gain:0, plane_spherical:1, radius: radius )};
+
+w = Window("Slider2D", Rect(100, 100, 300, 300));
+t = Slider2D(w, Rect(20, 20, 260, 260))
+        .action_({|sl| var position;
+	position = Cartesian(sl.y.linlin(0,1,-5,5), sl.x.linlin(0,1,5,-5), 0); [\x, position.x, \y, position.y].postln;
+	position = position.asSpherical;  [\radius, position.rho, \azimuth, position.theta].postln;
+	~hoaSignal.set(\azimuth, position.theta, \radius, position.rho);
+        });
+w.front;
+
+
 )
 ::
 

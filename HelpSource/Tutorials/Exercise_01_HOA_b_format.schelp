@@ -14,7 +14,7 @@ Similar to the MS technique, a weighted combination of the channels from the B-f
 A given order TELETYPE:: n ::  results in TELETYPE:: (n+1)^2 :: channels in the b-format.
 
 table::
-    ##  order   || number of channels
+    ##  order TELETYPE:: n ::  || # of channels
     ##    0       ||   1
     ##    1       ||   4
     ##    2       ||   9
@@ -55,7 +55,7 @@ Start the oscilloscope showing all the channels for the selected order of the b-
 code::
 (
 // try different orders up to 5
-~order = 4;
+~order = 1;
 ~hoaNumChannels = (~order+1).pow(2);
 s.scope(~hoaNumChannels);
 )
@@ -67,7 +67,7 @@ varying signal in channel 2 (y) and 4 (x), 3 (z) is flat, so is 6, 8, 11, etc., 
 code::
 (
 ~hoaSignal = NodeProxy.new(s, \audio, 26);
-~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), 0 )};
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), 0 )};
 ~hoaSignal.fadeTime = 1;
 )
 // execute this line to monitor the signal starting with bus 0, then watch the oscilloscope
@@ -77,13 +77,13 @@ code::
 Change the source of the node ~hoaSignal and it will fade into a spatialized sound which allows you to move the white noise in x,y,z.
 code::
 // move sounds in x,y,z with the mouse
-~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90)  )};
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), MouseY.kr(-pi * 0.5, pi * 0.5)  )};
 ::
 
-Change the source again, now it only switches between -90 and + 90 in the elevation argument.
+Change the source again, now it only switches between -pi/2 and +pi/2 in the elevation argument.
 code::
-// sounds moving only in the z direction (fixed in the x,y plane), switching between + 90 and -90
-~hoaSignal.source = {HOAEncPan.ar(~order, WhiteNoise.ar(1), 0, MouseY.kr(0, 1).round.linlin(0,1,-90,90) )};
+// sounds moving only in the z direction (fixed in the x,y plane), switching between -pi and +pi
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), 0, MouseY.kr(-pi * 0.5, pi * 0.5) .round.linlin(0,1,-pi,pi) )};
 ::
 
 You did not see any change in the oscilloscope?
@@ -93,13 +93,13 @@ Now we do the same with a very slow sine wave, so that we can observe the phase 
 code::
 ~freq = 48000 / 1024;
 // change direction in the x y plane
-~hoaSignal.source  = {HOAEncPan.ar(~order, SinOsc.ar(~freq ), MouseX.kr(0, 360), 0 )};
+~hoaSignal.source  = {HOAEncoder.ar(~order, SinOsc.ar(~freq ), MouseX.kr(-pi, pi), 0 )};
 
 // change only the z direction, fix in x,y
-~hoaSignal.source  = {HOAEncPan.ar(~order, SinOsc.ar(~freq ), 0, MouseY.kr(0, 1).round.linlin(0,1,-90,90)  )};
+~hoaSignal.source  = {HOAEncoder.ar(~order, SinOsc.ar(~freq ), 0, MouseY.kr(-pi * 0.5, pi * 0.5) .round.linlin(0,1,-pi,pi)  )};
 
 // move sound direction in x,y,z with the mouse
-~hoaSignal.source  = {HOAEncPan.ar(~order, SinOsc.ar(~freq ), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
+~hoaSignal.source  = {HOAEncoder.ar(~order, SinOsc.ar(~freq ), MouseX.kr(-pi, pi), MouseY.kr(-pi * 0.5, pi * 0.5)  )};
 ::
 
 

@@ -47,10 +47,11 @@ s.scope(~hoaNumChannels); // let's use only two channels as we will monitor it w
 
 We will first make a SynthDef with a very simple grain playing back a sound sample from a HOA scene redistributing it into a HOA scene.
 
-
 First, load a soundfile:
 code::
 ~hoaSoundScene = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
+~hoaSoundScene = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro.wav");
+~hoaSoundScene = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
 ::
 
 
@@ -61,9 +62,9 @@ code::
 SynthDef("littleHOAgrain",{ arg buffer, grainDur = 1, grainLevel = 1, start = 0, az = 0, el = 0, rad = 1,dur = 1, amp = 1;
     var playGrain, env, monoBeam, reDirect;
 	env = EnvGen.ar(Env.sine(grainDur, grainLevel), 1, doneAction:2 );
-	playGrain = PlayBuf.ar(16,  buffer, startPos:start, loop:1 ) * env;
-	monoBeam = HOABeamHCard2Mono.ar(3, playGrain, az, el)[0];
-	reDirect = HOAEncPan.ar(3, monoBeam, az, el);
+	playGrain = PlayBuf.ar(~hoaNumChannels.asInteger,  buffer, startPos:start, loop:1 ) * env;
+	monoBeam = HOABeamHCard2Mono.ar(~order.asInteger, playGrain, az, el);
+	reDirect = HOAEncoder.ar(~order.asInteger, monoBeam, az, el);
 	OffsetOut.ar(0, reDirect)
 }).load(s);
 )
@@ -78,33 +79,30 @@ code::
 Synth(\littleHOAgrain, [\buffer, ~hoaSoundScene,
 	                                 \grainDur, 1.0.rand,
 	                                 \start, (~hoaSoundScene.numFrames * ~hoaSoundScene.numChannels).rand,
-	                                 \az, 360.rand,
-	                                 \el, 90.rand2 ])
+	                                 \az, pi.rand2,
+	                                 \el, (pi*2).rand2 ])
 )
 ::
 
 
-So let's make the usual decoding and listening node:
+So let's make decoder, that is playing the decoded signal on the first 2 channels (0,1) and is listening on channel (2,3,4,5) for a b-format:
 code::
-HOADecLebedev26.loadHrirFilters(s); // load the HRIR filter first
-(
-~decoder = NodeProxy.new(s, \audio, 2);
-~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, hrir_Filters:1) };
-~decoder.fadeTime = 1;
-~decoder.play(0, 2);
+HOADecLebedev26.loadHrirFilters(s); // load the HRIR filters first
+( // pass the arguments as Integers
+~decoderSynth = {Out.ar(0, HOADecLebedev26.ar(~order.asInteger,  In.ar(2, ~hoaNumChannels.asInteger), hrir_Filters:1)) }.play;
 )
 ::
 
-And in order to properly decode the Synth, we  to play \littleHOAgrain before the ~decoder node:
+And in order to properly decode the Synth, we need to play it before the ~decoderSynth:
 code::
 (
-Synth.before(~decoder,
+Synth.before(~decoderSynth,
 	                 \littleHOAgrain,
-	                                [\buffer, ~hoaSoundFile,
-	                                 \grainDur, 1.0.rand,
-	                                 \start, (~hoaSoundFile.numFrames * ~hoaSoundFile.numChannels).rand,
-	                                 \az, 360.rand,
-	                                 \el, 90.rand2 ])
+	                                [\buffer, ~hoaSoundScene,
+	                                 \grainDur, 0.3.rand + 0.1,
+	                                 \start, (~hoaSoundScene.numFrames * ~hoaSoundScene.numChannels).rand,
+	                                 \az, pi.rand2,
+	                                 \el, (pi*2).rand2 ])
 )
 ::
 
@@ -113,7 +111,7 @@ Then we make a Score and we add to the Score OSC messages invoking the SynthDef 
 code::
 (
 var numNotes, seconds;
-numNotes = 20000;
+numNotes = 10000;
 seconds = 15;
 ~myScore = Score.new();
 
@@ -128,16 +126,19 @@ numNotes.do({|i|
 	~myScore = ~myScore.add([i.linlin(0, numNotes, 0.0, seconds - 2),
 		                       [\s_new, \littleHOAgrain, 1000 + i, 0, 0,
 			                           \buffer, ~sndbuf.bufnum,
-	                                   \grainDur, 0.2.rand,
-				                       \start, i.linlin(0, numNotes, 0, ~hoaSoundScene.numFrames )  + (11025.rand * 16) ,
-	                                   \az, 360.rand,
-	                                   \el, 90.rand2
+	                                   \grainDur, 0.1.rand + 0.1,
+				                       \start, i.linlin(0, numNotes, 0, ~hoaSoundScene.numFrames )  + (6000.rand * 16) ,
+	                                   \az, pi.rand2,
+	                                   \el, (pi*2).rand2
                                ]
                      ])
        });
    ~myScore.add([seconds, [\c_set, 0, 0]]); // finish
 }
 )
+
+// look at the first 20 entries in the Score you have created:
+~myScore.score.copyRange(0,20).do({|item,i| item.postln;  })
 ::
 
 
@@ -187,7 +188,7 @@ code::
 ::
 
 
-If the ~decoder from above is still there, let's connect (<>>) both:
+Let's make a decoder:
 code::
 HOADecLebedev26.loadHrirFilters(s);
 (
@@ -196,7 +197,7 @@ HOADecLebedev26.loadHrirFilters(s);
 ~decoder.fadeTime = 1;
 ~decoder.play(0, 2);
 )
-
+//  let's connect (<>>) both NodeProxies:
 ~hoaSignal <>>  ~decoder;
 ::
 

@@ -31,115 +31,60 @@ s.boot;
 )
 ::
 
-Start the oscilloscope showing all the channels for the selected order of the b-format.
-code::
-(
-~order = 3;
-~hoaNumChannels = (~order+1).pow(2);
-s.scope(~hoaNumChannels); // let's use only two channels as we will monitor it with headphones
-)
-::
 
-We will first make a SynthDef with a very simple grain playing back a sound sample from a HOA scene redistributing it into a HOA scene.
-
+We will first load a sound sample from a HOA scene.
 
 First, load a soundfile:
 code::
+
+~order = 3; // al material is 3rd order
+~hoaNumChannels = (~order+1).pow(2);
 ~hoaSoundScene = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
-::
-
-
-Then, we make a Ugen that beamforms into this HOA scene, makes a little grain out of it and plays it back into another direction.
-
-code::
-(
-SynthDef("littleHOAgrain",{ arg buffer, grainDur = 1, grainLevel = 1, start = 0, az = 0, el = 0, rad = 1,dur = 1, amp = 1;
-    var playGrain, env, monoBeam, reDirect;
-	env = EnvGen.ar(Env.sine(grainDur, grainLevel), 1, doneAction:2 );
-	playGrain = PlayBuf.ar(16,  buffer, startPos:start, loop:1 ) * env;
-	monoBeam = HOABeamHCard2Mono.ar(3, playGrain, az, el)[0];
-	reDirect = HOAEncPan.ar(3, monoBeam, az, el);
-	OffsetOut.ar(0, reDirect)
-}).load(s);
-)
-::
-
-
-
-Now you can play the Synth, but you won't hear a properly decoded sound but only the W and the Y channel in the stereo panorama:
-
-code::
-(
-Synth(\littleHOAgrain, [\buffer, ~hoaSoundScene,
-	                                 \grainDur, 1.0.rand,
-	                                 \start, (~hoaSoundScene.numFrames * ~hoaSoundScene.numChannels).rand,
-	                                 \az, 360.rand,
-	                                 \el, 90.rand2 ])
-)
-::
-
-
-So let's make the usual decoding and listening node:
-code::
-HOADecLebedev26.loadHrirFilters(s); // load the HRIR filter first
-(
-~decoder = NodeProxy.new(s, \audio, 2);
-~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, hrir_Filters:1) };
-~decoder.fadeTime = 1;
-~decoder.play(0, 2);
-)
-::
-
-And in order to properly decode the Synth, we  to play \littleHOAgrain before the ~decoder node:
-code::
-(
-Synth.before(~decoder,
-	                 \littleHOAgrain,
-	                                [\buffer, ~hoaSoundFile,
-	                                 \grainDur, 1.0.rand,
-	                                 \start, (~hoaSoundFile.numFrames * ~hoaSoundFile.numChannels).rand,
-	                                 \az, 360.rand,
-	                                 \el, 90.rand2 ])
-)
+~hoaSoundScene = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro.wav");
+~hoaSoundScene = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
 ::
 
 
 Then we make a Score and we add to the Score OSC messages invoking the SynthDef we have made earlier.
 code::
 (
-var numNotes, seconds;
-numNotes = 20000;
-seconds = 15;
+var seconds; // length of sound file 2 convert
+var informat; // input Format
+var outformat; // output Format
+
+informat =\ACN_N3D; //  examples from above are ACN_N3D
+outformat =\FuMa; // \ACN_N3D; \ACN_SN3D;
+
+seconds = ~hoaSoundScene.numFrames /  s.options.sampleRate; // length of the soundfile 2 convert
 ~myScore = Score.new();
 
 Routine.run{
+	// we need to load the soundfile to get the buffer number for the NRT server
 ~sndbufBundle = s.makeBundle(false, { ~sndbuf = Buffer.read(s, ~hoaSoundScene.path); });
 ~sndbufBundle = ~sndbufBundle.addFirst(0.0);
 ~myScore.add(~sndbufBundle);
 ~sndbuf.updateInfo;
 s.sync;
+   // we need to make the SynthDef that will do the conversion for us
+SynthDef(\hoaConverter,{ arg buffer;
+    var playFile;
+	playFile = PlayBuf.ar(~hoaNumChannels.asInteger,  buffer, startPos:0, loop:0, doneAction:2);
+	OffsetOut.ar(0, HOAConvert.ar(~order.asInteger, playFile, inFormat: informat, outFormat: outformat);)
+}).load(s);
+s.sync;
 
-numNotes.do({|i|
-	~myScore = ~myScore.add([i.linlin(0, numNotes, 0.0, seconds - 2),
-		                       [\s_new, \littleHOAgrain, 1000 + i, 0, 0,
-			                           \buffer, ~sndbuf.bufnum,
-	                                   \grainDur, 0.2.rand,
-				                       \start, i.linlin(0, numNotes, 0, ~hoaSoundScene.numFrames )  + (11025.rand * 16) ,
-	                                   \az, 360.rand,
-	                                   \el, 90.rand2
-                               ]
-                     ])
-       });
-   ~myScore.add([seconds, [\c_set, 0, 0]]); // finish
-}
-)
-::
+	// we need to load the SynthDef with the sound buffer that we want to convert
+~noteBundle = s.makeBundle(false, {Synth(\hoaConverter, [\buffer, ~sndbuf])});
+~noteBundle = ~noteBundle.addFirst(0.0);
+~myScore.add(~noteBundle);
+    //  at the end we need to set the command to stop NRT
+~myScore.add([seconds, [\c_set, 0, 0]]); // finish
+s.sync;
 
+~myScore.score.do({|item,i| item.postln;  });
+// Now we can start the NRT synthesis. We will configure the ServerOptions for the NRT server first.
+// We render the file as float and normalize it once it is written to disk.
 
-Now we can start the NRT synthesis. We will configure the ServerOptions for the NRT server first.
-We render the file as float and normalize it once it is written to disk.
-code::
-(
 ~nrtOptions = ServerOptions.new;
 ~nrtOptions.verbosity_(0);  // 0 to see the events as OSCPacket
 ~nrtOptions.numOutputBusChannels_(16); // we need 16 channels because it is B-format 3rd order
@@ -148,58 +93,32 @@ code::
 ~nrtOptions.maxSynthDefs_(1024 * 48);
 
 Score.recordNRT(~myScore.score,
-	            thisProcess.platform.userHomeDir++"/sonificationHOA-oscFile.txt",
-	            thisProcess.platform.userHomeDir++"/sonificationHOA.wav",
+	            thisProcess.platform.userHomeDir++"/convertHOA-oscFile.txt",
+	            thisProcess.platform.userHomeDir++"/convertHOA.wav",
 	            sampleRate: 44100,
 	            headerFormat: "WAV",
 	            sampleFormat: "float",
 	            options: ~nrtOptions,
 	            action: {"DONE".postln;
 
-		SoundFile.normalize(thisProcess.platform.userHomeDir++"/sonificationHOA.wav",
-	                thisProcess.platform.userHomeDir++"/sonificationHOA_norm.wav",
+		SoundFile.normalize(thisProcess.platform.userHomeDir++"/convertHOA.wav",
+	                thisProcess.platform.userHomeDir++"/convertHOA_norm.wav",
 	                newHeaderFormat: "WAV",
 	                newSampleFormat: "int16");
 
 	}
 );
+
+}
 )
 ::
 
-
-Now let's listen to the recorded sound file by opening it first:
-code::
-~hoaSoundFile = Buffer.read(s, thisProcess.platform.userHomeDir++"/sonificationHOA_norm.wav");
-::
-
-Now let's make a node that plays back the mukltichannel soundfile as a HOA signal
-code::
-(
-~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
-~hoaSignal.source = { HPF.ar(PlayBuf.ar( ~hoaSoundFile.numChannels,  ~hoaSoundFile, loop:1  ), 50)   };
-~hoaSignal.fadeTime = 1;
-)
-::
-
-
-If the ~decoder from above is still there, let's connect (<>>) both:
-code::
-HOADecLebedev26.loadHrirFilters(s);
-(
-~decoder = NodeProxy.new(s, \audio, 2);
-~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, hrir_Filters:1) };
-~decoder.fadeTime = 1;
-~decoder.play(0, 2);
-)
-
-~hoaSignal <>>  ~decoder;
-::
 
 Finally, we can delete the files:
 code::
-File.delete( thisProcess.platform.userHomeDir++"/sonificationHOA-oscFile.txt");
-File.delete( thisProcess.platform.userHomeDir++"/sonificationHOA.wav");
-File.delete( thisProcess.platform.userHomeDir++"/sonificationHOA_norm.wav");
+File.delete( thisProcess.platform.userHomeDir++"/convertHOA-oscFile.txt");
+File.delete( thisProcess.platform.userHomeDir++"/convertHOA.wav");
+File.delete( thisProcess.platform.userHomeDir++"/convertHOA_norm.wav");
 ::
 
 

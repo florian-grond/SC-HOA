@@ -38,7 +38,7 @@ The beampatern provided are regular hypercardioid up to order 5 compare [2] from
 link::https://github.com/sekisushai/ambitools/blob/master/Faust/src/hoa_beamforming_hypercardioid_to_mono.dsp::
 ::
 
-In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses and to have 36 output channels.
+In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses.
 
 code::
 s.quit; // quit the server first if it is still running with another configuration.
@@ -100,17 +100,17 @@ code::
 (
 ~beamFormer = NodeProxy.new(s, \audio, ~hoaNumChannels);
 ~beamFormer.source = {var in;
-	                                         in = \in.ar(0!~hoaNumChannels);
-	                                        HOADecLebedev26.ar(~order,
-	                                                     HOABeamDirac2Hoa.ar(~order,
-			                                             in,
-		                                                 Lag.ar(K2A.ar(MouseX.kr( -pi, pi)), 0.5),
-		                                                 Lag.ar(K2A.ar(MouseY.kr( -pi * 0.5, -pi * 0.5 )), 0.5),
-		                                                 on:1),
-			                                hrir_Filters: 1)
-};
+	                                       in = \in.ar(0!~hoaNumChannels);
+                                           HOADecLebedev26.ar(~order,
+	                                               HOABeamDirac2Hoa.ar(~order,
+	                                                                                    in,
+	                                                                                    az: MouseX.kr(-pi, pi ) ,
+			                                                                            ele: MouseY.kr(-pi * 0.5, pi * 0.5),
+			                                                                            on:1),
+			                                                                 hrir_Filters: 1)
+                                     };
 ~beamFormer.fadeTime = 1;
-~beamFormer.play(0, 26);
+~beamFormer.play(0, 2);
 )
 
 ~hoaSignal <>> ~beamFormer;
@@ -119,17 +119,18 @@ code::
 
 code::
 (
-var cardioid = 1;
+var cardioid = 3;
+
 ~beamFormer.source = {var in;
 	                                         in = \in.ar(0!~hoaNumChannels);
-	                                        HOADecLebedev26.ar(~order,
-	                                                     HOABeamHCard2Hoa.ar(~order,
-			                                             in,
-		                                                 Lag.ar(K2A.ar(MouseX.kr( -pi, pi)), 0.5),
-		                                                 Lag.ar(K2A.ar(MouseY.kr( -pi * 0.5, -pi * 0.5 )), 0.5),
-			                                             cardOrder: cardioid ),
-			                                hrir_Filters: 1)
-};
+                                             HOADecLebedev26.ar(~order,
+	                                                      HOABeamHCard2Hoa.ar(~order,
+	                                                                                             in,
+	                                                                                             az: MouseX.kr(-pi, pi ) ,
+			                                                                                     ele: MouseY.kr(-pi * 0.5, pi * 0.5),
+			                                                                                     cardOrder: cardioid),
+			                                                                             hrir_Filters: 1)
+                                          };
 )
 ::
 
@@ -139,9 +140,9 @@ code::
 	                                         in = \in.ar(0!~hoaNumChannels);
 	                                                     HOABeamHCard2Mono.ar(~order,
 			                                             in,
-		                                                 Lag.ar(K2A.ar(MouseX.kr( -pi, pi)), 0.5),
-		                                                 Lag.ar(K2A.ar(MouseY.kr( -pi * 0.5, -pi * 0.5 )), 0.5))!2
-};
+		                                                 az: MouseX.kr(-pi, pi ) ,
+		                                                 ele: MouseY.kr(-pi * 0.5, pi * 0.5))!2 // to have the mono in the middle of the headphones
+                                     };
 )
 ::
 

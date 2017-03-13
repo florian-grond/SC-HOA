@@ -60,7 +60,7 @@ we won't see it since we don't monitor it.
 code::
 (
 ~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
-~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )};
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(pi, -pi), MouseY.kr(-pi * 0.5, pi * 0.5 ) )};
 ~hoaSignal.fadeTime = 1;
 )
 ::

@@ -81,7 +81,7 @@ s.scope(4);
 
 
 // Beamforming Dirac2HOA
-(~order = 5;
+(~order = 3;
 s.scope((~order+1).pow(2));
 { HOABeamDirac2Hoa.ar(~order,
 	HOAEncLebedev50.ar(~order, {|i| SinOsc.ar( 50* (i+1) )}!50, filters: 0),
@@ -95,7 +95,7 @@ s.scope((~order+1).pow(2));
 ~order = 5; s.scope((~order+1).pow(2));
 
 (~order = 3; // 1 to 3
-~cardiodOrder = 3; // 1 to 3
+~cardiodOrder = 2; // 1 to 3
 { HOABeamHCard2Hoa.ar(~order,
 	                HOAEncLebedev50.ar(~order, {|i| SinOsc.ar( 50* (i+1) )}!50, filters: 0),
 	                    az: MouseX.kr(-pi, pi ) , ele: MouseY.kr(-pi * 0.5, pi * 0.5), cardOrder:~cardiodOrder) }.play
@@ -106,7 +106,7 @@ s.scope((~order+1).pow(2));
 
 // Beamforming HCardio2Mono
 
-(~order = 5; // 1 to 3
+(~order = 3; // 1 to 3
 { HOABeamHCard2Mono.ar(~order,
 	                HOAEncLebedev50.ar(~order, {|i| SinOsc.ar( 50* (i+1) )}!50, filters: 0),
 	                    az: MouseX.kr(-pi, pi ) , ele: MouseY.kr(-pi * 0.5, pi * 0.5)) }.play

@@ -24,7 +24,7 @@ azimuth angle of beam direction in degree (-pi to pi).
 ARGUMENT:: ele
 elevation angle of beam direction in degree (-pi * 0.5 to pi * 0.5).
 
-ARGUMENT:: level
+ARGUMENT:: gain
 level in dB (default 0).
 
 ARGUMENT:: on
@@ -42,7 +42,7 @@ INSTANCEMETHODS::
 EXAMPLES::
 
 code::
-(some example code)(
+(
 Server.local = Server.default;
 o = Server.local.options;
 o.numInputBusChannels = 1;

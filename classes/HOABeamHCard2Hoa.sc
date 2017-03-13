@@ -1,6 +1,7 @@
 HOABeamHCard2Hoa{
 
 	*ar { |order, in, az, ele, cardOrder = 1|
+				az = az.neg; ele = ele.neg; // the Faust Ugens seem to have those reversed
 		case{order == 1}
                 		{ var in1, // declare variables for the b-format array
 			                    in2, in3, in4;

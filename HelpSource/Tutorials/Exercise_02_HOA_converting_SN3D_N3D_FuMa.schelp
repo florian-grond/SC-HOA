@@ -106,7 +106,7 @@ Let's use a proxy for the creation of a B-format signal:
 code::
 (
 ~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
-~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), 45, 45 )};
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), pi* 0.25, pi* 0.25 )};
 ~hoaSignal.fadeTime = 1;
 ~hoaSignal.play(0, ~hoaNumChannels);
 )
@@ -116,17 +116,12 @@ Change between normalization within ACN and compare the amplitudes of the channe
 
 code::
 ~inFormat = \ACN_N3D;
+// try all three different out formats
 ~outFormat = \ACN_SN3D;
 ~outFormat = \ACN_N3D;
-
-~hoaSignal.source = {HOAConvert.ar(~order,  HOAEncoder.ar(~order, WhiteNoise.ar(1), 45, 45 ), ~inFormat, ~outFormat)};
-~hoaSignal.source = {HOAConvert.ar(~order,  HOAEncoder.ar(~order, WhiteNoise.ar(1), 45, 45 ), ~inFormat, ~outFormat)};
-::
-
-Change to FuMa.
-code::
 ~outFormat = \FuMa;
-~hoaSignal.source = {HOAConvert.ar(~order,  HOAEncoder.ar(~order, WhiteNoise.ar(1), 45, 45 ), ~inFormat, ~outFormat)}
+
+~hoaSignal.source = {HOAConvert.ar(~order,  HOAEncoder.ar(~order, WhiteNoise.ar(1), pi* 0.25, pi* 0.25 ), ~inFormat, ~outFormat)};
 ::
 
 
