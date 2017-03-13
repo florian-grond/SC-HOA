@@ -44,8 +44,6 @@ s.scope(2); // let's use only two channels as we will monitor it with headphones
 )
 ::
 
-
-
 Let's load some 16 channels 3rd order soundfiles, the filenames indicate the channel ordering as well as the normalization (ACN, N3D):
 code::
 ~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
@@ -80,7 +78,6 @@ And then we connect them:
 code::
 ~hoaSignal <>> ~decoder;
 ::
-
 
 STRONG:: Previous:::
 link::Tutorials/Exercise_04_HOA_plane_versus_spherical_waves::

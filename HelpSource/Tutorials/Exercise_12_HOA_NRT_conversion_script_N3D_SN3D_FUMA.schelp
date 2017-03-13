@@ -10,6 +10,8 @@ link::Tutorials/Exercise_11_HOA_NRT_using_scores_and_Buffers::
 STRONG:: Next:::
 link::Tutorials/Exercise_13_HOA_NRT_decoding_script::
 
+The code below is a non-real-time NRT script to convert your b-format file between standard channel orders and normalization conventions.
+
 First things first: let's start the sound server, which we configure first to get more audio buses and to have 36 output channels.
 
 code::
@@ -36,9 +38,10 @@ We will first load a sound sample from a HOA scene.
 
 First, load a soundfile:
 code::
-
+(
 ~order = 3; // al material is 3rd order
 ~hoaNumChannels = (~order+1).pow(2);
+)
 ~hoaSoundScene = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
 ~hoaSoundScene = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro.wav");
 ~hoaSoundScene = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");

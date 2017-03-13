@@ -9,7 +9,72 @@ link::Tutorials/Exercise_08_HOA_proxyspace_recording::
 STRONG:: Next:::
 link::Tutorials/Exercise_10_HOA_NRT_using_scores_and_SynthDefs::
 
-The code examples below show how to decode HOA b-format for standard speakers Arrays.
+Below are some simple examples that show how to play back a multichannel soundfile in HOA b-format and listen to it through headphones.
+The 3rd order field recordings have been made with the Eigenmike Link::https://mhacoustics.com/products:: with the kind support ofthe Centre for Interdisciplinary Research in Music Media and Technology, housed at the Schulich School of Music at McGill University (CIRMMT) Link:: http://www.cirmmt.org/:: a microphone array with 32 capsules.
+
+In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses and to have 36 output channels.
+
+code::
+s.quit; // quit the server first if it is still running with another configuration.
+(
+ServerOptions.devices;
+s = Server.local;
+Server.local = Server.default;
+o = Server.local.options; // Get the local server's options
+o.numInputBusChannels = 2; // Set Input to number of Inputs
+o.numOutputBusChannels = 36; // lets start after chan 36 so as not to see the mic input
+o.numAudioBusChannels = 2048;
+o.blockSize = 512;
+o.numWireBufs = 1024 * 16;
+o.memSize = 2.pow(18);
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+)
+::
+
+Start the oscilloscope showing all the channels for the selected order of the B-format.
+
+code::
+(
+~order = 3;
+~hoaNumChannels = (~order+1).pow(2);
+s.scope(5); // let's use 5 as we play back via ITU 5.0
+)
+::
+
+Let's load some 16 channels 3rd order soundfiles, the filenames indicate the channel ordering as well as the normalization (ACN, N3D):
+code::
+~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
+~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro.wav");
+~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
+~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_LePlateau_Backyard.wav");
+~hoaSoundFile.numChannels;
+::
+
+Let's make a node that can play back the 3rd order HOA sound file.
+code::
+(
+~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
+~hoaSignal.source = { HPF.ar(PlayBuf.ar( ~hoaSoundFile.numChannels,  ~hoaSoundFile, loop:1  ), 100)   };
+~hoaSignal.fadeTime = 1;
+)
+::
+
+Let's use a 5.0 allrad decoder watch in the scope how the back channels have a higher gain o make up for the missing channel in the back center and to keep the energy in the back constant. Play with the crossover frequency of the decoder as as with the low / high frequency balance.
+code::
+(
+~decoder = NodeProxy.new(s, \audio, 5);
+~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADec5_0.ar(3, in, lf_hf:0, xover:400) };
+~decoder.fadeTime = 1;
+~decoder.play(0, 26);
+)
+::
+
+And then we connect them:
+code::
+~hoaSignal <>> ~decoder;
+::
 
 STRONG:: Previous:::
 link::Tutorials/Exercise_08_HOA_proxyspace_recording::

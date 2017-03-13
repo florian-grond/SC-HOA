@@ -1,0 +1,81 @@
+TITLE:: HOADec5_0
+summary:: Mirroring of a higher order Ambisonics sound field
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
+
+DESCRIPTION::
+Pseudo Ugen method returning Ugens to decode HOA b-format for a 5.0 speaker layout.
+The decoder was written by the Ambisonic Decoder Toolbox, version 8.0
+
+speaker array name = itu50
+
+coefficient order  = acn
+
+coefficient scale  = N3D
+
+input scale        = N3D
+
+output speaker order: BL FL FC FR BR
+
+
+'BL', [ 110, 0, radius: 2m]
+
+'FL', [  30, 0, radius: 2m]
+
+'FC', [   0, 0, radius: 1.732m]
+
+'FR', [ -30, 0, radius: 2m]
+
+'BR', [-110, 0, radius: 2m]
+
+
+CLASSMETHODS::
+
+METHOD:: ar
+
+ARGUMENT:: order
+Ambisonics order 1-5.
+
+ARGUMENT:: in
+b-format as channel array.
+
+ARGUMENT:: gain
+outputgain (default 1).
+
+ARGUMENT:: lf_hf
+low frequency high frequency crossover.
+
+ARGUMENT:: xover
+crossover frequency default 400.
+
+ARGUMENT:: mute
+mute output 0 - 1 (default 0).
+
+
+returns:: speker signals in the following order BL FL FC FR BR.
+
+INSTANCEMETHODS::
+
+EXAMPLES::
+
+code::
+(
+Server.local = Server.default;
+o = Server.local.options;
+o.numInputBusChannels = 1;
+o.numOutputBusChannels = 36;
+o.numAudioBusChannels = 2048 * 8;
+o.blockSize = 512 ;
+o.numWireBufs = 1024;
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+)
+
+// Rotate an audio scene around pitch yaw and roll
+( ~order = 4; // try different orders up to 5 and watch the scope window.
+~freq = 48000 / 1024;
+s.scope(5);
+{HOADec5_0.ar(~order,  HOAEncoder.ar(~order, SinOsc.ar(~freq ), MouseX.kr(-pi, pi), 0 ), gain:1, lf_hf:0, xover:400, mute:0 ) }.play; // original
+)
+::
