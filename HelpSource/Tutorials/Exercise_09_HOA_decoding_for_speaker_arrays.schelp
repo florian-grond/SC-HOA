@@ -55,25 +55,63 @@ code::
 Let's make a node that can play back the 3rd order HOA sound file.
 code::
 (
-~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
-~hoaSignal.source = { HPF.ar(PlayBuf.ar( ~hoaSoundFile.numChannels,  ~hoaSoundFile, loop:1  ), 100)   };
-~hoaSignal.fadeTime = 1;
+~toaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
+~toaSignal.source = { HPF.ar(PlayBuf.ar( ~hoaSoundFile.numChannels,  ~hoaSoundFile, loop:1  ), 100)   };
+~toaSignal.fadeTime = 1;
+)
+::
+
+
+Let's make two more nodes that generate 2nd and 1st order HOA sounds to go with it.
+code::
+(
+~soaSignal = NodeProxy.new(s, \audio, 9);
+~soaSignal.source = { HOAEncoder.ar(2, Ringz.ar(LFSaw.ar(6, mul:BrownNoise.ar(0.2)).pow(3), 220, 0.8) , az: SinOsc.ar(0.5) ) };
+~soaSignal.fadeTime = 1;
+
+~foaSignal = NodeProxy.new(s, \audio, 4);
+~foaSignal.source = { HOAEncoder.ar(2, Ringz.ar(LFSaw.ar(4, mul:BrownNoise.ar(0.2)).pow(3), 880* 1.5, 0.8), az: SinOsc.ar(1) )  };
+~foaSignal.fadeTime = 1;
 )
 ::
 
 Let's use a 5.0 allrad decoder watch in the scope how the back channels have a higher gain o make up for the missing channel in the back center and to keep the energy in the back constant. Play with the crossover frequency of the decoder as as with the low / high frequency balance.
 code::
 (
-~decoder = NodeProxy.new(s, \audio, 5);
-~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADec5_0.ar(3, in, lf_hf:0, xover:400) };
-~decoder.fadeTime = 1;
-~decoder.play(0, 26);
+~toaDecoder = NodeProxy.new(s, \audio, 5);
+~toaDecoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADec5_0.ar(3, in, lf_hf:0, xover:400) };
+~toaDecoder.fadeTime = 1;
+
+~soaDecoder = NodeProxy.new(s, \audio, 5);
+~soaDecoder.source = {var in; in = \in.ar(0!9); HOADec5_0.ar(2, in, lf_hf:0, xover:400) };
+~soaDecoder.fadeTime = 1;
+
+~foaDecoder = NodeProxy.new(s, \audio, 5);
+~foaDecoder.source = {var in; in = \in.ar(0!4); HOADec5_0.ar(1, in, lf_hf:0, xover:400) };
+~foaDecoder.fadeTime = 1;
+
+~out = NodeProxy.new(s, \audio, 5);
+~out.source = {var in; in = \in.ar(0!5); in };
+~out.fadeTime = 1;
+~out.play(0, 5);
 )
 ::
 
+(
+~toa5 = ~toaSignal <>> ~toaDecoder;
+~soa5  = ~soaSignal <>> ~soaDecoder;
+~foa5  = ~foaSignal <>> ~foaDecoder;
+)
+
+(
+~mixOrders = ProxySubmix(\mixer);	~mixOrders.ar(5);
+
+~mixOrders.addMix(~toa5).addMix(~soa5).addMix(~foa5);
+)
+
 And then we connect them:
 code::
-~hoaSignal <>> ~decoder;
+~mixOrders <>> ~out;
 ::
 
 STRONG:: Previous:::
