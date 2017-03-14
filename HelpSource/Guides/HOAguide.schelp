@@ -31,7 +31,7 @@ SECTION:: Classes
 
 subsection:: Encoding
 LIST::
-## link::Classes/HOAEncPan:: - a panner to encode mono sources as plane waves or nearfield spherical waves up to order 5 (36 chan b-format).
+## link::Classes/HOAEncoder:: - a panner to encode mono sources as plane waves or nearfield spherical waves up to order 5 (36 chan b-format).
 ## link::Classes/HOAEncEigenMike:: - an encoder for the signals of the 32 microphones from the Eigenmike, includes radial filters up to order 4 (25 chan b-format).
 ## link::Classes/HOAEncLebedev06:: - an encoder for the signals of the microphones of a 6 nodes Lebedevgrid, includes radial filters up to order 1 (4 chan b-format).
 ## link::Classes/HOAEncLebedev26:: - an encoder for the signals of the microphones of a 26 nodes Lebedevgrid, includes radial filters up to order 3 (16 chan b-format).

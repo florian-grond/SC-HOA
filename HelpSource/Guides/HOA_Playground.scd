@@ -22,6 +22,9 @@ s.boot;
 s.scope(~hoaNumChannels); // to monitor the b-format
 // s.scope(2); // to monitor 2 binaural channels
 
+
+// We pack all the proxy creation into a Routine so that we can s.sync it with assynchronous processes
+
 Routine.run{
 ~hoaScene = NodeProxy.new(s, \audio, ~hoaNumChannels);
 ~hoaScene.source = {HOAEncoder.ar(~order, Decay.ar( Impulse.ar(1), 0.1, PinkNoise.ar(0.1) ), az: Saw.ar(0.5, pi )    )};

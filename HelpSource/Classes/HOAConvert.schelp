@@ -1,19 +1,10 @@
 TITLE:: HOAConvert
-summary:: Mirroring of a higher order Ambisonics sound field
+summary:: Converting of a higher order Ambisonics b-format
 categories:: Libraries>HOA
 related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
 
 DESCRIPTION::
-pseudo Ugen method returning Ugens based on Ambisonics order provided through the first argument.
-HOATransMirror mirros an HOA scene: Axes left-right, front-back, up-down can be reversed by changing the sign of particular spherical harmonics.
-
-References: Kronlachner, M. (2014). Spatial Transformations for the Alteration of Ambisonic Recordings. Graz University Of Technology, Austria. p.46-47
-
-First code examples:
-
-code::
-_some_example_code_
-::
+Pseudo Ugen method returning Ugens for the conversion of HOA b-formats.
 
 CLASSMETHODS::
 

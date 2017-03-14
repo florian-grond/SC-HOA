@@ -4,7 +4,7 @@ categories:: Libraries>HOA
 related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
 
 DESCRIPTION::
-HOAEncPan pans mono sound sources in a higher order Ambisonics sound field, you can chose between plane and near field spherical wave encoding.
+HOAEncoder pans mono sound sources in a higher order Ambisonics sound field, you can chose between plane and near field spherical wave encoding.
 
 References: Lecomte, P., & Gauthier, P.-A. (2015). Real-Time 3D Ambisonics using Faust, Processing, Pure Data, And OSC. In 15th International Conference on Digital Audio Effects (DAFx-15). Trondheim, Norway.
 
