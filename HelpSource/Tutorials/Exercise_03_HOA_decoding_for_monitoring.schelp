@@ -104,18 +104,24 @@ Now let's load HRIR filters for each of the 26 channels:
 code::
 HOADecLebedev26.loadHrirFilters(s);
 HOADecLebedev26.hrirFilters.size;
+
+~decoderOrder = 2; // let's reduce the order
+~decoderNumChannels = (~decoderOrder+1).pow(2);
 // and change the decoder.source again
-~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, hrir_Filters:1) };
+~decoder.source = {var in; in = \in.ar(0!~decoderNumChannels); HOADecLebedev26.ar(~decoderOrder, in, hrir_Filters:1) };
 ::
 
-This is likely quite heavy on the CPU, because it means 52 (26 * 2) convolutions with an FFT.
+This is likely quite heavy on the CPU, because it means 26 * 2 convolutions with an FFT.
 For monitoring purposes you might want to listen to the first order, for which you can use HOADecLebedev06.
 which results in 12 FFT convolutions.
 
 code::
 HOADecLebedev06.loadHrirFilters(s);
 HOADecLebedev06.hrirFilters.size;
-~decoder.source = {var in; in = \in.ar(0!4); HOADecLebedev06.ar(1, in, hrir_Filters:1) };
+
+~decoderOrder = 1; // let's reduce the order
+~decoderNumChannels = (~decoderOrder+1).pow(2);
+~decoder.source = {var in; in = \in.ar(0!~decoderNumChannels); HOADecLebedev06.ar(~decoderOrder, in, hrir_Filters:1) };
 // for 1st order take only 4 \in channels and set the first argument of HOADecLebedev06 (order) to 1.
 ::
 

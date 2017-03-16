@@ -40,8 +40,8 @@ HOA {
 	}
 
 	*openSystemSupportDir {
-		File.exists(Atk.systemSupportDir).if({
-			Atk.systemSupportDir.openOS;
+		File.exists(HOA.systemSupportDir).if({
+			HOA.systemSupportDir.openOS;
 		}, {
 			"System Support Dir may not exist.".warn
 		})

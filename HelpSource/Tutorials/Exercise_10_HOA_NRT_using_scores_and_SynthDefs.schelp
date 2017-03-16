@@ -38,7 +38,7 @@ s.boot;
 Start the oscilloscope showing all the channels for the selected order of the b-format.
 code::
 (
-~order = 3;
+~order = 2;
 ~hoaNumChannels = (~order+1).pow(2);
 s.scope(~hoaNumChannels); // let's use only two channels as we will monitor it with headphones
 )
@@ -115,7 +115,7 @@ code::
 (
 ~nrtOptions = ServerOptions.new;
 ~nrtOptions.verbosity_(0);  // 0 to see the events as OSCPacket
-~nrtOptions.numOutputBusChannels_(16); // we need 16 channels because it is B-format 3rd order
+~nrtOptions.numOutputBusChannels_(~order); // we need 16 channels because it is B-format 3rd order
 ~nrtOptions.memSize_(8192 * 6400);
 ~nrtOptions.maxNodes_(1024 * 48);
 ~nrtOptions.maxSynthDefs_(1024 * 48);
@@ -159,8 +159,12 @@ If the ~decoder from above is still there, let's connect (<>>) both:
 code::
 HOADecLebedev26.loadHrirFilters(s);
 (
+
+~decoderOrder = 2; // let's reduce the order
+~decoderNumChannels = (~decoderOrder+1).pow(2);
+
 ~decoder = NodeProxy.new(s, \audio, 2);
-~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, hrir_Filters:1) };
+~decoder.source = {var in; in = \in.ar(0!~decoderNumChannels); HOADecLebedev26.ar(~decoderOrder, in, hrir_Filters:1) };
 ~decoder.fadeTime = 1;
 ~decoder.play(0, 2);
 

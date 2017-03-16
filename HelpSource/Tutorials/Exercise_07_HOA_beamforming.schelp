@@ -62,7 +62,7 @@ s.boot;
 Start the oscilloscope showing all the channels for the selected order of the b-format.
 code::
 (
-~order = 3;
+~order = 2;
 ~hoaNumChannels = (~order+1).pow(2);
 s.scope(2); // let's use only two channels as we will monitor it with headphones
 )
@@ -98,6 +98,7 @@ HOADecLebedev26.hrirFilters.size;
 
 code::
 (
+~order = 2;
 ~beamFormer = NodeProxy.new(s, \audio, ~hoaNumChannels);
 ~beamFormer.source = {var in;
 	                                       in = \in.ar(0!~hoaNumChannels);

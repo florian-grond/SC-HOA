@@ -89,8 +89,11 @@ code::
 HOADecLebedev26.loadHrirFilters(s);
 HOADecLebedev26.hrirFilters.size;
 (
+~decoderOrder = 2; // let's reduce the order
+~decoderNumChannels = (~decoderOrder+1).pow(2);
+
 ~decoder = NodeProxy.new(s, \audio, 26);
-~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, hrir_Filters:1) };
+~decoder.source = {var in; in = \in.ar(0!~decoderNumChannels); HOADecLebedev26.ar(~decoderOrder, in, hrir_Filters:1) };
 ~decoder.fadeTime = 1;
 ~decoder.play(0, 26);
 )
