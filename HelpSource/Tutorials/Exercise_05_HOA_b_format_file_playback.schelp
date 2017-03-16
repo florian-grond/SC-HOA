@@ -49,7 +49,7 @@ code::
 ~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
 ~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro.wav");
 ~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
-~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_LePlateau_Backyard.wav");
+~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_LePlateau_Backyard_short.wav");
 ~hoaSoundFile.numChannels;
 ::
 

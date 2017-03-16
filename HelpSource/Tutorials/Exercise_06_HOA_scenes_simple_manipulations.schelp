@@ -132,9 +132,9 @@ code::
 (
 ~hoaTransformer.source = { var in; in = \in.ar(0!~hoaNumChannels);
 	               HOATransRotateXYZ.ar(~order, in,
-		                                          LFTri.ar(0.01, 0, pi), // pitch
-		                                          LFTri.ar(0.01, 0, pi), // roll
-		                                          LFTri.ar(0.01, 0, pi)  // yaw
+		                                          LFTri.ar(0.02, 0, pi), // pitch
+		                                          LFTri.ar(0.02, 0, pi), // roll
+		                                          LFTri.ar(0.02, 0, pi)  // yaw
 ) };
 )
 ::

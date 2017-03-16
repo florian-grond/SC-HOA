@@ -62,7 +62,7 @@ s.boot;
 Start the oscilloscope showing all the channels for the selected order of the b-format.
 code::
 (
-~order = 2;
+~order = 3;
 ~hoaNumChannels = (~order+1).pow(2);
 s.scope(2); // let's use only two channels as we will monitor it with headphones
 )
@@ -73,7 +73,7 @@ code::
 ~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
 ~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro.wav");
 ~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
-~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_LePlateau_Backyard.wav");
+~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_LePlateau_Backyard_short.wav");
 ~hoaSoundFile.numChannels;
 ::
 
@@ -105,7 +105,7 @@ code::
                                            HOADecLebedev26.ar(~order,
 	                                               HOABeamDirac2Hoa.ar(~order,
 	                                                                                    in,
-	                                                                                    az: MouseX.kr(-pi, pi ) ,
+	                                                                                    az: MouseX.kr(pi, -pi ) ,
 			                                                                            ele: MouseY.kr(-pi * 0.5, pi * 0.5),
 			                                                                            on:1),
 			                                                                 hrir_Filters: 1)
@@ -127,7 +127,7 @@ var cardioid = 3;
                                              HOADecLebedev26.ar(~order,
 	                                                      HOABeamHCard2Hoa.ar(~order,
 	                                                                                             in,
-	                                                                                             az: MouseX.kr(-pi, pi ) ,
+	                                                                                             az: MouseX.kr(pi, -pi ) ,
 			                                                                                     ele: MouseY.kr(-pi * 0.5, pi * 0.5),
 			                                                                                     cardOrder: cardioid),
 			                                                                             hrir_Filters: 1)

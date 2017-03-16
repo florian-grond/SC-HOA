@@ -38,7 +38,7 @@ s.boot;
 Start the oscilloscope showing all the channels for the selected order of the b-format.
 code::
 (
-~order = 2;
+~order = 3;
 ~hoaNumChannels = (~order+1).pow(2);
 s.scope(~hoaNumChannels); // let's use only two channels as we will monitor it with headphones
 )
@@ -85,14 +85,14 @@ Then we make a Score and we add to the Score OSC messages invoking the SynthDef 
 code::
 (
 var numNotes, seconds;
-numNotes = 10000;  // reduce the number of sine grains if needed
+numNotes = 1000;  // reduce the number of sine grains if needed
 seconds = 15;
 ~myScore = Score.new();
 numNotes.do({|i|
 	~myScore = ~myScore.add([i.explin(0.1, numNotes, 0.1, seconds - 5),  // here we calculate the time for each sound event to be played back
 		                              [\s_new, //  this is the OSC command sent to the server to invoke a synth
 			                           \littleHOAPing, 1000 + i, 0, 0, // the name of the Synth and each Synth needs a unique ID (1000 + i) on the server
-			                           \freq, i.linexp(0, numNotes, 500, 7000).rand, // mapping frequency
+			                           \freq, i.linexp(0, numNotes, 500, 5000).rand, // mapping frequency
 			                           \az, i.linlin(0,numNotes, -pi*1.5 , pi*1.5).mod(pi), // mapping  azimuth
 			                           \el, i.linlin(0,numNotes, -pi, pi), // mapping elevation
 		                               \dur, i.linexp(0.0, numNotes, 100, 800), // mapping duration
@@ -160,7 +160,7 @@ code::
 HOADecLebedev26.loadHrirFilters(s);
 (
 
-~decoderOrder = 2; // let's reduce the order
+~decoderOrder = 3; // let's reduce the order
 ~decoderNumChannels = (~decoderOrder+1).pow(2);
 
 ~decoder = NodeProxy.new(s, \audio, 2);

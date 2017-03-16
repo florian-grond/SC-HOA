@@ -70,14 +70,14 @@ code::
 ~soaSignal.fadeTime = 1;
 
 ~foaSignal = NodeProxy.new(s, \audio, 4);
-~foaSignal.source = { HOAEncoder.ar(2, Ringz.ar(LFSaw.ar(4, mul:BrownNoise.ar(0.2)).pow(3), 880* 1.5, 0.8), az: SinOsc.ar(1) )  };
+~foaSignal.source = { HOAEncoder.ar(1, Ringz.ar(LFSaw.ar(4, mul:BrownNoise.ar(0.2)).pow(3), 880* 1.5, 0.8), az: SinOsc.ar(1) )  };
 ~foaSignal.fadeTime = 1;
 )
 ::
 
 Let's use a 5.0 allrad decoder watch in the scope how the back channels have a higher gain o make up for the missing channel in the back center and to keep the energy in the back constant. Play with the crossover frequency of the decoder as as with the low / high frequency balance.
 code::
-(
+( // creating all the 1st 2nd and 3rd order signals
 ~toaDecoder = NodeProxy.new(s, \audio, 5);
 ~toaDecoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADec5_0.ar(3, in, lf_hf:0, xover:400) };
 ~toaDecoder.fadeTime = 1;
@@ -95,21 +95,21 @@ code::
 ~out.fadeTime = 1;
 ~out.play(0, 5);
 )
-::
 
-(
+( // routing them into the decoder
 ~toa5 = ~toaSignal <>> ~toaDecoder;
 ~soa5  = ~soaSignal <>> ~soaDecoder;
 ~foa5  = ~foaSignal <>> ~foaDecoder;
 )
 
-(
+( // mixing the decoded speaker signal
 ~mixOrders = ProxySubmix(\mixer);	~mixOrders.ar(5);
-
 ~mixOrders.addMix(~toa5).addMix(~soa5).addMix(~foa5);
 )
 
-And then we connect them:
+::
+
+And then we connect them to the ~out:
 code::
 ~mixOrders <>> ~out;
 ::
