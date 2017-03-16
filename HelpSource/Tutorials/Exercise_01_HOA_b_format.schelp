@@ -55,7 +55,7 @@ Start the oscilloscope showing all the channels for the selected order of the b-
 code::
 (
 // try different orders up to 5
-~order = 1;
+~order = 5;
 ~hoaNumChannels = (~order+1).pow(2);
 s.scope(~hoaNumChannels);
 )
@@ -66,7 +66,7 @@ varying signal in channel 2 (y) and 4 (x), 3 (z) is flat, so is 6, 8, 11, etc., 
 
 code::
 (
-~hoaSignal = NodeProxy.new(s, \audio, 26);
+~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
 ~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), 0 )};
 ~hoaSignal.fadeTime = 1;
 )
