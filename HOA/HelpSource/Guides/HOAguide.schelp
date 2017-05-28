@@ -3,65 +3,59 @@ SUMMARY:: a small guide about the use of the HOA classes
 CATEGORIES:: Libraries>HOA
 related:: Tutorials/HOA_Tutorial_Overview
 
-The HOA library provides classes to encode, transform and decode Higher Order Ambisonics sound signals up to order 5.
-The Ugens on which this library is based are compiled from Faustcode made by Pierre Lecomte, and the documentation is based in part on this document  link::https://github.com/sekisushai/ambitools/blob/master/Documentation/documentation.pdf::.
+he HOA library provides classes to encode, transform and decode Higher Order Ambisonics sound signals up to order 5. The basis for the library are UGens compiled from Faust code written by Pierre Lecomte. Documentation and tutorials are based in part on link::https://github.com/sekisushai/ambitools/blob/master/Documentation/documentation.pdf::.
 
-The SC library, was written by Florian Grond.
-The library also includes soundfield recordings made together with Romain Dumoulin using the Eigenmike at CIRMMT link:: http://www.cirmmt.org::.
+The SuperCollider library was written by Florian Grond. It includes soundfield recordings made together with Romain Dumoulin using the Eigenmike from CIRMMT link::http://www.cirmmt.org::.
 
-The classes provided here are wrapper classes that return the correct Ugen depending on the ambisonics order which is provided as an argument.
-The b-format is handled as a channel array, which makes the SC code flexible to experiment with different orders depending on computational resources.
-All arguments obey the channel expansion paradigm.
+Frontend classes are wrappers that select the correct low-level UGen depending on the intended ambisonics order. The b-format signal is encapsulated in a channel array, which makes the resulting SC code flexible to experiment with different orders e.g. to account for available computational resources. All arguments obey SuperCollider's link::Guides/Multichannel-Expansion:: paradigm.
 
 Some practical notes for working with higher order b-format signals:
 
-If you want to familiarize yourself with the b-format conventions please consult:
-link:: http://ambisonics.ch/standards/channels::.
-
-The b-format of this library follows the ACN channel order convention and defaults to N3D.
-N3D, SN3D and FuMa are all availble through a conversion tool.
-
-See: link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#Normalisation::.
-See also the tutorial for more information on channel ordering and normalizations.
-
-This library also alows to encode and decode spherical waves by using near field filters.
-See the tutorial for more information on spherical and planewaves.
-
+list::
+## To familiarize yourself with the b-format conventions please consult link:: http://ambisonics.ch/standards/channels::.
+An overview on normalization can be found at link:: https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#Normalisation::.
+See link::Tutorials/Exercise_02_HOA_converting_SN3D_N3D_FuMa:: for information on channel ordering and normalizations.
+## The b-format of this library follows the ACN channel order convention and defaults to N3D normalization.
+N3D, SN3D and FuMa are all available through the conversion tool link::Classes/HOAConvert::.
+## This library allows to encode and decode spherical waves using near-field filters.
+See link::Tutorials/HOA_Tutorial_Overview::
+ for more information on spherical and planewaves.
+::
 SECTION:: Classes
 
 subsection:: Encoding
 LIST::
-## link::Classes/HOAEncoder:: - a panner to encode mono sources as plane waves or nearfield spherical waves up to order 5 (36 chan b-format).
-## link::Classes/HOAEncEigenMike:: - an encoder for the signals of the 32 microphones from the Eigenmike, includes radial filters up to order 4 (25 chan b-format).
-## link::Classes/HOAEncLebedev06:: - an encoder for the signals of the microphones of a 6 nodes Lebedevgrid, includes radial filters up to order 1 (4 chan b-format).
-## link::Classes/HOAEncLebedev26:: - an encoder for the signals of the microphones of a 26 nodes Lebedevgrid, includes radial filters up to order 3 (16 chan b-format).
-## link::Classes/HOAEncLebedev50:: - an encoder for the signals of the microphones of a 50 nodes Lebedevgrid, includes radial filters up to order 5 (36 chan b-format).
+## link::Classes/HOAEncoder:: — a panner to encode mono sources as plane waves or nearfield spherical waves up to order 5 (36 chan b-format).
+## link::Classes/HOAEncEigenMike:: — an encoder for the signals of the 32 microphones from the Eigenmike, includes radial filters up to order 4 (25 chan b-format).
+## link::Classes/HOAEncLebedev06:: — an encoder for the signals of the microphones of a 6 nodes Lebedevgrid, includes radial filters up to order 1 (4 chan b-format).
+## link::Classes/HOAEncLebedev26:: — an encoder for the signals of the microphones of a 26 nodes Lebedevgrid, includes radial filters up to order 3 (16 chan b-format).
+## link::Classes/HOAEncLebedev50:: — an encoder for the signals of the microphones of a 50 nodes Lebedevgrid, includes radial filters up to order 5 (36 chan b-format).
 ::
 
 subsection:: Transforming
 LIST::
-## link::Classes/HOATransMirror:: - mirror the sound field along x,y or z.
-## link::Classes/HOATransRotateAz:: - rotate the soundfield around the z axis.
-## link::Classes/HOATransRotateXYZ:: - rotate the soundfield around x, y, z.
+## link::Classes/HOATransMirror:: — mirror the sound field along x,y or z.
+## link::Classes/HOATransRotateAz:: — rotate the soundfield around the z axis.
+## link::Classes/HOATransRotateXYZ:: — rotate the soundfield around x, y, z.
 ::
 
 subsection:: Converting
 LIST::
-## link::Classes/HOAConvert:: - convert between teh channel ordes ACN and FuMa as well as SN3D, N3D and MaxN.
+## link::Classes/HOAConvert:: — convert between teh channel ordes ACN and FuMa as well as SN3D, N3D and MaxN.
 ::
 
 subsection:: Beam Forming
 LIST::
-## link::Classes/HOABeamDirac2Hoa:: - filters along a specifed direction (truncated Dirac), returns b-format.
-## link::Classes/HOABeamHCard2Hoa:: - filters along a specifed direction (hyper cardioid pattern), returns b-format.
-## link::Classes/HOABeamHCard2Mono:: - filters along a specifed direction (hyper cardioid pattern), returns a mono signal.
+## link::Classes/HOABeamDirac2Hoa:: — filters along a specifed direction (truncated Dirac), returns b-format.
+## link::Classes/HOABeamHCard2Hoa:: — filters along a specifed direction (hyper cardioid pattern), returns b-format.
+## link::Classes/HOABeamHCard2Mono:: — filters along a specifed direction (hyper cardioid pattern), returns a mono signal.
 ::
 
 subsection:: Decoding
 
 All of the three decoders allow to optionally load associated HRIR filters, and to render the ambisonics scene via headphones.
 LIST::
-## link::Classes/HOADecLebedev06:: - decodes the b-format signal into virtual speakers positioned on 6 Lebedev nodes.
-## link::Classes/HOADecLebedev26:: - decodes the b-format signal into virtual speakers positioned on 26 Lebedev nodes.
-## link::Classes/HOADecLebedev50:: - decodes the b-format signal into virtual speakers positioned on 50 Lebedev nodes.
+## link::Classes/HOADecLebedev06:: — decodes the b-format signal into virtual speakers positioned on 6 Lebedev nodes.
+## link::Classes/HOADecLebedev26:: — decodes the b-format signal into virtual speakers positioned on 26 Lebedev nodes.
+## link::Classes/HOADecLebedev50:: — decodes the b-format signal into virtual speakers positioned on 50 Lebedev nodes.
 ::
