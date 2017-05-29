@@ -1,49 +1,91 @@
 /*
-This class is based on the ATK class, in fact it only changes the name to HOA ;-) Thank you ATK!
+This class is based on the ATK class
+Thank you ATK!
+
+additions and alterations by Till Bovermann ( http://tai-studio.org )
 */
 
 
 HOA {
-	classvar <userSupportDir, <userSoundsDir, <userKernelDir;
-	classvar <systemSupportDir, <systemSoundsDir, <systemKernelDir;
+	classvar   <>userSupportDir; //,   <userSoundsDir,   <userKernelDir;
+	classvar <>systemSupportDir; //, <systemSoundsDir, <systemKernelDir;
+	classvar <>soundsSubdir, <>kernelSubdir;
 
 	*initClass {
-		userSupportDir = Platform.userAppSupportDir.dirname ++ "/HOA";		userSoundsDir = userSupportDir ++ "/sounds";
-		userKernelDir = userSupportDir ++ "/kernels";
-		systemSupportDir = Platform.systemAppSupportDir.dirname ++ "/HOA";		systemSoundsDir = systemSupportDir ++ "/sounds";
-		systemKernelDir = systemSupportDir ++ "/kernels";
+		systemSupportDir = Platform.systemAppSupportDir.dirname ++ "/HOA";
+		userSupportDir   = Platform.userAppSupportDir  .dirname ++ "/HOA";
+
+		soundsSubdir     = "sounds";
+		kernelSubdir     = "kernels";
+
 	}
 
-	*userSupportDir_ {arg userSupportDirIn;
-		userSupportDir = userSupportDirIn;
-		userSoundsDir = userSupportDir ++ "/sounds";
-		userKernelDir = userSupportDir ++ "/kernels";
+
+	*userSoundsDir {
+		systemSupportDir +/+ soundsSubdir;
+	}
+	*systemSoundsDir {
+		systemSupportDir +/+ soundsSubdir;
 	}
 
-	*systemSupportDir_ {arg systemSupportDurIn;
-		systemSupportDir = systemSupportDurIn;
-		systemSoundsDir = systemSupportDir ++ "/sounds";
-		systemKernelDir = systemSupportDir ++ "/kernels";
+	*userKernelDir {
+		systemSupportDir +/+ kernelSubdir;
+	}
+	*systemKernelDir {
+		systemSupportDir +/+ kernelSubdir;
 	}
 
 	*openUserSupportDir {
-		File.exists(Atk.userSupportDir).if({
+		if (File.exists(Atk.userSupportDir).not, {
 			HOA.userSupportDir.openOS;
 		}, {
-			"User Support Dir may not exist. Run \n\tHOA.createUserSupportDir\nto create it".warn
+			"\n%: User Support directory does not exist. Run\n"
+			"\tthis.createUserSupportDir\nto create it".format(this, this).warn;
+			^this;
 		})
 	}
 
-	*createUserSupportDir {
-		File.mkdir(HOA.userSupportDir);
-//		("mkdir \"" ++ HOA.userSupportDir ++ "\"").unixCmd;
-	}
+	// not really a good idea, we cannot populate it from within SC anyhow...
+	// *createUserSupportDir {
+	// 	"%: creating directory at %"
+	// 	.format(this, userSupportDir).inform
+	// 	File.mkdir(userSupportDir);
+	// 	//		("mkdir \"" ++ HOA.userSupportDir ++ "\"").unixCmd;
+	// }
 
 	*openSystemSupportDir {
-		File.exists(HOA.systemSupportDir).if({
-			HOA.systemSupportDir.openOS;
-		}, {
-			"System Support Dir may not exist.".warn
-		})
+		if (File.exists(systemSupportDir).not, {
+			"%: HOA System Support directory does not exist.".format(this).warn;
+			^this;
+		});
+
+		systemSupportDir.openOS;
 	}
+
+	*pr_dirsFor {|keyword, subdir, subPaths|
+		var paths;
+		// user directory takes precedence
+		paths = [userSupportDir, systemSupportDir].collect{|dir|
+			(dir +/+ subdir +/+ subPaths +/+ keyword).pathMatch;
+		}.flatten;
+
+		^paths;
+
+	}
+
+	*kernelDirsFor {|keyword, subPaths|
+		^this.pr_dirsFor(keyword, kernelSubdir, subPaths);
+	}
+	*soundsDirsFor {|keyword, subPaths|
+		^this.pr_dirsFor(keyword, soundsSubdir, subPaths);
+	}
+
+	*o2c {|n|
+		^((n+1).squared)
+	}
+
+	*c2o {|n|
+		^(n.sqrt - 1)
+	}
+
 }

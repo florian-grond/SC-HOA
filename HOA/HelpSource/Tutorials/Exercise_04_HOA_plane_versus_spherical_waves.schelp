@@ -12,7 +12,7 @@ link::Tutorials/Exercise_05_HOA_b_format_file_playback::
 
 
 The examples below demonstarte the difference between plane and spherical waves.
-Sperical waves apply nearfield filters to account not only for directions but also for the distance of sound sources.
+Spherical waves apply nearfield filters to account not only for directions but also for the distance of sound sources.
 For the correct use of the distance filters, which are unstable by nature, take care about the distance parameters in the encoding and decoding step.
 
 In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses and to have 36 output channels.
