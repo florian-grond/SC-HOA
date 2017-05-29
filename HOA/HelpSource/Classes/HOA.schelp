@@ -11,15 +11,15 @@ It is modeled after the Atk class.
 CLASSMETHODS::
 
 METHOD:: userSupportDir
-set the user support dir where HOA resources are located
-
-argument:: userSupportDirIn
-the path to the HOA folder containing your HOA support files
-
-METHOD:: userSupportDir
 
 returns::the path to the HOA support dir. Defaults to:
 code::Platform.userAppSupportDir.dirname ++ "/HOA";::
+
+METHOD:: systemSupportDir
+
+returns::the path to the HOA support dir. Defaults to:
+code::Platform.systemAppSupportDir.dirname ++ "/HOA";::
+
 
 METHOD:: userSoundsDir
 
@@ -29,24 +29,58 @@ METHOD:: userKernelDir
 
 returns:: a path to the 'kernel' dir inside the ATK support dir
 
-METHOD:: systemSupportDir
-
-returns::the path to the HOA support dir. Defaults to:
-code::Platform.systemAppSupportDir.dirname ++ "/HOA";::
 
 METHOD:: systemSoundsDir
 
-returns:: a path to the 'sounds' dir inside the HOA system support dir
+returns:: a path to the sounds dir inside the HOA system support dir
 
 METHOD:: systemKernelDir
 
-returns:: a path to the 'kernel' dir inside the HOA system support dir
+returns:: a path to the kernel dir inside the HOA system support dir
+
+METHOD:: kernelSubdir
+name of subdirectory for kernels within code::userSupportDir:: and code::systemSupportDir::
+
+METHOD:: soundsSubdir
+name of subdirectory for sounds within code::userSupportDir:: and code::systemSupportDir::
+
 
 METHOD:: openUserSupportDir
 runs a unixCmd to open the userAppSupport dir. Uses 'open' (OS X only)
 
-METHOD:: createUserSupportDir
-runs a unix cmd to create the user support dir for HOA
-
 METHOD:: openSystemSupportDir
 runs a unixCmd to open the systemAppSupport dir. Uses 'open' (OS X only)
+
+
+METHOD:: kernelDirsFor
+argument:: keyword
+string, possibly with wildcards, identifying the kernel subdirectory
+argument:: subPaths
+string woth subpahts leading to keyword
+
+code::
+// return all directories in <kernels>/FIR/hrir containing the string "lebedev"
+HOA.kernelDirsFor("*lebedev*", "FIR/hrir").first
+::
+
+returns:: array of paths matching the given parameters
+
+
+METHOD:: soundsDirsFor
+argument:: keyword
+string, possibly with wildcards, identifying the sounds subdirectory
+argument:: subPaths
+string woth subpahts leading to keyword
+
+returns:: array of paths matching the given parameters
+
+
+METHOD:: o2c
+argument:: n
+order
+returns:: channel count for given order
+
+METHOD:: c2o
+argument:: n
+channel count
+returns:: order for given channel count

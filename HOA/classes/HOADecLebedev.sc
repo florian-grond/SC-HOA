@@ -1,3 +1,8 @@
+/*
+2016/2017 Florian Grond
+additions by Till Bovermann ( http://tai-studio.org )
+*/
+
 HOADecLebedev06 : HOADecLebedev {
 	classvar <>hrirFilters;
 	classvar <numChannels;
@@ -27,7 +32,17 @@ HOADecLebedev26 : HOADecLebedev {
 HOADecLebedev {
 	*loadHrirFilters {|server, path|
 
-		path = path ?? {HOA.userKernelDir++"/FIR/hrir/hrir_lebedev50/"};
+		// make path contain something usable
+		path = if (path.isNil, {
+			HOA.kernelDirsFor("*lebedev50", "FIR/hrir")
+		}, {
+			path.pathMatch;
+		}).first;
+
+		if (path.isNil, {
+			"%: specified path is nil".format(this).error;
+			^this;
+		});
 
 		this.hrirFilters = this.numChannels.collect({|i|	[
 			Buffer.read(server, path ++"/hrir_"++(i+1)++"_L.wav"),
