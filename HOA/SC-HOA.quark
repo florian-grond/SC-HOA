@@ -1,5 +1,5 @@
 (
-  name: "SC-HOA",
+  name: "HOA",
   summary: "SuperCollider Higher Order Ambisonics",
   version: "1.0.0",
   schelp: "HelpSource/Classes/HOA.schelp",
