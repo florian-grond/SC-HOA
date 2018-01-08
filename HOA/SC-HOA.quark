@@ -1,0 +1,11 @@
+(
+  name: "SC-HOA",
+  summary: "SuperCollider Higher Order Ambisonics",
+  version: "1.0.0",
+  schelp: "HelpSource/Classes/HOA.schelp",
+  dependencies: #[ ],
+  url: "https://github.com/florian-grond/SC-HOA/tree/master/HOA",
+  since: "2017",
+  license: "GPL",
+  copyright: "Florian Grond, Pierre Lecomte"
+)
