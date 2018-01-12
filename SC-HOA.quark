@@ -1,8 +1,8 @@
 (
   name: "HOA",
   summary: "SuperCollider Higher Order Ambisonics",
-  version: "1.0.0",
-  schelp: "HelpSource/Classes/HOA.schelp",
+  version: "0.1.0",
+  schelp: "SC-HOA/HelpSource/Guides/HOAguide.schelp",
   dependencies: #[ ],
   url: "https://github.com/florian-grond/SC-HOA/tree/master/HOA",
   since: "2017",
