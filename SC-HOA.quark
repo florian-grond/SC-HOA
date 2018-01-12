@@ -1,5 +1,5 @@
 (
-  name: "HOA",
+  name: "SC-HOA",
   summary: "SuperCollider Higher Order Ambisonics",
   version: "0.1.0",
   schelp: "SC-HOA",
