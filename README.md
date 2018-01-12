@@ -12,41 +12,24 @@ Frontend classes are wrappers that select the correct low-level UGen depending o
 
 [^1]: binary files are not included in this repository, see [Install](#install) for details.
 
-## Install
+## Installation
 
-This repository contains several folders as described below. 
+Install the SC-HOA quark using:
+
+Quarks.gui
+
+or by
+
+Quarks.install("https://github.com/florian-grond/SC-HOA");
+
+In order to use the library you also need to install the HOA plugins.
+A PR to the SC3 plugins has been submitted, meanwhile you can compile SC3plugins + HOA here:
+(compiled plugins SC3plugins for 3.8 and 3.9 with supernova support are also provided at this link)
+https://github.com/florian-grond/sc3-pluginsHOA
+
 There are additional sources you might need (FIR filters, 3rd order recordings for testing the tutorial and radial filters). Please [contact](http://www.grond.at/html/submenues/submenu_contact.htm) me if you need them.
 
+## Acknowledgements
 
-### `HOA` 
-
-Contains classes, pseudo-`UGens`, help and tutorial files.
-Should be installed either 
-
-in the extensions folder 
-
-```Platform.userExtensionDir; // see below```
-
-or included in the the Language configuration file, either via IDE preferences (Interpreter/Include), or by running 
-
-```LanguageConfig.addIncludePath("/path/to/HOA")```
-
-help and tutorial files are then accessible via the help system from within SuperCollider. An entry-point to the documentation is e.g. the `HOA` class documentation.
-
-### `HOAplugins`
-
-The FAUST-generated CPP sources, ready to be compiled into plugins. The compilation requires [faust](http://faust.grame.fr/) headers (via [git repository](https://github.com/grame-cncm/faust)) and SuperCollider headers to be installed on your system.
-The resulting plugins (`.scx, .sc` on OSX, `.so, .sc` on linux) should be installed as described below.
-
-### `HOAplugins_compiled`
-
-Pre-compiled plugins (OSX, linux). 
-Should be installed in the extensions folder: 
-
-```
-// return path of the user extension directory by running 
-Platform.userExtensionDir;
-
-// open user extension directory
-Platform.userExtensionDir.openOS;
-```
+The implementation of SC-HOA was supported by a postdoctoral fellowship of Fonds de Recherche du Québec - Société et Culture (FRQSC) http://www.frqsc.gouv.qc.ca/ conducted at CIRMMT https://www.cirmmt.org/ and through the Metalab at the Société des Arts Technologiques http://sat.qc.ca/ in Montreal.
+Special thanks goes to Till Bovermann, Carlo Capocasa, Nicolas Bouillot and Michal Seta.
