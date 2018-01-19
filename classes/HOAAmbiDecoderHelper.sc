@@ -1,6 +1,5 @@
 /*
-2016/2017 Florian Grond
-additions by Till Bovermann ( http://tai-studio.org )
+2018 Florian Grond
 */
 
 
