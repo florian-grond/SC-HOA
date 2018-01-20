@@ -1,5 +1,6 @@
 /*
-2018 Florian Grond
+2016/2017 Florian Grond
+additions by Till Bovermann ( http://tai-studio.org )
 */
 
 
@@ -29,18 +30,12 @@ HOAAmbiDecoderHelper {
 	specifySpeakersAsXYZ{|speakers|
 		this.speakerPositions = [];
 		this.speakerLabels = [];
-		speakers.do({|item,i|
-			  this.speakerPositions.add( Cartesian(item[0], item[1], item[2] ));
-			  this.speakerLabels.add(i);
-		});
-		this.speakerPositions.postcs;
-		this.calculateCenterOfGravity();
-		this.speakerPositions.postcs;
 		this.speakerPositions = speakers.collect({|item,i| Cartesian(item[0], item[1], item[2] ) });
 
 		this.speakerLabels = speakers.collect({|item,i| item[3] });
-		this.speakerLabels.do({|item,i|  if(this.speakerLabels[i] == nil, {this.speakerLabels[i] =i})  });
+		this.speakerLabels.do({|item,i|  if(this.speakerLabels[i] == nil, {this.speakerLabels[i] =i},{this.speakerLabels[i]})  });
 		this.calculateCenterOfGravity();
+		this.sweeterPositions = this.speakerPositions.deepCopy;
 
 	}
 
@@ -53,6 +48,7 @@ HOAAmbiDecoderHelper {
 		this.speakerLabels = speakers.collect({|item,i| item[3] });
 		this.speakerLabels.do({|item,i|  if(this.speakerLabels[i] == nil, {this.speakerLabels[i] =i})  });
 		this.calculateCenterOfGravity();
+		this.sweeterPositions = this.speakerPositions.deepCopy;
 	}
 
 
@@ -88,7 +84,7 @@ HOAAmbiDecoderHelper {
         file.write("    [val.x val.y val.z] = sph2cart(val.az, val.el, 1); \n\n\n");
 
         file.write("val.id = {");
-		speakerPositions.do({|item,i|  file.write((i+1).asString); if(i<(speakerPositions.size-1),  {file.write(",")});         } );
+		speakerLabels.do({|item,i|  file.write("'"++item.asString++"'"); if(i<(speakerPositions.size-1),  {file.write(",")});         } );
         file.write("}; \n\n\n end");
         file.close;
 	}
