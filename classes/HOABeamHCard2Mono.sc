@@ -6,7 +6,7 @@ HOABeamHCard2Mono{
 			                    in2, in3, in4;
                                #in1, // distribute the channels from the array
 			                     in2, in3, in4 = in;
-			              ^FaustHOABeamHCardio2Mono1.ar(in1, // return the Ugen with the b-format channels
+			              ^HOABeamHCardio2Mono1.ar(in1, // return the Ugen with the b-format channels
 				                                            in2, in3, in4,
 				                                            azimuth: az, elevation: ele, output_gain: gain)} // and with the args from the *ar method
 		       {order == 2}
@@ -16,7 +16,7 @@ HOABeamHCard2Mono{
                              #in1, // distribute the channels from the array
 			                   in2, in3, in4,
 			                   in5, in6, in7, in8, in9 = in;
-			              ^FaustHOABeamHCardio2Mono2.ar(in1, // return the Ugen with the b-format channels
+			              ^HOABeamHCardio2Mono2.ar(in1, // return the Ugen with the b-format channels
 				                                            in2, in3, in4,
 				                                            in5, in6, in7, in8, in9,
 				                                           azimuth: az, elevation: ele, output_gain: gain)} // and with the args from the *ar method
@@ -29,7 +29,7 @@ HOABeamHCard2Mono{
 			                    in2, in3, in4,
 			                    in5, in6, in7, in8, in9,
 			                    in10, in11, in12, in13, in14, in15, in16 = in;
-			             ^FaustHOABeamHCardio2Mono3.ar(in1,  // return the Ugen with the b-format channels
+			             ^HOABeamHCardio2Mono3.ar(in1,  // return the Ugen with the b-format channels
 				                                           in2, in3, in4,
 				                                           in5, in6, in7, in8, in9,
 				                                           in10, in11, in12, in13, in14, in15, in16,
@@ -48,7 +48,7 @@ HOABeamHCard2Mono{
 				"order 4 is not implemented for HOABeamHCardio2Mono. \n returning unaltered omni channel.".postln;
 			^[ in1]
 		/*
-			^FaustHOABeamHCardio2Mono4.ar(in1,  // return the Ugen with the b-format channels
+			^HOABeamHCardio2Mono4.ar(in1,  // return the Ugen with the b-format channels
 				                                           in2, in3, in4,
 				                                           in5, in6, in7, in8, in9,
 				                                           in10, in11, in12, in13, in14, in15, in16,
@@ -73,7 +73,7 @@ HOABeamHCard2Mono{
 			^[ in1]
 
 			/*
-			^FaustHOABeamHCardio2Mono5.ar(in1,  // return the Ugen with the b-format channels
+			^HOABeamHCardio2Mono5.ar(in1,  // return the Ugen with the b-format channels
 				                                           in2, in3, in4,
 				                                           in5, in6, in7, in8, in9,
 				                                           in10, in11, in12, in13, in14, in15, in16,
