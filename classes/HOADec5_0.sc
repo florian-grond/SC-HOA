@@ -8,7 +8,7 @@ HOADec5_0{
 			                    in2, in3, in4, decoded;
                                #in1, // distribute the channels from the array
 			                     in2, in3, in4 = in;
-			              ^FaustITU5001.ar(in1, // return the Ugen
+			              ^ITU5001.ar(in1, // return the Ugen
 				                                            in2, in3, in4,
 				                                            gain: gain.ampdb, lf_hf: lf_hf, mute:mute, xover:xover );
 
@@ -20,7 +20,7 @@ HOADec5_0{
                              #in1, // distribute the channels from the array
 			                   in2, in3, in4,
 			                   in5, in6, in7, in8, in9 = in;
-			              ^FaustITU5002.ar(in1,
+			              ^ITU5002.ar(in1,
 				                                            in2, in3, in4,
 				                                            in5, in6, in7, in8, in9,
 				                                            gain: gain.ampdb, lf_hf: lf_hf, mute:mute, xover:xover );
@@ -35,7 +35,7 @@ HOADec5_0{
 			                    in2, in3, in4,
 			                    in5, in6, in7, in8, in9,
 			                    in10, in11, in12, in13, in14, in15, in16 = in;
-			             ^FaustITU5003.ar(in1,  // return the Ugen
+			             ^ITU5003.ar(in1,  // return the Ugen
 				                                           in2, in3, in4,
 				                                           in5, in6, in7, in8, in9,
 				                                           in10, in11, in12, in13, in14, in15, in16,
@@ -55,7 +55,7 @@ HOADec5_0{
 			                    in5, in6, in7, in8, in9,
 			                    in10, in11, in12, in13, in14, in15, in16,
 			                    in17, in18, in19, in20, in21, in22, in23, in24, in25 = in;
-			             ^FaustITU5004.ar(in1,  // return the Ugen
+			             ^ITU5004.ar(in1,  // return the Ugen
 				                                           in2, in3, in4,
 				                                           in5, in6, in7, in8, in9,
 				                                           in10, in11, in12, in13, in14, in15, in16,
