@@ -22,8 +22,8 @@ s.options
 
 // initialise everything for the tests
 s.doWhenBooted{
-	HOADecLebedev26.loadHrirFilters(s, "/localvol/sound/src/ambitools/FIR/hrir/hrir_christophe_lebedev50");
-	HOADecLebedev06.loadHrirFilters(s, "/localvol/sound/src/ambitools/FIR/hrir/hrir_christophe_lebedev50");
+	HOADecLebedev26.loadHrirFilters(s, "~/Documents/repos/ambitools/FIR/hrir/hrir_christophe_lebedev50");
+	HOADecLebedev06.loadHrirFilters(s, "~/Documents/repos/ambitools/FIR/hrir/hrir_christophe_lebedev50");
 	~order = 4;
 	~hoaNumChannels = (~order+1).pow(2);
 

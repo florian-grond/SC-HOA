@@ -67,7 +67,7 @@ HOADecLebedev {
 
 		decoded = switch(order.asInt,
 			1, {
-				FaustHOADecLebedev061.ar(
+				HOADecLebedev061.ar(
 					in[0], in[1], in[2], in[3],
 					inputs_gain: input_gains,
 					outputs_gain: output_gains,
@@ -76,7 +76,7 @@ HOADecLebedev {
 				);
 			},
 			2, {
-				FaustHOADecLebedev262.ar(
+				HOADecLebedev262.ar(
 					in[0], in[1], in[2], in[3], in[4],
 					in[5], in[6], in[7], in[8],
 					inputs_gain: input_gains,
@@ -86,7 +86,7 @@ HOADecLebedev {
 				);
 			},
 			3, {
-				FaustHOADecLebedev263.ar(
+				HOADecLebedev263.ar(
 					in[ 0], in[ 1], in[ 2], in[ 3],
 					in[ 4], in[ 5], in[ 6], in[ 7],
 					in[ 8], in[ 9], in[10], in[11],
