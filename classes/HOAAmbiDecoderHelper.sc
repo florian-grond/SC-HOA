@@ -10,9 +10,9 @@ HOAAmbiDecoderHelper {
 	var   <>speakerPositions; //,
 	var   <>sweeterPositions; //,
 	var   <>speakerLabels; //
-	var   <>listenerPosition;
 	var   <>centerOfGravity;
 	var   <>decoderPath;
+	var   <>sweetSpot;
 
 	initClass {|path|
 	}
@@ -65,14 +65,12 @@ HOAAmbiDecoderHelper {
 		centerOfGravity = array.sum / size;
 	}
 
-
     setSweetSpot{|sweet|
-		var sweetSpot = Cartesian(sweet[0],sweet[1],sweet[2]);
+		this.sweetSpot = Cartesian(sweet[0],sweet[1],sweet[2]);
 
 		this.sweeterPositions = this.speakerPositions.deepCopy;
-		this.speakerPositions.do({|item,i| this.sweeterPositions[i] = this.speakerPositions[i]  -  sweetSpot;    });
+		this.speakerPositions.do({|item,i| this.sweeterPositions[i] = this.speakerPositions[i]  -  this.sweetSpot;    });
 	}
-
 
 	makeAmbiDecoderSpeakerPositionFile
 	{this.speakerPositionFile(this.ambiToolboxPath++"examples/"++this.speakerArrayName++".m")}
@@ -100,7 +98,7 @@ HOAAmbiDecoderHelper {
 	}
 
 
-	makeambiDecoderAllradRunFile{|order=2, chanOrder='ACN', chanNorm='N3D'|
+	makeAmbiDecoderAllradRunFile{|order=2, chanOrder='ACN', chanNorm='N3D'|
 		this.ambiDecoderAllradRunFile(this.ambiToolboxPath, order, chanOrder, chanNorm);
 	}
 
@@ -127,63 +125,143 @@ HOAAmbiDecoderHelper {
 		file.write("\t chanOrder = '"++chanOrder++"' ; % the channel order convention AMBIX or FUMA \n");
 		file.write("\t chanNorm = '"++chanNorm++"' ; % the channel order normalization N3D or SN3D \n");
 		file.write("\t imgSpeakers = [0 0 -1]; \n");
+		//file.write("\t decoder_type = 2; % (1) 1 band (2) 2 band one matrix (3) 2 band 2 matricies \n");
 		file.write("\t out_path = '"++ this.decoderPath++"decoders/"++this.speakerArrayName++"'; \n");
 
-		file.write("\n\n");
-    	file.write("\t C = ambi_channel_definitions(h_order, v_order, mixed_order_scheme, chanOrder, chanNorm); \n");
-
-		file.write("\n\n");
-		file.write("\t% execute the ambi_run_allrad() function with the parameters from above\n");
-		file.write("\t ambi_run_allrad(...\n");
-		file.write("\t\t S, ...  % speaker array struct\n");
-		file.write("\t\t C, ...  % ambisonic order [h, v]\n");
-		file.write("\t\t imgSpeakers, ... % imaginary speakers, none in this case\n");
-		file.write("\t\t out_path, ... % outpath where the files are written to, [] = default\n");
-		file.write("\t\t true, ... % do plots, default is true for MATLAB, false for Octave\n");
-		file.write("\t\t mixed_order_scheme ...% mixed order scheme HV or HP\n");
-		file.write("\t);\n");
-
-		file.write("\n");
+        file.write("\n");
 		file.write("\t% set the correct path for the execution of the faust scripts\n");
 		file.write("\t PATH = getenv('PATH'); \n");
 		file.write("\t setenv('PATH', [PATH ':/usr/local/bin']); \n");
 
+		file.write("\n\n");
+		file.write("\t% looping up to the order set above \n");
+
+		file.write("\t for order = 1:h_order \n");
+		file.write("\n \t % set the channel definition first\n");
+    	file.write("\t\t C = ambi_channel_definitions(order, order, mixed_order_scheme, chanOrder, chanNorm); \n");
+
+		file.write("\t\t% execute the ambi_run_allrad() function with the parameters from above\n");
+		file.write("\t\t ambi_run_allrad(...\n");
+		file.write("\t\t\t S, ...  % speaker array struct\n");
+		file.write("\t\t\t C, ...  % ambisonic order as definded in the channel struct C\n");
+		file.write("\t\t\t imgSpeakers, ... % imaginary speakers, none in this case\n");
+		file.write("\t\t\t strcat(out_path,num2str(order,0)), ... % outpath where the files are written to, [] = default\n");
+		file.write("\t\t\t true, ... % do plots, default is true for MATLAB, false for Octave\n");
+		// file.write("\t\t\t mixed_order_scheme ...% mixed order scheme HV or HP\n");
+		// file.write("\t\t\t decoder_type ...% decoder type 1, 2 or 3\n");
+		file.write("\t\t\t mixed_order_scheme ...% mixed order scheme HV or HP\n");
+		// file.write("\t\t\t decoder_type ...% decoder type 1, 2 or 3\n");
+		file.write("\t\t);\n");
 		file.write("\n");
 		file.write("\t% convert the faustfile generated with the abisonics decoder toolkit from above into scsynth and supernova Ugens\n");
-		file.write("\t unix('faust2supercollider -sn "++this.decoderPath++"decoders/"++this.speakerArrayName++".dsp');\n");
 
-		//file.write("\n");
-		//file.write("\t% create a directory with the speaker array name \n");
-		//file.write("\t unix('mkdir "++this.ambiToolboxPath++this.speakerArrayName++"');\n");
+		file.write("\t unix(strcat(\"faust2supercollider -sn -ks \",out_path,num2str(order,0),\".dsp\"));\n");
 
-		/*
-		file.write("\n");
-		file.write("\t% move all files the files into it\n");
-		file.write("\t unix('mv "++
-			       path_ADT++"decoders "++
-			       path_ADT++this.speakerArrayName++"');\n");
-
-		file.write("\t unix('mv "++
-			       path_ADT++"examples/"++"run_dec_"++this.speakerArrayName++".m "++
-			       path_ADT++this.speakerArrayName++"/run_dec_"++this.speakerArrayName++".m""');\n");
-
-	    file.write("\t unix('mv "++
-			       path_ADT++"examples/"++this.speakerArrayName++".m "++
-			       path_ADT++this.speakerArrayName++"/"++this.speakerArrayName++".m""');\n");
-
-	    file.write("\t unix('mv "++
-			       path_ADT++"examples/"++this.speakerArrayName++".schelp "++
-			       path_ADT++this.speakerArrayName++"/"++this.speakerArrayName++".schelp""');\n");
-        */
+		file.write("\t end \n");
 
 		file.write("end \n");
 
 		file.close;
 	}
 
+	makeWrapperClass{|path_ADT, order|
+		var file, path, counter;
+		counter = 1;
+		path = path_ADT++"decoders/HOADec"++this.speakerArrayName++".sc";
+		path.postln;
+		file = File.open(path,"w");
+		file.write("HOADec"++this.speakerArrayName++"{\n\n");
+
+		file.write("classvar <>speakerPositions;\n");
+		file.write("classvar <>sweeterPositions;\n");
+		file.write("classvar <>speakerLabels;\n");
+		file.write("classvar <>sweetSpot;\n\n");
+
+		file.write("*initClass { \n");
+		file.write("speakerPositions = [\n");
+		this.speakerPositions.do({|item,i| if(i<(this.speakerPositions.size-1),
+			{file.write("\t\t\t\t\t"++item.asCompileString++",  //"++this.speakerLabels[i]++"\n")},
+			{file.write("\t\t\t\t\t"++item.asCompileString++"  //"++this.speakerLabels[i]++"\n")})}
+		      );
+		file.write("\t\t\t\t\t];\n\n");
+
+		file.write("sweeterPositions = [\n");
+		this.sweeterPositions.do({|item,i| if(i<(this.sweeterPositions.size-1),
+			{file.write("\t\t\t\t\t"++item.trunc(0.001).asCompileString++",  //"++this.speakerLabels[i]++"\n")},
+			{file.write("\t\t\t\t\t"++item.trunc(0.001).asCompileString++"  //"++this.speakerLabels[i]++"\n")})}
+		     );
+		file.write("\t\t\t\t\t];\n\n");
+
+		file.write("speakerLabels = [\n");
+		this.speakerLabels.do({|item,i| if(i<(this.speakerLabels.size-1),
+			{file.write("\t\t\t\t\t"++item.asCompileString++",\n")},
+			{file.write("\t\t\t\t\t"++item.asCompileString++"\n")})}
+		     );
+		file.write("\t\t\t\t\t];\n\n");
+
+		file.write("sweetSpot = "++this.sweetSpot.trunc(0.001).asCompileString++";\n\n");
+
+		file.write("}\n\n");
+
+		file.write("*ar { |order, in, gain(-10.0), lf_hf(0.0), mute(0.0), xover(400.0)|\n");
+		if(counter <= order,
+		{
+        file.write("// declare variables for the b-format array in\n");
+        file.write("// distribute the channels from the array over in1 ... inN\n");
+        file.write("// return the Ugen with the b-format channels and with the args from the *ar method\n");
+        file.write("case\n{order == 1}\n");
+        file.write("\t{ var in1, in2, in3, in4; \n");
+        file.write("\t#in1,in2, in3, in4 = in; \n");
+		file.write("\t^Faust"++this.speakerArrayName++counter.asString++".ar(in1, in2, in3, in4, gain, lf_hf, mute, xover)}\n\n");
+		});
+		counter = counter + 1;
+		if(counter <= order,
+		{
+	    file.write("{order == 2}\n");
+        file.write("\t{ var in1, in2, in3, in4, in5, in6, in7, in8, in9; \n");
+        file.write("\t#in1, in2, in3, in4, in5, in6, in7, in8, in9 = in; \n");
+        file.write("\t^Faust"++this.speakerArrayName++counter.asString++".ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, gain, lf_hf, mute, xover)}\n\n");
+		}
+		);
+		counter = counter + 1;
+		if(counter <= order,
+		{
+	    file.write("{order == 3}\n");
+        file.write("\t{ var in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16; \n");
+        file.write("\t#in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16 = in; \n");
+        file.write("\t^Faust"++this.speakerArrayName++counter.asString++".ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, gain, lf_hf, mute, xover)}\n\n");
+		}
+		);
+		counter = counter + 1;
+		if(counter <= order,
+		{
+	    file.write("{order == 4}\n");
+        file.write("\t{ var in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25; \n");
+        file.write("\t#in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25 = in; \n");
+        file.write("\t^Faust"++this.speakerArrayName++counter.asString++".ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25, gain, lf_hf, mute, xover)} \n\n");
+		}
+		);
+		counter = counter + 1;
+		if(counter <= order,
+		{
+	    file.write("{order == 5}\n");
+        file.write("\t{var in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25, in26, in27, in28, in29, in30, in31, in32, in33, in34, in35, in36; \n");
+        file.write("\t#in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25, in26, in27, in28, in29, in30, in31, in32, in33, in34, in35, in36 = in; \n");
+        file.write("\t^Faust"++this.speakerArrayName++counter.asString++".ar(in1,in2, in3, in4,in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25, in26, in27, in28, in29, in30, in31, in32, in33, in34, in35, in36, gain, lf_hf, mute, xover)} \n\n");
+
+				file.write("{\"Order "++counter.asString++" is not implemented for HOADec"++this.speakerArrayName++"\".postln} \n } \n\n");
+		}
+		);
+
+
+
+		file.write("\n\n}");
+
+		file.close
+	}
 
 	install{
-		 File.mkdir(thisProcess.platform.userExtensionDir++"/HOAdecoders/");
+		File.mkdir(thisProcess.platform.userExtensionDir++"/HOAdecoders/");
 		File.copy(this.decoderPath++"/decoders/", thisProcess.platform.userExtensionDir++"/HOAdecoders/"++this.speakerArrayName )
 	}
 
@@ -217,9 +295,6 @@ p.close;					// close the pipe to avoid that nasty buildup \n
 ::\n");
 
 		file.close;
-
-
-
 	}
 
 
@@ -237,4 +312,32 @@ p.close;					// close the pipe to avoid that nasty buildup \n
 	}
 
 }
+
+
+
+
+
+		//file.write("\n");
+		//file.write("\t% create a directory with the speaker array name \n");
+		//file.write("\t unix('mkdir "++this.ambiToolboxPath++this.speakerArrayName++"');\n");
+
+		/*
+		file.write("\n");
+		file.write("\t% move all files the files into it\n");
+		file.write("\t unix('mv "++
+			       path_ADT++"decoders "++
+			       path_ADT++this.speakerArrayName++"');\n");
+
+		file.write("\t unix('mv "++
+			       path_ADT++"examples/"++"run_dec_"++this.speakerArrayName++".m "++
+			       path_ADT++this.speakerArrayName++"/run_dec_"++this.speakerArrayName++".m""');\n");
+
+	    file.write("\t unix('mv "++
+			       path_ADT++"examples/"++this.speakerArrayName++".m "++
+			       path_ADT++this.speakerArrayName++"/"++this.speakerArrayName++".m""');\n");
+
+	    file.write("\t unix('mv "++
+			       path_ADT++"examples/"++this.speakerArrayName++".schelp "++
+			       path_ADT++this.speakerArrayName++"/"++this.speakerArrayName++".schelp""');\n");
+        */
 	

@@ -20,4 +20,5 @@ LIST::
 ## link::Tutorials/Exercise_11_HOA_NRT_using_scores_and_Buffers:: - NRT synthesis, working with Buffers.
 ## link::Tutorials/Exercise_12_HOA_NRT_conversion_script_N3D_SN3D_FUMA:: - NRT conversion script between N3D, SN3D, and FuMa.
 ## link::Tutorials/Exercise_13_HOA_NRT_decoding_script:: - NRT script to decode the b-format to speaker arrays.
+## link::Tutorials/Exercise_14_HOA_ADT_DecoderHelper:: - Helper class for decoders depending on Faust and Matlab/Octave.
 ::

@@ -7,6 +7,9 @@ related:: Guides/HOAguide, Guides/HOAguide
 STRONG:: Previous:::
 link::Tutorials/Exercise_12_HOA_NRT_conversion_script_N3D_SN3D_FUMA::
 
+STRONG:: Next:::
+link::Tutorials/Exercise_14_HOA_ADT_DecoderHelper::
+
 The code below is a non-real-time NRT script to decode your compositions for a 5.0 speaker array.
 
 First things first: let's start the sound server, which we configure first to get more audio buses and to have 36 output channels.
@@ -121,4 +124,4 @@ File.delete( thisProcess.platform.userHomeDir++"/5_0decodedHOA_norm.wav");
 
 
 STRONG:: Previous:::
-link::Tutorials/Exercise_12_HOA_NRT_conversion_script_N3D_SN3D_FUMA::
+link::Tutorials/Exercise_14_HOA_ADT_DecoderHelper::
