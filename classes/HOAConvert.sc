@@ -21,8 +21,8 @@ HOAConvert{
 		{ "Conversion FROM FuMa only supported up to order 3 \n Returning b-format as is.".postln; unconverted = 1; };
 
 		case{unconverted == 1}
-		{HOAPassThrough.ar(order, in)}
-
+		{^in}
+/*
 		// converting ACN_N3D  to \ACN_SN3D
 	    case{inputFormat == 1 && outputFormat == 2}
 			{ ^HOAConverterAcnN3d2AcnSn3d.ar(order, in)}
@@ -46,6 +46,35 @@ HOAConvert{
 		// converting FuMa  to \ACN_SN3D
 	    case{inputFormat == 3 && outputFormat == 2}
 			{ ^HOAConverterFuma2AcnSn3d.ar(order, in)}
+
+		*/
+
+
+				// converting ACN_N3D  to \ACN_SN3D
+	    case{inputFormat == 1 && outputFormat == 2}
+			{ ^in}
+
+		// converting ACN_N3D  to \FuMa
+	    case{inputFormat == 1 && outputFormat == 3}
+			{ ^in}
+
+		// converting ACN_SN3D  to \ACN_N3D
+	    case{inputFormat == 2 && outputFormat == 1}
+			{ ^in}
+
+		// converting ACN_SN3D  to \FuMa
+	    case{inputFormat == 2 && outputFormat == 3}
+			{ ^in}
+
+		// converting FuMa  to \ACN_N3D
+	    case{inputFormat == 3 && outputFormat == 1}
+			{ ^in}
+
+		// converting FuMa  to \ACN_SN3D
+	    case{inputFormat == 3 && outputFormat == 2}
+			{ ^in}
+
+
 
 	}
 }
