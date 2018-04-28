@@ -3,7 +3,7 @@
   summary: "SuperCollider Higher Order Ambisonics",
   version: "0.1.2.1",
   schelp: "Guides/HOAguide",
-  dependencies: #[ ],
+  dependencies: #[ MathLib ],
   url: "https://github.com/florian-grond/SC-HOA/tree/master/HOA",
   since: "2017",
   license: "GPL",
