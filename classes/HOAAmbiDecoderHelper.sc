@@ -249,7 +249,7 @@ HOAAmbiDecoderHelper {
         file.write("\t#in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25, in26, in27, in28, in29, in30, in31, in32, in33, in34, in35, in36 = in; \n");
         file.write("\t^Faust"++this.speakerArrayName++counter.asString++".ar(in1,in2, in3, in4,in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25, in26, in27, in28, in29, in30, in31, in32, in33, in34, in35, in36, gain, lf_hf, mute, xover)} \n\n");
 
-				file.write("{\"Order "++counter.asString++" is not implemented for HOADec"++this.speakerArrayName++"\".postln} \n } \n\n");
+				file.write("{\"Order "++counter.asString++" is not implemented for HOADec"++this.speakerArrayName++"\".postln} \n } } \n\n");
 		}
 		);
 
