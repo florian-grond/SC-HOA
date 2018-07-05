@@ -36,7 +36,8 @@ HOAAmbiDecoderHelper {
 	specifySpeakersAsXYZ{|speakers|
 		this.speakerPositions = [];
 		this.speakerLabels = [];
-		this.speakerPositions = speakers.collect({|item,i| Cartesian(item[0], item[1], item[2] ) });
+	// 	this.speakerPositions = speakers.collect({|item,i| Cartesian(item[0], item[1], item[2] ) });
+		this.speakerPositions = speakers.collect({|item,i| [ item[0], item[1], item[2] ] });
 
 		this.speakerLabels = speakers.collect({|item,i| item[3] });
 		this.speakerLabels.do({|item,i|  if(this.speakerLabels[i] == nil, {this.speakerLabels[i] =i},{this.speakerLabels[i]})  });
@@ -45,9 +46,12 @@ HOAAmbiDecoderHelper {
 
 	}
 
+	/*
 	specifySpeakersAsRadAzEl{|speakers|
 		this.speakerPositions = [];
 		this.speakerLabels = [];
+//		this.speakerPositions = speakers.collect({|item,i| Spherical(item[0], item[1].linlin(-180, 180, -pi, pi),
+//			item[2].linlin(-180, 180, -pi, pi) ).asCartesian.trunc(0.00000001) });
 		this.speakerPositions = speakers.collect({|item,i| Spherical(item[0], item[1].linlin(-180, 180, -pi, pi),
 			item[2].linlin(-180, 180, -pi, pi) ).asCartesian.trunc(0.00000001) });
 
@@ -56,17 +60,18 @@ HOAAmbiDecoderHelper {
 		this.calculateCenterOfGravity();
 		this.sweeterPositions = this.speakerPositions.deepCopy;
 	}
-
+*/
 
 	calculateCenterOfGravity{
 		var array, size;
 		size = speakerPositions.size;
-		array = speakerPositions.collect({|item,i|   item.asArray   }).deepCopy;
+		array = speakerPositions.collect({|item,i|   item   }).deepCopy;
 		centerOfGravity = array.sum / size;
 	}
 
     setSweetSpot{|sweet|
-		this.sweetSpot = Cartesian(sweet[0],sweet[1],sweet[2]);
+// 		this.sweetSpot = Cartesian(sweet[0],sweet[1],sweet[2]);
+		this.sweetSpot = [sweet[0],sweet[1],sweet[2]];
 
 		this.sweeterPositions = this.speakerPositions.deepCopy;
 		this.speakerPositions.do({|item,i| this.sweeterPositions[i] = this.speakerPositions[i]  -  this.sweetSpot;    });
@@ -84,8 +89,14 @@ HOAAmbiDecoderHelper {
         file.write("val.name = '"++this.speakerArrayName++"';\n\n\n");
 
         file.write("S=[\n");
-        sweeterPositions.do({|item,i|
-			file.write(  "\t"++"\t"++item.x.trunc(0.0001).asString++"\t"++item.y.trunc(0.0001).asString++"\t"++item.z.trunc(0.0001).asString++"\n"  )    });
+
+        //sweeterPositions.do({|item,i|
+		//	file.write(  "\t"++"\t"++item.x.trunc(0.0001).asString++"\t"++item.y.trunc(0.0001).asString++"\t"++item.z.trunc(0.0001).asString++"\n"  )    });
+
+		sweeterPositions.do({|item,i|
+			file.write(  "\t"++"\t"++item[0].trunc(0.0001).asString++"\t"++item[1].trunc(0.0001).asString++"\t"++item[2].trunc(0.0001).asString++"\n"  )    });
+
+
         file.write("];\n\n\n");
 
         file.write("    [val.az val.el val.r] = cart2sph(S(:,1),S(:,2),S(:,3)); \n");
@@ -249,7 +260,7 @@ HOAAmbiDecoderHelper {
         file.write("\t#in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25, in26, in27, in28, in29, in30, in31, in32, in33, in34, in35, in36 = in; \n");
         file.write("\t^Faust"++this.speakerArrayName++counter.asString++".ar(in1,in2, in3, in4,in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25, in26, in27, in28, in29, in30, in31, in32, in33, in34, in35, in36, gain, lf_hf, mute, xover)} \n\n");
 
-				file.write("{\"Order "++counter.asString++" is not implemented for HOADec"++this.speakerArrayName++"\".postln} \n } } \n\n");
+				file.write("{\"Order "++counter.asString++" is not implemented for HOADec"++this.speakerArrayName++"\".postln} \n } \n\n");
 		}
 		);
 
