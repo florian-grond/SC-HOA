@@ -83,6 +83,7 @@ HOAAmbiDecoderHelper {
 	speakerPositionFile{|path|
 		var file;
 
+
 		file = File.open(path ,"w");
 
 		file.write("function [ val ] =" ++ this.speakerArrayName++"() \n");
