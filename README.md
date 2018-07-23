@@ -26,7 +26,7 @@ https://github.com/florian-grond/sc3-pluginsHOA
 (compiled plugins SC3plugins for 3.8 and 3.9 with supernova support are also provided at this link)
 
 There are additional sources you might need e.g. FIR filters for binaural decoding:
-Download them here https://github.com/sekisushai/ambitools and place the downloaded FIR folder in the HOA folder.
+Download them here https://github.com/sekisushai/ambitools and place the downloaded FIR folder in the HOA/kernels folder.
 Depending on the platform you have this is:
 ~/.local/share/HOA/kernels/ or ~/Library/Application Support/HOA/kernels/
 You can find the right path by executing
