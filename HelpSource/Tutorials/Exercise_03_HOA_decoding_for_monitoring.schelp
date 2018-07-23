@@ -100,6 +100,23 @@ s.scope(26); // To see all channels we add one more to the oscilloscope
 ::
 
 Now let's load HRIR filters for each of the 26 channels:
+Download them first here link::https://github.com/sekisushai/ambitools:: and place the FIR folder in the HOA folder.
+
+Depending on the platform you have this is:
+
+~/.local/share/HOA/
+
+or
+
+~/Library/Application Support/HOA/
+
+You can find the right path by executing
+
+code::
+HOA.userSupportDir
+::
+
+Then execute:
 
 code::
 HOADecLebedev26.loadHrirFilters(s);
