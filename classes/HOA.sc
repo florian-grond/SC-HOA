@@ -22,17 +22,17 @@ HOA {
 
 
 	*userSoundsDir {
-		userSupportDir +/+ soundsSubdir;
+		^userSupportDir +/+ soundsSubdir
 	}
 	*systemSoundsDir {
-		systemSupportDir +/+ soundsSubdir;
+		^systemSupportDir +/+ soundsSubdir
 	}
 
 	*userKernelDir {
-		userSupportDir +/+ kernelSubdir;
+		^userSupportDir +/+ kernelSubdir
 	}
 	*systemKernelDir {
-		systemSupportDir +/+ kernelSubdir;
+		^systemSupportDir +/+ kernelSubdir
 	}
 
 	*openUserSupportDir {
