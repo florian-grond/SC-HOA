@@ -167,7 +167,7 @@ HOAAmbiDecoderHelper {
 		file.write("\n");
 		file.write("\t% convert the faustfile generated with the abisonics decoder toolkit from above into scsynth and supernova Ugens\n");
 
-		file.write("\t unix(strcat(\"faust2supercollider -sn -ks \",out_path,num2str(order,0),\".dsp\"));\n");
+		file.write("\t unix(strcat(\"faust2supercollider -sn -ks -noprefix \",out_path,num2str(order,0),\".dsp\"));\n");
 
 		file.write("\t end \n");
 
