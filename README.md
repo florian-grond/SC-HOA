@@ -27,12 +27,13 @@ You might need additional resources to make use of SC-HOA (e.g. FIR filters for 
 These files can be obtained by downloading a copy of the [ambitools][1] repository. Make a copy of the folder called `FIR` and place it into your SC-HOA kernels folder.
 
 Depending on your system, you will need to create the SC-HOA kernels folder in the following locations:
- 
-| Linux      | `~/.local/share/HOA/kernels/`                         |
-| macOS      | `~/Library/Application Support/HOA/kernels/`          |
-| Windows    | `C:\Users\_your-username_\AppData\Local\HOA\kernels\` |
+
+* Linux `~/.local/share/HOA/kernels/`
+* macOS `~/Library/Application Support/HOA/kernels/`
+* Windows `C:\Users\_your-username_\AppData\Local\HOA\kernels\`
 
 You can find this path from within SuperCollider by executing the following:
+
 ```HOA.userKernelDir```
 
 If you need 3rd order recordings for testing the tutorial and radial filters, feel free to [contact me](http://www.grond.at/html/submenues/submenu_contact.htm).
