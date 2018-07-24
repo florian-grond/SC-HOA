@@ -1,11 +1,10 @@
 TITLE:: HOABeamHCard2Mono
-summary:: Mirroring of a higher order Ambisonics sound field
+summary:: dirrectional filtering of a higher order Ambisonic sound field
 categories:: Libraries>HOA
-related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
+related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview, HOABeamHCard2Hoa
 
 DESCRIPTION::
-(put long description here)
-
+dirrectional filtering of a higher order Ambisonic sound field rendered to mono.
 
 CLASSMETHODS::
 
@@ -24,14 +23,15 @@ azimuth angle of beam direction in degree (-pi to pi).
 ARGUMENT:: ele
 elevation angle of beam direction in degree (-pi * 0.5 to pi * 0.5).
 
+ARGUMENT:: int_float
+0: "cardOrder" integer step from 0 (omni) up to "order".
+1: float interpolation between "cardOrder" steps.
+
+ARGUMENT:: cardOrder
+cardioïde shape from 0 (omni) up to "order".
+
 ARGUMENT:: gain
 level in dB (default 0).
-
-ARGUMENT:: on
-(describe argument here)
-
-ARGUMENT:: crossfade
-(describe argument here)
 
 returns:: mono signal
 

@@ -1,0 +1,58 @@
+TITLE:: HOALibEnc3D
+summary:: Light wheight, plane wave alternative to HOAEcoder
+categories:: Libraries>HOA
+related:: HOAEncoder, HOAmbiPanner
+
+DESCRIPTION::
+HOALibEnc3D pans mono sound sources in a higher order Ambisonics sound field.
+
+Adapted from https://github.com/CICM/HoaLibrary-Faust
+the Faust implementation of CICM's HoaLib http://hoalibrary.mshparisnord.fr/en
+
+
+CLASSMETHODS::
+
+METHOD:: ar
+pseudo Ugen method returning Ugens based on Ambisonics order provided through the first argument.
+
+ARGUMENT:: order
+Ambisonics order 1-5.
+
+ARGUMENT:: in
+b-format as channel array.
+
+ARGUMENT:: az
+azimuth in degree -pi to pi.
+
+ARGUMENT:: elev
+elevation in degree -pi/2 to pi/2
+
+ARGUMENT:: gain
+in dB
+
+returns:: returns encoded HOA scene (4,9,16,25,36 channels depending on the order argument).
+
+INSTANCEMETHODS::
+
+EXAMPLES::
+
+code::
+(
+Server.local = Server.default;
+o = Server.local.options;
+o.numInputBusChannels = 1;
+o.numOutputBusChannels = 36;
+o.numAudioBusChannels = 2048 * 8;
+o.blockSize = 512 ;
+o.numWireBufs = 1024;
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+)
+
+// Rotate an audio scene around pitch yaw and roll
+( ~order = 2; // try different orders up to 5 and watch the scope window.
+s.scope((~order+1).pow(2));
+{HOALibEnc3D.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )}.play;
+)
+::
