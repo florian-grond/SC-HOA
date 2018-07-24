@@ -4,7 +4,7 @@
 
 ## Overview
 
-The HOA library provides classes to encode, transform and decode Higher Order Ambisonics sound signals up to order 5. The basis for the library are UGens compiled from Faust code written by Pierre Lecomte, see [ambitools](https://github.com/sekisushai/ambitools). Documentation and tutorials are partly based on the [ambitools documentation](https://github.com/sekisushai/ambitools/blob/master/Documentation/documentation.pdf) (pdf).
+The HOA library provides classes to encode, transform and decode Higher Order Ambisonics sound signals up to order 5. The basis for the library are UGens compiled from Faust code written by Pierre Lecomte, see [ambitools][1]. Documentation and tutorials are partly based on the [ambitools documentation](https://github.com/sekisushai/ambitools/blob/master/Documentation/documentation.pdf) (pdf).
 
 The SuperCollider library was written by [Florian Grond](http://www.grond.at). It includes soundfield recordings made together with Romain Dumoulin using the Eigenmike from [CIRMMT](http://www.cirmmt.org).
 
@@ -14,28 +14,33 @@ Frontend classes are wrappers that select the correct low-level UGen depending o
 
 ## Installation
 
-Installing the SC-HOA quark:
+To install the SC-HOA quark, either use the `Quarks.gui` interface or install it manually:
 
-Either use the Quarks.gui interface or install the quark manually:
+```Quarks.install("https://github.com/florian-grond/SC-HOA")```
 
-Quarks.install("https://github.com/florian-grond/SC-HOA");
-
-In order to use the library you also need to install the HOA plugins.
+In order to use this library, you will need to install the collection of SuperCollider plugins called _HOAUGens_.
 A PR to the SC3 plugins has been submitted, meanwhile you find compile instructions for SC3plugins + HOA here:
 https://github.com/florian-grond/sc3-pluginsHOA
 (compiled plugins SC3plugins for 3.8 and 3.9 with supernova support are also provided at this link)
 
-There are additional sources you might need e.g. FIR filters for binaural decoding:
-Download them here https://github.com/sekisushai/ambitools and place the downloaded FIR folder in the HOA/kernels folder.
-Depending on the platform you have this is:
-~/.local/share/HOA/kernels/ or ~/Library/Application Support/HOA/kernels/
-You can find the right path by executing
+You might need additional resources to make use of SC-HOA (e.g. FIR filters for binaural decoding).
+These files can be obtained by downloading a copy of the [ambitools][1] repository. Make a copy of the folder called `FIR` and place it into your SC-HOA kernels folder.
 
-HOA.userSupportDir
+Depending on your system, you will need to create the SC-HOA kernels folder in the following locations:
 
-3rd order recordings for testing the tutorial and radial filters). Please [contact](http://www.grond.at/html/submenues/submenu_contact.htm) me if you need them.
+* Linux `~/.local/share/HOA/kernels/`
+* macOS `~/Library/Application Support/HOA/kernels/`
+* Windows `C:\Users\_your-username_\AppData\Local\HOA\kernels\`
+
+You can find this path from within SuperCollider by executing the following:
+
+```HOA.userKernelDir```
+
+If you need 3rd order recordings for testing the tutorial and radial filters, feel free to [contact me](http://www.grond.at/html/submenues/submenu_contact.htm).
 
 ## Acknowledgements
 
 The implementation of SC-HOA was supported by a postdoctoral fellowship of Fonds de Recherche du Québec - Société et Culture (FRQSC) http://www.frqsc.gouv.qc.ca/ conducted at CIRMMT https://www.cirmmt.org/ and through the Metalab at the Société des Arts Technologiques http://sat.qc.ca/ in Montreal.
 Special thanks goes to Nicolas Bouillot, Michal Seta, Till Bovermann and Carlo Capocasa.
+
+[1]: https://github.com/sekisushai/ambitools
