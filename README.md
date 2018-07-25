@@ -41,6 +41,10 @@ If you need 3rd order recordings for testing the tutorial and radial filters, fe
 ## Acknowledgements
 
 The implementation of SC-HOA was supported by a postdoctoral fellowship of Fonds de Recherche du Québec - Société et Culture (FRQSC) http://www.frqsc.gouv.qc.ca/ conducted at CIRMMT https://www.cirmmt.org/ and through the Metalab at the Société des Arts Technologiques http://sat.qc.ca/ in Montreal.
-Special thanks goes to Nicolas Bouillot, Michal Seta, Till Bovermann and Carlo Capocasa.
+<<<<<<< HEAD
+Special thanks for contributions and feedback goes to Nicolas Bouillot, Michal Seta, Till Bovermann, Carlo Capocasa, Thibaud Keller and Julian Rohrhuber.
+=======
+Special thanks for code contribition and discussion goes to Nicolas Bouillot, Michal Seta, Till Bovermann, Carlo Capocasa, Thibaud Keller and Julian Rohrhuber.
 
 [1]: https://github.com/sekisushai/ambitools
+>>>>>>> ec5627f05b911161d86e251a379882b7eb51c99b
