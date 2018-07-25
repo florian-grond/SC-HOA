@@ -1,0 +1,48 @@
+TITLE:: HOALibOptim
+summary:: Converting of a higher order Ambisonics b-format
+categories:: Libraries>HOA
+related:: HOAEncoder, HOALibEnc3D
+
+DESCRIPTION::
+Pseudo Ugen method returning Ugens for the optimisation of HOA b-formats.
+
+Adapted from https://github.com/CICM/HoaLibrary-Faust
+the Faust implementation of CICM's HoaLib http://hoalibrary.mshparisnord.fr/en
+
+CLASSMETHODS::
+
+METHOD:: ar
+ARGUMENT:: order
+Ambisonics order 1-5.
+
+ARGUMENT:: in
+b-format as channel array.
+
+argument:: inPhase_MaxRE
+0: InPhase optimisation 1: MaxRe optimisation
+
+INSTANCEMETHODS::
+
+
+EXAMPLES::
+
+code::
+(
+Server.local = Server.default;
+o = Server.local.options;
+o.numInputBusChannels = 1;
+o.numOutputBusChannels = 36;
+o.numAudioBusChannels = 2048 * 8;
+o.blockSize = 512 ;
+o.numWireBufs = 1024;
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+)
+
+( s.scope((~order+1).pow(2));
+{ HOALibOptim.ar(~order,  HOAEncoder.ar(~order, WhiteNoise.ar(1.0)), 0 ) }.play )
+
+( s.scope((~order+1).pow(2));
+{ HOALibOptim.ar(~order,  HOAEncoder.ar(~order, WhiteNoise.ar(1.0)), 1 ) }.play )
+::

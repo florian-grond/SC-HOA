@@ -1,0 +1,61 @@
+TITLE:: HOAmbiPanner
+summary:: Light wheight, plane wave alternative to HOAEcoder
+categories:: Libraries>HOA
+related:: HOAEncoder, HOAAmbiDecoderHelper
+
+DESCRIPTION::
+HOAmbiPanner pans mono sound sources in a higher order Ambisonics sound field.
+
+Adapted from https://bitbucket.org/ambidecodertoolbox/adt/src/b6c8c11dc421e7b6a1261b03872788bbd7a8fee7/faust/ambi_panner_ambix_o5.dsp?at=master&fileviewer=file-view-default
+the Faust encoder provided by Aaron Heller's ambidecodertoolbox https://bitbucket.org/ambidecodertoolbox/adt.git
+otherwise used for creating higher order Ambisonic decoders.
+SC-HOA provides the HOAAmbiDecoderHelper class for creaing encoders using ambidecodertoolbox
+
+
+
+CLASSMETHODS::
+
+METHOD:: ar
+pseudo Ugen method returning Ugens based on Ambisonics order provided through the first argument.
+
+ARGUMENT:: order
+Ambisonics order 1-5.
+
+ARGUMENT:: in
+b-format as channel array.
+
+ARGUMENT:: az
+azimuth in degree -pi to pi.
+
+ARGUMENT:: elev
+elevation in degree -pi/2 to pi/2
+
+ARGUMENT:: gain
+in dB
+
+returns:: returns encoded HOA scene (4,9,16,25,36 channels depending on the order argument).
+
+INSTANCEMETHODS::
+
+EXAMPLES::
+
+code::
+(
+Server.local = Server.default;
+o = Server.local.options;
+o.numInputBusChannels = 1;
+o.numOutputBusChannels = 36;
+o.numAudioBusChannels = 2048 * 8;
+o.blockSize = 512 ;
+o.numWireBufs = 1024;
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+)
+
+// Rotate an audio scene around pitch yaw and roll
+( ~order = 2; // try different orders up to 5 and watch the scope window.
+s.scope((~order+1).pow(2));
+{HOAmbiPanner.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )}.play;
+)
+::
