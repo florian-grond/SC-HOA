@@ -18,7 +18,7 @@ To install the SC-HOA quark, either use the `Quarks.gui` interface or install it
 
 ```Quarks.install("https://github.com/florian-grond/SC-HOA")```
 
-In order to use this library, you will need a collection of SuperCollider UGens called _HOAUGens_. These UGens are available as part of the [sc3-plugins](https://supercollider.github.io/sc3-plugins/).See the website and GitHub repository for installation instructions. 
+In order to use this library, you will need a collection of SuperCollider UGens called _HOAUGens_. These UGens are available as part of the [sc3-plugins](https://supercollider.github.io/sc3-plugins/). See the website and GitHub repository for installation instructions. 
 
 > **note:** The HOAUGens were added to the sc3-plugins as of commit https://github.com/supercollider/sc3-plugins/commit/9326e1229a64ca82f76124a7a1a038095be22996
  
