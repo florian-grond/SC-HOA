@@ -6,8 +6,7 @@ related:: HOAEncoder, HOALibEnc3D
 DESCRIPTION::
 Pseudo Ugen method returning Ugens for the optimisation of HOA b-formats.
 
-Adapted from https://github.com/CICM/HoaLibrary-Faust
-the Faust implementation of CICM's HoaLib http://hoalibrary.mshparisnord.fr/en
+Adapted from https://github.com/CICM/HoaLibrary-Faust the Faust implementation of CICM's HoaLib http://hoalibrary.mshparisnord.fr/en
 
 CLASSMETHODS::
 

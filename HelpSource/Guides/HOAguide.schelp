@@ -5,6 +5,8 @@ related:: Tutorials/HOA_Tutorial_Overview
 
 he HOA library provides classes to encode, transform and decode Higher Order Ambisonics sound signals up to order 5. The basis for the library are UGens compiled from Faust code written by Pierre Lecomte. Documentation and tutorials are based in part on link::https://github.com/sekisushai/ambitools/blob/master/Documentation/documentation.pdf::.
 
+Additional plane wave encoders and optimizers have been added, adpated from CICM's HoaLibrary link::https://github.com/CICM/HoaLibrary-Faust:: and Aaron Heller's ambidecodertoolbox link::https://bitbucket.org/ambidecodertoolbox/adt.git::.
+
 The SuperCollider library was written by Florian Grond. It includes soundfield recordings made together with Romain Dumoulin using the Eigenmike from CIRMMT link::http://www.cirmmt.org::.
 
 Frontend classes are wrappers that select the correct low-level UGen depending on the intended ambisonics order. The b-format signal is encapsulated in a channel array, which makes the resulting SC code flexible to experiment with different orders e.g. to account for available computational resources. All arguments obey SuperCollider's link::Guides/Multichannel-Expansion:: paradigm.
@@ -30,6 +32,8 @@ LIST::
 ## link::Classes/HOAEncLebedev06:: — an encoder for the signals of the microphones of a 6 nodes Lebedevgrid, includes radial filters up to order 1 (4 chan b-format).
 ## link::Classes/HOAEncLebedev26:: — an encoder for the signals of the microphones of a 26 nodes Lebedevgrid, includes radial filters up to order 3 (16 chan b-format).
 ## link::Classes/HOAEncLebedev50:: — an encoder for the signals of the microphones of a 50 nodes Lebedevgrid, includes radial filters up to order 5 (36 chan b-format).
+## link::Classes/HOALibEnc3D:: — a light weight panner, more resistant to faster coordinates changes, to encode mono sources as plane waves up to order 5 (36 chan b-format).
+## link::Classes/HOAmbiPanner:: — another light weight, braod sounding panner to encode mono sources as plane waves up to order 5 (36 chan b-format).
 ::
 
 subsection:: Transforming
@@ -39,9 +43,10 @@ LIST::
 ## link::Classes/HOATransRotateXYZ:: — rotate the soundfield around x, y, z.
 ::
 
-subsection:: Converting
+subsection:: Converting - Optimizing
 LIST::
-## link::Classes/HOAConvert:: — convert between teh channel ordes ACN and FuMa as well as SN3D, N3D and MaxN.
+## link::Classes/HOAConvert:: — convert between channel orders ACN and FuMa as well as SN3D, N3D and MaxN.
+## link::Classes/HOALibOptim:: — applie either MaxRe or InPhase optimization.
 ::
 
 subsection:: Beam Forming
