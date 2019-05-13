@@ -6,6 +6,8 @@
 
 The HOA library provides classes to encode, transform and decode Higher Order Ambisonics sound signals up to order 5. The basis for the library are UGens compiled from Faust code written by Pierre Lecomte, see [ambitools][1]. Documentation and tutorials are partly based on the [ambitools documentation](https://github.com/sekisushai/ambitools/blob/master/Documentation/documentation.pdf) (pdf).
 
+Additional plane wave encoders and optimizers have been added, adpated from [CICM](http://cicm.mshparisnord.org/)'s [HoaLibrary](http://hoalibrary.mshparisnord.fr/) and [Aaron Heller](https://www.sri.com/about/people/aaron-j-heller)'s [ambidecodertoolbox](https://bitbucket.org/ambidecodertoolbox/adt.git).  
+
 The SuperCollider library was written by [Florian Grond](http://www.grond.at). It includes soundfield recordings made together with Romain Dumoulin using the Eigenmike from [CIRMMT](http://www.cirmmt.org).
 
 Frontend classes are wrappers that select the correct low-level UGen depending on the intended ambisonics order. The b-format signal is encapsulated in a channel array, which makes the resulting SC code flexible to experiment with different orders e.g. to account for available computational resources. All arguments obey SuperCollider's Multichannel Expansion paradigm.
@@ -18,11 +20,10 @@ To install the SC-HOA quark, either use the `Quarks.gui` interface or install it
 
 ```Quarks.install("https://github.com/florian-grond/SC-HOA")```
 
-In order to use this library, you will need to install the collection of SuperCollider plugins called _HOAUGens_.
-A PR to the SC3 plugins has been submitted, meanwhile you find compile instructions for SC3plugins + HOA here:
-https://github.com/florian-grond/sc3-pluginsHOA
-(compiled plugins SC3plugins for 3.8 and 3.9 with supernova support are also provided at this link)
+In order to use this library, you will need a collection of SuperCollider UGens called _HOAUGens_. These UGens are available as part of the [sc3-plugins](https://supercollider.github.io/sc3-plugins/). See the website and GitHub repository for installation instructions. 
 
+> **note:** The HOAUGens were added to the sc3-plugins as of commit https://github.com/supercollider/sc3-plugins/commit/9326e1229a64ca82f76124a7a1a038095be22996
+ 
 You might need additional resources to make use of SC-HOA (e.g. FIR filters for binaural decoding).
 These files can be obtained by downloading a copy of the [ambitools][1] repository. Make a copy of the folder called `FIR` and place it into your SC-HOA kernels folder.
 
