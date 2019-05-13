@@ -10,7 +10,9 @@ STRONG:: Next:::
 link::Tutorials/Exercise_04_HOA_plane_versus_spherical_waves::
 
 Having mostly looked at HOA B-format multichannel signals so far, this exercise is about listening to them.
-To this end, the HOA library provides 3 different spherical decoders based on Lebedev grids
+To this end, the HOA library provides 3 different spherical decoders based on Lebedev grids.
+
+HOADecLebedev50
 
 The basic decoder (mode-matching) for Lebedev grid with 50 nodes, is working up to order 5 [1].
 Possibility to choose with or without near-field compensation [2].
@@ -20,6 +22,23 @@ Possibility to choose with or without near-field compensation [2].
 [2] Lecomte, P., & Gauthier, P.-A. (2015). Real-Time 3D Ambisonics using Faust, Processing, Pure Data, And OSC. In 15th International Conference on Digital Audio Effects (DAFx-15). Trondheim, Norway.
 
 Lebedev Grids link:: https://en.wikipedia.org/wiki/Lebedev_quadrature::. are equidistant points on a sphere, in the case of a decoder they correspond to virtual speaker positions. Each signal of the virtual speakers is then convolved with corresponding HRIR kernels to yield two headphone signals.
+
+
+
+Further down you also find a HOA binaural decoder that implements symetrized KU100 IRs.
+
+HOABinaural
+
+They were created using KU100 HRIR measurements presented in [1] and the rendering approach proposed in [2].
+
+[1] Bernschütz, Benjamin. "A Spherical Far Field HRIR/HRTF Compilation of the Neumann KU 100", Proceedings of the 40th Italian (AIA) Annual Conference on Acoustics and the 39th German Annual Conference on Acoustics (DAGA) Conference on Acoustics. 2013. http://audiogroup.web.th-koeln.de/ku100hrir.html
+[2] Schoerkhuber, Christian; Zaunschirm, Markus; Hoeldrich, Robert. "Binaural Rendering of Ambisonic Signals via Magnitude Least Squares", Fortschritte der Akustik, DAGA, 2018
+
+For the  headphone correction filters:
+The impulse responses were created by Benjamin Bernschuetz.
+[1] Bernschuetz, B. (2013. A Spherical Far Field HRIR/HRTF Compilation of the Neumann KU 100.
+AIA-DAGA 2013 Merano. http://audiogroup.web.th-koeln.de/ku100hrir.html
+
 
 The examples below show how to monitor the playback of HOA b-format via headphones.
 
@@ -148,6 +167,51 @@ code::
 ~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), MouseY.kr(-pi * 0.5, pi * 0.5) )};
 ::
 
+
+For testing the HOABinaural class, which is a very efficient binauralizer up to order 7 that takes advantage of the symmetry of the KU100 see the following example:
+
+
+Load the IRs as well as the headphone correction filters
+code::
+(
+s.scope(40);
+Buffer.freeAll;
+HOABinaural.loadbinauralIRs(s);
+HOABinaural.loadHeadphoneCorrections(s);
+HOABinaural.binauralIRs;
+HOABinaural.headPhoneIRs;
+
+HOABinaural.listHeadphones;
+
+~headphoneModel = 4;
+
+// set to nil if you want no correction
+//~headphoneModel = nil;
+)
+::
+
+
+Initilaize the binaural decoder and feed it with 3 noise sources
+code::
+(
+{OffsetOut.ar(0, HOABinaural.ar(5, In.ar(2, 36), headphoneCorrection:~headphoneModel) * 1 )}.play;
+
+{ Out.ar(2, HOAEncoder.ar(5, PinkNoise.ar(0.1),
+	                      SinOsc.ar(0.1, 0, pi * 0.999 ),
+	                      SinOsc.ar(0.2, 0, pi * 0.999 * 0.4 )
+		                  ) +
+HOAEncoder.ar(5, WhiteNoise.ar(0.05),
+	                      SinOsc.ar(0.11, 0, pi * 0.999 ),
+	                      SinOsc.ar(0.22, 0, pi * 0.999 * 0.4 )
+		                  ) +
+HOAEncoder.ar(5, BrownNoise.ar(0.2),
+	                      SinOsc.ar(0.12, 0, pi * 0.999 ),
+	                      SinOsc.ar(0.23, 0, pi * 0.999 * 0.4 )
+		                  )
+) }.play;
+
+)
+::
 
 STRONG:: Previous:::
 link::Tutorials/Exercise_02_HOA_converting_SN3D_N3D_FuMa::
