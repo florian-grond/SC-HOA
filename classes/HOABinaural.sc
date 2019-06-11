@@ -28,14 +28,12 @@ HOABinaural{
 	classvar <>headPhoneIRs;
 	classvar <>headPhones;
 
-	classvar <numChannels;
 	classvar <maxOrder;
 	classvar <midChannels;
 	classvar <sideChannels;
 
 	*initClass {
-		numChannels = 50;
-		maxOrder = 5;
+		maxOrder = 7;
 		midChannels = [ 0, 2, 3, 6, 7, 8, 12, 13, 14, 15, 20, 21, 22, 23, 24, 30, 31, 32, 33, 34, 35, 42, 43, 44, 45, 46, 47, 48, 56, 57, 58, 59, 60, 61, 62, 63 ];
 		sideChannels = [ 1, 4, 5, 9, 10, 11, 16, 17, 18, 19, 25, 26, 27, 28, 29, 36, 37, 38, 39, 40, 41, 49, 50, 51, 52, 53, 54, 55 ];
 	}
