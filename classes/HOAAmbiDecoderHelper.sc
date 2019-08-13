@@ -83,7 +83,6 @@ HOAAmbiDecoderHelper {
 	speakerPositionFile{|path|
 		var file;
 
-
 		file = File.open(path ,"w");
 
 		file.write("function [ val ] =" ++ this.speakerArrayName++"() \n");
@@ -167,7 +166,7 @@ HOAAmbiDecoderHelper {
 		file.write("\n");
 		file.write("\t% convert the faustfile generated with the abisonics decoder toolkit from above into scsynth and supernova Ugens\n");
 
-		file.write("\t unix(strcat(\"faust2supercollider -sn -ks -noprefix \",out_path,num2str(order,0),\".dsp\"));\n");
+		file.write("\t unix(strcat(\"faust2supercollider -sn -ks \",out_path,num2str(order,0),\".dsp\"));\n");
 
 		file.write("\t end \n");
 
@@ -224,7 +223,7 @@ HOAAmbiDecoderHelper {
         file.write("case\n{order == 1}\n");
         file.write("\t{ var in1, in2, in3, in4; \n");
         file.write("\t#in1,in2, in3, in4 = in; \n");
-		file.write("\t^"++this.speakerArrayName++counter.asString++".ar(in1, in2, in3, in4, gain, lf_hf, mute, xover)}\n\n");
+		file.write("\t^Faust"++this.speakerArrayName++counter.asString++".ar(in1, in2, in3, in4, gain, lf_hf, mute, xover)}\n\n");
 		});
 		counter = counter + 1;
 		if(counter <= order,
@@ -232,7 +231,7 @@ HOAAmbiDecoderHelper {
 	    file.write("{order == 2}\n");
         file.write("\t{ var in1, in2, in3, in4, in5, in6, in7, in8, in9; \n");
         file.write("\t#in1, in2, in3, in4, in5, in6, in7, in8, in9 = in; \n");
-        file.write("\t^"++this.speakerArrayName++counter.asString++".ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, gain, lf_hf, mute, xover)}\n\n");
+        file.write("\t^Faust"++this.speakerArrayName++counter.asString++".ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, gain, lf_hf, mute, xover)}\n\n");
 		}
 		);
 		counter = counter + 1;
@@ -241,7 +240,7 @@ HOAAmbiDecoderHelper {
 	    file.write("{order == 3}\n");
         file.write("\t{ var in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16; \n");
         file.write("\t#in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16 = in; \n");
-        file.write("\t^"++this.speakerArrayName++counter.asString++".ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, gain, lf_hf, mute, xover)}\n\n");
+        file.write("\t^Faust"++this.speakerArrayName++counter.asString++".ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, gain, lf_hf, mute, xover)}\n\n");
 		}
 		);
 		counter = counter + 1;
@@ -250,7 +249,7 @@ HOAAmbiDecoderHelper {
 	    file.write("{order == 4}\n");
         file.write("\t{ var in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25; \n");
         file.write("\t#in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25 = in; \n");
-        file.write("\t^"++this.speakerArrayName++counter.asString++".ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25, gain, lf_hf, mute, xover)} \n\n");
+        file.write("\t^Faust"++this.speakerArrayName++counter.asString++".ar(in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25, gain, lf_hf, mute, xover)} \n\n");
 		}
 		);
 		counter = counter + 1;
@@ -259,7 +258,7 @@ HOAAmbiDecoderHelper {
 	    file.write("{order == 5}\n");
         file.write("\t{var in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25, in26, in27, in28, in29, in30, in31, in32, in33, in34, in35, in36; \n");
         file.write("\t#in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25, in26, in27, in28, in29, in30, in31, in32, in33, in34, in35, in36 = in; \n");
-        file.write("\t^"++this.speakerArrayName++counter.asString++".ar(in1,in2, in3, in4,in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25, in26, in27, in28, in29, in30, in31, in32, in33, in34, in35, in36, gain, lf_hf, mute, xover)} \n\n");
+        file.write("\t^Faust"++this.speakerArrayName++counter.asString++".ar(in1,in2, in3, in4,in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25, in26, in27, in28, in29, in30, in31, in32, in33, in34, in35, in36, gain, lf_hf, mute, xover)} \n\n");
 
 				file.write("{\"Order "++counter.asString++" is not implemented for HOADec"++this.speakerArrayName++"\".postln} \n } \n\n");
 		}
@@ -286,7 +285,7 @@ HOAAmbiDecoderHelper {
 		helpSourcePath = this.decoderPath++"/decoders/HelpSource/";
 		File.mkdir(helpSourcePath);
 		file = File.open(helpSourcePath++this.speakerArrayName++".schelp" ,"w");
-		file.write("class:: "++this.speakerArrayName++" \n");
+		file.write("class:: Faust"++this.speakerArrayName++" \n");
 		file.write("summary:: This is a HOA decoder for a speaker Array compiled using the Abisonics decoder toolkit\n");
 		file.write("CATEGORIES:: Libraries>HOA");
 		file.write("related:: Tutorials/HOA_Tutorial_Overview \n");
@@ -352,3 +351,4 @@ p.close;					// close the pipe to avoid that nasty buildup \n
 			       path_ADT++"examples/"++this.speakerArrayName++".schelp "++
 			       path_ADT++this.speakerArrayName++"/"++this.speakerArrayName++".schelp""');\n");
         */
+	

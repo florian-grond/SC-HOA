@@ -1,6 +1,33 @@
 HOAEncLebedev06{
 
 		classvar <radialFilters;
+		classvar <>grid;
+
+	*initClass {
+		grid =
+		[
+		[
+				// Vertex : 6 Nodes
+		0,
+		0,
+		1.5707963267949,
+		3.1415926535898,
+		4.7123889803847,
+		0
+			],
+			[
+			    // Vertex : 6 Nodes
+		1.5707963267949,
+		0,
+		0,
+		0,
+		0,
+		-1.5707963267949
+		]
+		]
+
+	}
+
 
 	*loadRadialFilters {|server|
 		radialFilters = 	[Buffer.read(server,Platform.userExtensionDir++"/HOA/FIR/spherical_microphones/jconvolver_mic_lebedev50"++"/order_0.wav"),
