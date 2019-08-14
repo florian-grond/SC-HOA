@@ -1,0 +1,212 @@
+title:: HOA Tutorial Exercise 09
+summary:: Interfacing VBAP, Ambisonics, Binaural Rendering.
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
+
+
+STRONG:: Previous:::
+link::Tutorials/Exercise_08_HOA_proxyspace_recording::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_10_HOA_decoding_for_speaker_arrays::
+
+
+This Tutorial shows how to use Binaural Rendering in combination with VBAP and Ambisonics.
+
+You can use HOABinaural in combination with the HOAEncLebedev50 in order to listen to VBAP spatializations:
+First extract the Lebedevnode grid positions (azimuth and elevation), pack them in pairs and convert them to degrees.
+Use these positions as speaker positions in your VBAPSpeakerArray and prepare the necessary buffer for VBAP triangulation.
+
+code::
+a = VBAPSpeakerArray.new(3, HOAEncLebedev50.grid.flop.raddeg);
+// the next command might take a while for 50 speaker positions.
+b = Buffer.loadCollection(s, a.getSetsAndMatrices);
+::
+
+
+code::
+// load the buffers for the Binaural
+HOABinaural.loadbinauralIRs(s);
+HOABinaural.loadHeadphoneCorrections(s);
+HOABinaural.binauralIRs;
+HOABinaural.headPhoneIRs;
+
+// watch the scope window for you binaural results
+s.scope(2);
+::
+
+Now encode a Noise source over VBAP with the Lebedev speaker positions and feed this 50 channels into the HOAEncLebedev50 e.g. for the 5th order.
+Then, binauralize the resulting b-format.
+
+code::
+(
+x = { |azi = 0, ele = 0, spr = 0|
+var source, lbedev50, order5Sig ;
+source = PinkNoise.ar(10);
+// source = SinOsc.ar(440.0);
+lbedev50 = VBAP.ar(50, source, b.bufnum, MouseX.kr(-180, 180), MouseY.kr(-90, 90), spr);
+order5Sig = HOAEncLebedev50.ar(5, 	lbedev50, gain: 0, filters:0);
+
+HOABinaural.ar(5, order5Sig, headphoneCorrection: nil);
+
+}.play;
+)
+
+// play with the VBAP spread
+
+x.set(\spr, 5)
+x.set(\spr, 10)
+x.set(\spr, 15)
+x.set(\spr, 20)
+x.set(\spr, 25)
+x.set(\spr, 50)
+::
+
+
+
+
+
+The next example is for comparison with the Lebedev50BinauralDecoder.
+first we need the HRIRs:
+
+code::
+Lebedev50BinauralDecoder.loadHrirFilters(s);
+::
+
+Then we can encode again directly into a Lebedev 50 VBAP grid and convolve the grid positions directly with the HRIRs.
+
+code::
+(
+x = { |azi = 0, ele = 0, spr = 0|
+var source, lbedev50, order5Sig ;
+source = PinkNoise.ar(10);
+// source = SinOsc.ar(440.0);
+lbedev50 = VBAP.ar(50, source, b.bufnum, MouseX.kr(180, -180), MouseY.kr(-90, 90), spr);
+
+Lebedev50BinauralDecoder.ar(lbedev50 * 0.1);
+
+}.play;
+
+)
+
+// play with the VBAP spread
+
+
+x.set(\spr, 5)
+x.set(\spr, 10)
+x.set(\spr, 15)
+x.set(\spr, 20)
+x.set(\spr, 25)
+x.set(\spr, 50)
+::
+
+
+
+If you want to encode any array of virtual speakers into the b-format assuming distant static sound sources as plane waves you can use the class HOASphericalHarmonics, which returns for a given order the coefficients for each combination of azimuth and elevation.
+
+
+code::
+(
+~order = 1; // change order here
+HOASphericalHarmonics.coefN3D(~order, 0, 0).postcs;
+HOASphericalHarmonics.coefSN3D(~order, 0, 0).postcs;
+)
+::
+
+Encoding of sources using HOASphericalHarmonics listened to via binaural rendering would then work like that:
+
+code::
+(
+{
+var order = 5;
+var source = WhiteNoise.ar(0.1) ;
+//var source = SoundIn.ar(0.1) ;
+var bform = HOASphericalHarmonics.coefN3D(order,  MouseX.kr(-pi, pi, 0).poll, MouseY.kr(-0.5pi, 0.5pi, 0).poll ) * source;
+var binaural =	HOABinaural.ar(order, bform, headphoneCorrection:~headphoneModel);
+	binaural
+}.play;
+)
+::
+
+Now we can implememt the Lebedev VBAP grid from above circumventing HOAEncLebedev50.
+This in turn means that you can replace these VBAP positions with any positions of your choice.
+
+code::
+(// first we get the source positions in radians
+~postions = HOAEncLebedev50.grid.flop;
+// then we calculate the spherical Harmonics for each position
+~order = 5;
+~sh = ~postions.collect({|item,i| HOASphericalHarmonics.coefN3D(~order, item[0], item[1]  )});
+)
+::
+
+The next example is exactly as the first one but we remove the HOAEncLebedev50 encoder and replace the encoding step  with the spherical harmonics from above from above.
+
+code::
+(
+x = { |azi = 0, ele = 0, spr = 0|
+var source, lbedev50, order5Sig ;
+// source = PinkNoise.ar(0.01);
+source = SinOsc.ar(440.0, 0, 0.1);
+lbedev50 = VBAP.ar(50, source, b.bufnum, MouseX.kr(-180, 180), MouseY.kr(-90, 90), spr);
+
+// lbedev50 = VBAP.ar(50, source, b.bufnum, SinOsc.ar(0.1, 0, 180), SinOsc.ar(0.15, 0, 90), spr);
+
+//	This is the Ugen we are replacing with the hand made VBAP positions
+// order5Sig = HOAEncLebedev50.ar(5, 	lbedev50, gain: 0, filters:0);
+
+order5Sig = (~sh * lbedev50).sum; // this is a matrix multiplication
+
+HOABinaural.ar(5, order5Sig, headphoneCorrection: nil);
+
+}.play;
+)
+
+// play with the VBAP spread
+x.set(\spr, 5)
+x.set(\spr, 10)
+x.set(\spr, 15)
+x.set(\spr, 20)
+x.set(\spr, 25)
+x.set(\spr, 50)
+::
+
+
+
+In the next example we encode the VBAP sources with the HOAEncoder.
+
+code::
+(
+~order = 1;
+x = { |azi = 0, ele = 0, spr = 0|
+var source, lbedev50, order5Sig ;
+source = PinkNoise.ar(0.1);
+// source = SinOsc.ar(440.0);
+lbedev50 = VBAP.ar(50, source, b.bufnum, MouseX.kr(-180, 180), MouseY.kr(-90, 90), spr);
+
+// lbedev50 = VBAP.ar(50, source, b.bufnum, SinOsc.ar(0.1, 0, 180), SinOsc.ar(0.15, 0, 90), spr);
+
+order5Sig = ~postions.collect({|item,i| HOAEncoder.ar(~order, lbedev50[i], item[0], item[1], 1, 1, 10 ) }).sum;
+
+HOABinaural.ar(~order, order5Sig, headphoneCorrection: nil);
+
+}.play;
+)
+
+// play with the VBAP spread
+x.set(\spr, 5)
+x.set(\spr, 10)
+x.set(\spr, 15)
+x.set(\spr, 20)
+x.set(\spr, 25)
+x.set(\spr, 50)
+::
+
+
+
+
+STRONG:: Previous:::
+link::Tutorials/Exercise_08_HOA_proxyspace_recording::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_10_HOA_decoding_for_speaker_arrays::

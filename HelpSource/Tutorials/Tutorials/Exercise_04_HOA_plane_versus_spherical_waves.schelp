@@ -1,0 +1,145 @@
+title:: HOA Tutorial Exercise 04
+summary:: Plane versus spherical wave encoding.
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
+
+
+STRONG:: Previous:::
+link::Tutorials/Exercise_03_HOA_decoding_for_monitoring::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_05_HOA_b_format_file_playback::
+
+
+The examples below demonstarte the difference between plane and spherical waves.
+Spherical waves apply nearfield filters to account not only for directions but also for the distance of sound sources.
+For the correct use of the distance filters, which are unstable by nature, take care about the distance parameters in the encoding and decoding step.
+
+In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses and to have 36 output channels.
+
+code::
+s.quit; // quit the server first if it is still running with another configuration.
+(
+ServerOptions.devices;
+s = Server.local;
+Server.local = Server.default;
+o = Server.local.options; // Get the local server's options
+o.numInputBusChannels = 2; // Set Input to number of Inputs
+o.numOutputBusChannels = 36; // lets start after chan 36 so as not to see the mic input
+o.numAudioBusChannels = 2048;
+o.blockSize = 512;
+o.numWireBufs = 1024 * 16;
+o.memSize = 2.pow(18);
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+)
+::
+
+Start the oscilloscope showing all the channels for the selected order of the b-format.
+
+code::
+(
+~order = 4;
+~hoaNumChannels = (~order+1).pow(2);
+s.scope(2); // let's use only two channels as we will monitor it with headphones
+)
+::
+
+Let's make a node that generates a plane wave HOA signal (white noise), control the direction with the mouse.
+We won't see it since we don't monitor it.
+code::
+(
+~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), MouseY.kr(-pi * 0.5, pi * 0.5)  )};
+~hoaSignal.fadeTime = 1;
+)
+::
+As in the example before, let's make a node that can take in (multichannel) HOA signals,
+and let's load HRIR filters for each of the 26 channels.
+
+code::
+HOADecLebedev26.loadHrirFilters(s);
+HOADecLebedev26.hrirFilters.size;
+(
+
+~decoderOrder = 2; // let's reduce the order
+~decoderNumChannels = (~decoderOrder+1).pow(2);
+
+~decoder = NodeProxy.new(s, \audio, 26);
+~decoder.source = {var in; in = \in.ar(0!~decoderNumChannels); HOADecLebedev26.ar(~decoderOrder, in, hrir_Filters:1) };
+~decoder.fadeTime = 1;
+~decoder.play(0, 26);
+)
+::
+
+And then we connect them:
+code::
+~hoaSignal <>> ~decoder;
+::
+
+Now, let's change the NodeProxies of the ~hoaSignal, now with distance filters controlled by the vertical Y movement of the Mouse.
+You'll hear a loudness change but also an increase in the lower frequencies as the source comes closer.
+
+code::
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), elev:0, gain:0, plane_spherical:1, radius: MouseY.kr(0.1, 4 ) )};
+// same as before Mouse Y now mapped to elevation
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), MouseY.kr(-pi * 0.5, pi * 0.5) )};
+::
+
+Try with another sound:
+
+code::
+(
+~hoaSignal.source = {|azimuth = 0, radius = 1| HOAEncoder.ar(~order,
+	Klank.ar(`[[800, 1071, 1153, 1723], nil, [2.0, 1.0, 0.5, 0.25]], Decay.ar( Impulse.ar(2, 0, 0.1), 0.05, ClipNoise.ar(1))  ),
+	azimuth, elev:0, gain:0, plane_spherical:1, radius: radius )};
+
+w = Window("Slider2D", Rect(100, 100, 300, 300));
+t = Slider2D(w, Rect(20, 20, 260, 260))
+        .action_({|sl| var position;
+	position = Cartesian(sl.y.linlin(0,1,-5,5), sl.x.linlin(0,1,5,-5), 0); [\x, position.x, \y, position.y].postln;
+	position = position.asSpherical;  [\radius, position.rho, \azimuth, position.theta].postln;
+	~hoaSignal.set(\azimuth, position.theta, \radius, position.rho);
+        });
+w.front;
+
+)
+::
+
+If you wanna work with recorded sounds. Load a soundfile into a buffer:
+
+code::
+~buffer = Buffer.read(s, Platform.resourceDir +/+ "sounds/a11wlk01.wav";)
+::
+
+And play it back. Move the sound source as in the example from above.
+
+code::
+(
+~hoaSignal.source = {|azimuth = 0, radius = 1| HOAEncoder.ar(~order,
+	 PlayBuf.ar(1, ~buffer, BufRateScale.kr(~buffer) , loop:1),
+	azimuth, elev:0, gain:0, plane_spherical:1, radius: radius )};
+
+w = Window("Slider2D", Rect(100, 100, 300, 300));
+t = Slider2D(w, Rect(20, 20, 260, 260))
+        .action_({|sl| var position;
+	position = Cartesian(sl.y.linlin(0,1,-5,5), sl.x.linlin(0,1,5,-5), 0); [\x, position.x, \y, position.y].postln;
+	position = position.asSpherical;  [\radius, position.rho, \azimuth, position.theta].postln;
+	~hoaSignal.set(\azimuth, position.theta, \radius, position.rho);
+        });
+w.front;
+
+
+)
+::
+
+
+
+
+
+STRONG:: Previous:::
+link::Tutorials/Exercise_03_HOA_decoding_for_monitoring::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_05_HOA_b_format_file_playback::

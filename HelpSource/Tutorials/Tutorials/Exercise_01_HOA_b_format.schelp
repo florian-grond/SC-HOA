@@ -1,0 +1,107 @@
+title:: HOA Tutorial Exercise 01
+summary:: Creating spatialized sounds in HOA b-format.
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
+
+STRONG:: Next:::
+link::Tutorials/Exercise_02_HOA_converting_SN3D_N3D_FuMa::
+
+In ambisonics, a sound field is approximated with spherical harmonics of a given order, the multichannel signal  associated with the spherical harmonics is called the B-format.
+For order 0, consisting of one channel, no directional information is available, one can think of it as a mono signal with the spatial characteristics of an omni spherical microphone, which is also know as the W channel (see top of the pyramid in the image below).
+For order 1, top of the pyramid and second row, the spherical harmonics have shapes reminiscent of microphone patterns (figure 8) and are known as Y Z and X channels. Combinations of the W channel and the Y (or X) channel are the basis of the MS microphone technique.
+Similar to the MS technique, a weighted combination of the channels from the B-format is used to generate speaker signals for the reconstruction of the approximated soundfield.
+
+A given order TELETYPE:: n ::  results in TELETYPE:: (n+1)^2 :: channels in the b-format.
+
+table::
+    ##  order TELETYPE:: n ::  || # of channels
+    ##    0       ||   1
+    ##    1       ||   4
+    ##    2       ||   9
+    ##    3       ||   16
+    ##    4       ||   25
+    ##    5       ||   36
+::
+
+For a listing of spherical harmonics and their equations see link::http://ambisonics.ch/standards/channels/index::.
+
+image::Spherical_Harmonics_deg5_small.png# Spherical Harmonics up to degree 5, as used in fifth-order, Image made by Dr. Franz Zotter, taken from Wikipedia ::
+link::https://en.wikipedia.org/wiki/Ambisonic_data_exchange_formats#Prerequisites_for_successful_data_exchange::
+
+The code examples below show how to generate b-format signals and how to monitor them in the oscilloscope.
+Let's start the sound server, which we configure first to get more audio buses and 36 output channels.
+
+code::
+s.quit; // quit the server first if it is still running
+(
+ServerOptions.devices;
+s = Server.local;
+Server.local = Server.default;
+o = Server.local.options; // Get the local server's options
+o.numInputBusChannels = 2; // Set Input to number of Inputs
+o.numOutputBusChannels = 36; // lets start after chan 36 so as not to see the mic input
+o.numAudioBusChannels = 1024 * 2; // default is 1024
+o.blockSize = 512;
+o.numWireBufs = 64 * 16;  // for more complex SynthDefs
+o.memSize = 2.pow(16);  // default 2.pow(13)
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+)
+::
+
+Start the oscilloscope showing all the channels for the selected order of the b-format.
+
+code::
+(
+// try different orders up to 5
+~order = 5;
+~hoaNumChannels = (~order+1).pow(2);
+s.scope(~hoaNumChannels);
+)
+::
+
+Let's try some spatialized white noise in the x y plane, observe constant signal in channel 1 and the
+varying signal in channel 2 (y) and 4 (x), 3 (z) is flat, so is 6, 8, 11, etc., all spherical harmonics with a vertical component
+
+code::
+(
+~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), 0 )};
+~hoaSignal.fadeTime = 1;
+)
+// execute this line to monitor the signal starting with bus 0, then watch the oscilloscope
+~hoaSignal.play(0, ~hoaNumChannels, vol: 0.1, fadeTime:1.0);
+::
+
+Change the source of the node ~hoaSignal and it will fade into a spatialized sound which allows you to move the white noise in x,y,z.
+code::
+// move sounds in x,y,z with the mouse
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), MouseY.kr(-pi * 0.5, pi * 0.5)  )};
+::
+
+Change the source again, now it only switches between -pi/2 and +pi/2 in the elevation argument.
+code::
+// sounds moving only in the z direction (fixed in the x,y plane), switching between -pi and +pi
+~hoaSignal.source = {HOAEncoder.ar(~order, WhiteNoise.ar(1), 0, MouseY.kr(-pi * 0.5, pi * 0.5) .round.linlin(0,1,-pi,pi) )};
+::
+
+You did not see any change in the oscilloscope?
+The directional information is not only in the gain that you see in the white noise, but also in the sign relative to the W channel.
+Now we do the same with a very slow sine wave, so that we can observe the phase relations in the channels, chose a freq so that the scope stands still, keep the default zoom value of 1 @ 48000. Compare with the spherical harmonics from the image above, particularly the symetries of the spherical harmonics in the vertical central column and the sign of the sinewave flipping along the z-axis.
+
+code::
+~freq = 48000 / 1024;
+// change direction in the x y plane
+~hoaSignal.source  = {HOAEncoder.ar(~order, SinOsc.ar(~freq ), MouseX.kr(-pi, pi), 0 )};
+
+// change only the z direction, fix in x,y
+~hoaSignal.source  = {HOAEncoder.ar(~order, SinOsc.ar(~freq ), 0, MouseY.kr(-pi * 0.5, pi * 0.5) .round.linlin(0,1,-pi,pi)  )};
+
+// move sound direction in x,y,z with the mouse
+~hoaSignal.source  = {HOAEncoder.ar(~order, SinOsc.ar(~freq ), MouseX.kr(-pi, pi), MouseY.kr(-pi * 0.5, pi * 0.5)  )};
+::
+
+
+STRONG:: Next:::
+link::Tutorials/Exercise_02_HOA_converting_SN3D_N3D_FuMa::

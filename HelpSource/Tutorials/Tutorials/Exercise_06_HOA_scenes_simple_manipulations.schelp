@@ -1,0 +1,149 @@
+title:: HOA Tutorial Exercise 06
+summary:: simple transformations of the B-format, mirroring and rotation.
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
+
+
+STRONG:: Previous:::
+link::Tutorials/Exercise_05_HOA_b_format_file_playback::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_07_HOA_beamforming::
+
+After learning how to play back HOA soundfiles, the examples below demonstarte how to use the classes
+
+LIST::
+## link::Classes/HOATransMirror:: - mirror the sound field along x,y or z.
+## link::Classes/HOATransRotateAz:: - rotate the soundfield around the z axis.
+## link::Classes/HOATransRotateXYZ:: - rotate the soundfield around the xyz axis.
+::
+
+in order to manipulate the HOA B-format. For the details of the mirroring and rotation transformations please refer to:
+[1] M. Kronlachner, “Spatial Transformations for the Alteration of Ambisonic Recordings,” Graz University Of Technology, Austria, 2014 p.46-47.
+
+The x,y,z (roll, pitch, yaw) rotator of the HOA scene  uses the  for the matrix definition from [2] with implentation according to [1]
+for details about the corrections in the implementation see underlying Faust code by Pierre Lecomte:
+https://github.com/sekisushai/ambitools/blob/master/Faust/src/hoa_rotator.dsp
+[2] J. Ivanic and K. Ruedenberg, “Rotation matrices for real spherical harmonics. Direct determination by recursion,” J. Phys. Chem., vol. 100, no. 15, pp. 6342–6347, 1996.
+
+
+In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses and to have 36 output channels.
+
+code::
+s.quit; // quit the server first if it is still running with another configuration.
+(
+ServerOptions.devices;
+s = Server.local;
+Server.local = Server.default;
+o = Server.local.options; // Get the local server's options
+o.numInputBusChannels = 2; // Set Input to number of Inputs
+o.numOutputBusChannels = 36; // lets start after chan 36 so as not to see the mic input
+o.numAudioBusChannels = 2048;
+o.blockSize = 512;
+o.numWireBufs = 1024 * 16;
+o.memSize = 2.pow(18);
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+)
+::
+
+Start the oscilloscope showing all the channels for the selected order of the b-format.
+
+code::
+(
+~order = 3;
+~hoaNumChannels = (~order+1).pow(2);
+s.scope(2); // let's use only two channels as we will monitor it with headphones
+)
+::
+
+We will load a very short sound file that we loop so that we can observe the soundfield transformations:
+code::
+~hoaSoundFile = Buffer.read(s,HOA.userSoundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
+~hoaSoundFile.numChannels;
+::
+
+Let's make a node that can play back the 3rd order HOA sound file.
+code::
+(
+~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
+~hoaSignal.source = { HPF.ar(PlayBuf.ar( ~hoaSoundFile.numChannels,  ~hoaSoundFile, loop:1  ), 100)   };
+~hoaSignal.fadeTime = 1;
+)
+::
+
+Here we use HOATransMirror to simply mirror the sound field along the x, y, and z axis.
+
+code::
+(
+~hoaTransformer = NodeProxy.new(s, \audio, ~hoaNumChannels);
+~hoaTransformer.source = {|front_back =1, left_right = 0, up_down = 0| var in; in = \in.ar(0!~hoaNumChannels); HOATransMirror.ar(~order, in, front_back, left_right, up_down) };
+~hoaTransformer.fadeTime = 1;
+)
+::
+
+Then we make the decoder as before.
+
+code::
+HOADecLebedev26.loadHrirFilters(s);
+HOADecLebedev26.hrirFilters.size;
+(
+~decoderOrder = 2; // let's reduce the order
+~decoderNumChannels = (~decoderOrder+1).pow(2);
+
+~decoder = NodeProxy.new(s, \audio, 26);
+~decoder.source = {var in; in = \in.ar(0!~decoderNumChannels); HOADecLebedev26.ar(~decoderOrder, in, hrir_Filters:1) };
+~decoder.fadeTime = 1;
+~decoder.play(0, 26);
+)
+::
+
+And we connect the NodeProxies to hear something
+
+code::
+~hoaSignal <>> ~hoaTransformer  <>>  ~decoder;
+::
+
+Now we can flip the sound field:
+
+code::
+~hoaTransformer.set(\front_back, 0);
+~hoaTransformer.set(\front_back, 1);
+
+~hoaTransformer.set(\left_right, 0);
+~hoaTransformer.set(\left_right, 1);
+
+~hoaTransformer.set(\up_down, 0);
+~hoaTransformer.set(\up_down, 1);
+::
+
+
+Here we have an example with HOATransRotateAz where we rotate the sound scene around the z-axis.
+
+code::
+~hoaTransformer.source = { var in; in = \in.ar(0!~hoaNumChannels); HOATransRotateAz.ar(~order, in, MouseX.kr(-pi, pi)) };
+::
+
+
+Here we have an example with HOATransRotateXYZ where we rotate the sound scene around all three axis.
+
+code::
+(
+~hoaTransformer.source = { var in; in = \in.ar(0!~hoaNumChannels);
+	               HOATransRotateXYZ.ar(~order, in,
+		                                          LFTri.ar(0.02, 0, pi), // pitch
+		                                          LFTri.ar(0.02, 0, pi), // roll
+		                                          LFTri.ar(0.02, 0, pi)  // yaw
+) };
+)
+::
+
+
+
+
+STRONG:: Previous:::
+link::Tutorials/Exercise_05_HOA_b_format_file_playback::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_07_HOA_beamforming::

@@ -1,0 +1,155 @@
+title:: HOA Tutorial Exercise 07
+summary:: Spatial filtering of HOA sound scenes.
+categories:: Libraries>HOA
+related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
+
+
+STRONG:: Previous:::
+link::Tutorials/Exercise_06_HOA_scenes_simple_manipulations::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_08_HOA_proxyspace_recording::
+
+The examples in this exercise demonstarte how to use the three different beamforming classes below for filtering everything out in a HOA scene except specific directions.
+For implementation of the classes and the references see the links provided:
+
+LIST::
+## link::Classes/HOABeamDirac2Hoa:: - filters along a specifed direction (truncated Dirac), STRONG::returns HOA B-format.::
+
+This tool helps to explore the HOA scene with a "flashlight".
+It applies a directionnal filter (Dirac function) to the HOA scene and filters out everything else except the chosen direction, see:
+[1] P. Lecomte, P.-A. Gauthier, C. Langrenne, A. Berry, and A. Garcia, “Filtrage directionnel dans un scène sonore 3D par une utilisation conjointe de Beamforming et d’Ambisonie d’ordre elevés,” in CFA / VISHNO 2016, 2016, pp. 169–175.
+link::https://github.com/sekisushai/ambitools/blob/master/Faust/src/hoa_beamforming_dirac_to_hoa.dsp::
+
+## link::Classes/HOABeamHCard2Hoa:: - filters along a specifed direction (hyper cardioid pattern), STRONG::returns HOA B-format.::
+
+Description: This tool applies a hypercardioid beampattern to the HOA scene to enhances some directions according to the chosen beampattern.
+See [1] for more details.
+The proposed beampattern are regular hypercardioid as described in [2].
+The higher the order of the beampattern the more selective is the directionnal filtering.
+[2] J. Meyer and G. Elko, “A highly scalable spherical microphone array based on an orthonormal decomposition of the soundfield,” in IEEE International Conference on Acoustics, Speech, and Signal Processing, 2002, vol. 2, pp. 1781–1784.
+link::https://github.com/sekisushai/ambitools/blob/master/Faust/src/hoa_beamforming_hypercardioid_to_hoa.dsp::
+
+## link::Classes/HOABeamHCard2Mono:: - filters along a specifed direction (hyper cardioid pattern), STRONG::returns a mono signal.::
+
+This tool helps to extract a monophonic signal from the HOA scene with a beampatern.
+The HOA channels are combined to produce a monophonic output as if the capture was done with a directionnal microphone.
+The beampatern provided are regular hypercardioid up to order 5 compare [2] from above.
+link::https://github.com/sekisushai/ambitools/blob/master/Faust/src/hoa_beamforming_hypercardioid_to_mono.dsp::
+::
+
+In case you have not done so yet: let's start the sound server, which we configure first to get more audio buses.
+
+code::
+s.quit; // quit the server first if it is still running with another configuration.
+(
+ServerOptions.devices;
+s = Server.local;
+Server.local = Server.default;
+o = Server.local.options; // Get the local server's options
+o.numInputBusChannels = 2; // Set Input to number of Inputs
+o.numOutputBusChannels = 36; // lets start after chan 36 so as not to see the mic input
+o.numAudioBusChannels = 2048;
+o.blockSize = 512;
+o.numWireBufs = 1024 * 16;
+o.memSize = 2.pow(18);
+o.sampleRate = 48000;
+s.makeWindow;
+s.boot;
+)
+::
+
+Start the oscilloscope showing all the channels for the selected order of the b-format.
+code::
+(
+~order = 3;
+~hoaNumChannels = (~order+1).pow(2);
+s.scope(2); // let's use only two channels as we will monitor it with headphones
+)
+::
+
+
+code::
+~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
+~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro.wav");
+~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
+~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_LePlateau_Backyard_short.wav");
+~hoaSoundFile.numChannels;
+::
+
+// Let's make a node that generates a HOA signal ( white noise ) control the direction with the mouse.
+// we won't see it since we don't monitor it.
+
+code::
+(
+~hoaSignal = NodeProxy.new(s, \audio, ~hoaNumChannels);
+~hoaSignal.source = { HPF.ar(PlayBuf.ar( ~hoaSoundFile.numChannels,  ~hoaSoundFile, loop:1  ), 100)   };
+~hoaSignal.fadeTime = 1;
+)
+::
+
+code::
+(
+HOADecLebedev26.loadHrirFilters(s);
+HOADecLebedev26.hrirFilters.size;
+)
+::
+
+
+code::
+(
+~order = 2;
+~beamFormer = NodeProxy.new(s, \audio, ~hoaNumChannels);
+~beamFormer.source = {var in;
+	                                       in = \in.ar(0!~hoaNumChannels);
+                                           HOADecLebedev26.ar(~order,
+	                                               HOABeamDirac2Hoa.ar(~order,
+	                                                                                    in,
+	                                                                                    az: MouseX.kr(pi, -pi ) ,
+			                                                                            ele: MouseY.kr(-pi * 0.5, pi * 0.5),
+			                                                                            on:1),
+			                                                                 hrir_Filters: 1)
+                                     };
+~beamFormer.fadeTime = 1;
+~beamFormer.play(0, 2);
+)
+
+~hoaSignal <>> ~beamFormer;
+::
+
+
+code::
+(
+var cardioid = 3;
+
+~beamFormer.source = {var in;
+	                                         in = \in.ar(0!~hoaNumChannels);
+                                             HOADecLebedev26.ar(~order,
+	                                                      HOABeamHCard2Hoa.ar(~order,
+	                                                                                             in,
+	                                                                                             az: MouseX.kr(pi, -pi ) ,
+			                                                                                     ele: MouseY.kr(-pi * 0.5, pi * 0.5),
+			                                                                                     cardOrder: cardioid),
+			                                                                             hrir_Filters: 1)
+                                          };
+)
+::
+
+code::
+(
+~beamFormer.source = {var in;
+	                                         in = \in.ar(0!~hoaNumChannels);
+	                                                     HOABeamHCard2Mono.ar(~order,
+			                                             in,
+		                                                 az: MouseX.kr(-pi, pi ) ,
+		                                                 ele: MouseY.kr(-pi * 0.5, pi * 0.5))!2 // to have the mono in the middle of the headphones
+                                     };
+)
+::
+
+
+STRONG:: Previous:::
+link::Tutorials/Exercise_06_HOA_scenes_simple_manipulations::
+
+STRONG:: Next:::
+link::Tutorials/Exercise_08_HOA_proxyspace_recording::
