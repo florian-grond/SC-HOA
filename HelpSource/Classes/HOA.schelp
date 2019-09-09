@@ -15,11 +15,6 @@ METHOD:: userSupportDir
 returns::the path to the HOA support dir. Defaults to:
 code::Platform.userAppSupportDir.dirname ++ "/HOA";::
 
-METHOD:: systemSupportDir
-
-returns::the path to the HOA support dir. Defaults to:
-code::Platform.systemAppSupportDir.dirname ++ "/HOA";::
-
 
 METHOD:: userSoundsDir
 
@@ -30,26 +25,15 @@ METHOD:: userKernelDir
 returns:: a path to the 'kernel' dir inside the ATK support dir
 
 
-METHOD:: systemSoundsDir
-
-returns:: a path to the sounds dir inside the HOA system support dir
-
-METHOD:: systemKernelDir
-
-returns:: a path to the kernel dir inside the HOA system support dir
-
 METHOD:: kernelSubdir
-name of subdirectory for kernels within code::userSupportDir:: and code::systemSupportDir::
+name of subdirectory for kernels within code::userSupportDir::
 
 METHOD:: soundsSubdir
-name of subdirectory for sounds within code::userSupportDir:: and code::systemSupportDir::
+name of subdirectory for sounds within code::userSupportDir::
 
 
 METHOD:: openUserSupportDir
 runs a unixCmd to open the userAppSupport dir. Uses 'open' (OS X only)
-
-METHOD:: openSystemSupportDir
-runs a unixCmd to open the systemAppSupport dir. Uses 'open' (OS X only)
 
 
 METHOD:: kernelDirsFor
