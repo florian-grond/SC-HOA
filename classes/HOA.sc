@@ -8,11 +8,9 @@ additions and alterations by Till Bovermann ( http://tai-studio.org )
 
 HOA {
 	classvar   <>userSupportDir; //,   <userSoundsDir,   <userKernelDir;
-	classvar <>systemSupportDir; //, <systemSoundsDir, <systemKernelDir;
 	classvar <>soundsSubdir, <>kernelSubdir;
 
 	*initClass {
-		systemSupportDir = Platform.systemAppSupportDir.dirname ++ "/HOA";
 		userSupportDir   = Platform.userAppSupportDir  .dirname ++ "/HOA";
 
 		soundsSubdir     = "sounds";
@@ -24,15 +22,9 @@ HOA {
 	*userSoundsDir {
 		^userSupportDir   +/+ soundsSubdir
 	}
-	*systemSoundsDir {
-		^systemSupportDir +/+ soundsSubdir
-	}
 
 	*userKernelDir {
 		^userSupportDir   +/+ kernelSubdir
-	}
-	*systemKernelDir {
-		^systemSupportDir +/+ kernelSubdir
 	}
 
 	*openUserSupportDir {
@@ -53,24 +45,8 @@ HOA {
 	// 	//		("mkdir \"" ++ HOA.userSupportDir ++ "\"").unixCmd;
 	// }
 
-	*openSystemSupportDir {
-		if (File.exists(systemSupportDir).not, {
-			"%: HOA System Support directory does not exist.".format(this).warn;
-			^this;
-		});
-
-		systemSupportDir.openOS;
-	}
-
 	*pr_dirsFor {|keyword, subdir, subPaths|
-		var paths;
-		// user directory takes precedence
-		paths = [userSupportDir, systemSupportDir].collect{|dir|
-			(dir +/+ subdir +/+ subPaths +/+ keyword).pathMatch;
-		}.flatten;
-
-		^paths;
-
+		^(userSupportDir +/+ subdir +/+ subPaths +/+ keyword).pathMatch
 	}
 
 	*kernelDirsFor {|keyword, subPaths|
