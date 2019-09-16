@@ -35,7 +35,7 @@ Depending on your system, you will need to create the SC-HOA kernels folder in t
 
 You can find this path from within SuperCollider by executing the following:
 
-```HOA.userKernelDir```
+```HOA.kernelsDir```
 
 If you need 3rd order recordings for testing the tutorial and radial filters, feel free to [contact me](http://www.grond.at/html/submenues/submenu_contact.htm).
 

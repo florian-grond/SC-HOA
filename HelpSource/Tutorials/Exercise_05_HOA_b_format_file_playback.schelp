@@ -46,10 +46,10 @@ s.scope(2); // let's use only two channels as we will monitor it with headphones
 
 Let's load some 16 channels 3rd order soundfiles, the filenames indicate the channel ordering as well as the normalization (ACN, N3D):
 code::
-~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
-~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro.wav");
-~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
-~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_LePlateau_Backyard_short.wav");
+~hoaSoundFile = Buffer.read(s, HOA.soundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
+~hoaSoundFile = Buffer.read(s, HOA.soundsDir++"/eigen_ACN_N3D_Montreal_Metro.wav");
+~hoaSoundFile = Buffer.read(s, HOA.soundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
+~hoaSoundFile = Buffer.read(s, HOA.soundsDir++"/eigen_ACN_N3D_Montreal_LePlateau_Backyard_short.wav");
 ~hoaSoundFile.numChannels;
 ::
 

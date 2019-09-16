@@ -60,7 +60,7 @@ s.scope(2); // let's use only two channels as we will monitor it with headphones
 
 We will load a very short sound file that we loop so that we can observe the soundfield transformations:
 code::
-~hoaSoundFile = Buffer.read(s,HOA.userSoundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
+~hoaSoundFile = Buffer.read(s,HOA.soundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
 ~hoaSoundFile.numChannels;
 ::
 
