@@ -1,5 +1,5 @@
 Lebedev50BinauralDecoder {
-	classvar <>hrirFilters;
+	classvar <hrirFilters;
 	classvar <numChannels;
 	classvar <maxOrder;
 

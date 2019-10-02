@@ -24,9 +24,9 @@ substraction yields the right signal for the ears.
 
 
 HOABinaural{
-	classvar <>binauralIRs;
-	classvar <>headPhoneIRs;
-	classvar <>headPhones;
+	classvar <binauralIRs;
+	classvar <headPhoneIRs;
+	classvar <headPhones;
 
 	classvar <numChannels;
 	classvar <maxOrder;

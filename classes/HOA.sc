@@ -7,8 +7,8 @@ additions and alterations by Till Bovermann ( http://tai-studio.org )
 
 
 HOA {
-	classvar <>resourceDir;
-	classvar <>soundsSubdir, <>kernelsSubdir;
+	classvar <resourceDir;
+	classvar <soundsSubdir, <kernelsSubdir;
 
 	*initClass {
 		// find the path to this file, then move up one level and append "resources/"
