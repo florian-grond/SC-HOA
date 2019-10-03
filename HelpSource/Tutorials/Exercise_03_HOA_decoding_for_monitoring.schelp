@@ -245,9 +245,8 @@ var source, lbedev50, order5Sig ;
 source = PinkNoise.ar(10);
 // source = SinOsc.ar(440.0);
 lbedev50 = VBAP.ar(50, source, b.bufnum, MouseX.kr(-180, 180), MouseY.kr(-90, 90), spr);
-// order5Sig = HOAEncLebedev50.ar(5, 	lbedev50, gain: 0, filters:0);
+order5Sig = HOAEncLebedev50.ar(5, 	lbedev50, gain: 0, filters:0);
 
-order5Sig = HOALibEnc3D5.ar(source * 0.1, MouseX.kr(-pi, pi)) ;
 HOABinaural.ar(5, order5Sig, headphoneCorrection: nil);
 
 }.play;

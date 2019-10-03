@@ -1,14 +1,14 @@
 title:: HOA Tutorial Exercise 08
 summary:: Recording the b-format within the proxy space.
 categories:: Libraries>HOA
-related:: Guides/HOAguide, Guides/HOAguide
+related:: Guides/HOAguide, Tutorials/HOA_Tutorial_Overview
 
 
 STRONG:: Previous:::
 link::Tutorials/Exercise_07_HOA_beamforming::
 
 STRONG:: Next:::
-link::Tutorials/Exercise_09_HOA_decoding_for_speaker_arrays::
+link::Tutorials/Exercise_09_HOA_interfacing_VBAP_and_Ambisonics::
 
 
 The example below shows how to record the b-format within the proxy space.
