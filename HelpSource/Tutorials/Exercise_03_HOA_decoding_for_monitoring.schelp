@@ -118,24 +118,13 @@ s.scope(26); // To see all channels we add one more to the oscilloscope
 ~decoder.source = {var in; in = \in.ar(0!~hoaNumChannels); HOADecLebedev26.ar(3, in, output_gains: 24) };
 ::
 
-Now let's load HRIR filters for each of the 26 channels:
-Download them first here link::https://github.com/sekisushai/ambitools:: and place the FIR folder in the HOA folder.
-
-Depending on the platform you have this is:
-
-~/.local/share/HOA/
-
-or
-
-~/Library/Application Support/HOA/
-
-You can find the right path by executing
+Now let's load HRIR filters for each of the 26 channels. You can find these filters inside the teletype::resource/:: directory.
 
 code::
-HOA.userSupportDir
+HOA.openResourceDir
 ::
 
-Then execute:
+To load the HRIR filters, execute the following:
 
 code::
 HOADecLebedev26.loadHrirFilters(s);
@@ -170,7 +159,6 @@ code::
 
 The previous binauralization examples are CPU costly but can in principle use personalized HRIRs, should you happen to have some measurements for the positions of Lebedev grids.
 There is another possibility to binauralize b-format For, which is a very efficient and takes advantage of the symmetry of the KU100 see the following example:
-Make sure that the binauralIRs folder and the headphoneEQ folder are under HOA/kernels/
 
 Load the IRs as well as the headphone correction filters
 code::

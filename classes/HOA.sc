@@ -7,34 +7,27 @@ additions and alterations by Till Bovermann ( http://tai-studio.org )
 
 
 HOA {
-	classvar   <>userSupportDir; //,   <userSoundsDir,   <userKernelDir;
-	classvar <>soundsSubdir, <>kernelSubdir;
+	classvar <>resourceDir;
+	classvar <>soundsSubdir, <>kernelsSubdir;
 
 	*initClass {
-		userSupportDir   = Platform.userAppSupportDir  .dirname ++ "/HOA";
+		// find the path to this file, then move up one level and append "resources/"
+		resourceDir = this.class.filenameSymbol.asString.dirname.dirname +/+ "resources";
 
-		soundsSubdir     = "sounds";
-		kernelSubdir     = "kernels";
-
+		soundsSubdir = "sounds";
+		kernelsSubdir = "kernels";
 	}
 
-
-	*userSoundsDir {
-		^userSupportDir   +/+ soundsSubdir
+	*soundsDir {
+		^resourceDir +/+ soundsSubdir
 	}
 
-	*userKernelDir {
-		^userSupportDir   +/+ kernelSubdir
+	*kernelsDir {
+		^resourceDir +/+ kernelsSubdir
 	}
 
-	*openUserSupportDir {
-		if (File.exists(Atk.userSupportDir).not, {
-			HOA.userSupportDir.openOS;
-		}, {
-			"\n%: User Support directory does not exist. Run\n"
-			"\tthis.createUserSupportDir\nto create it".format(this, this).warn;
-			^this;
-		})
+	*openResourceDir {
+		resourceDir.openOS
 	}
 
 	// not really a good idea, we cannot populate it from within SC anyhow...
@@ -46,11 +39,11 @@ HOA {
 	// }
 
 	*pr_dirsFor {|keyword, subdir, subPaths|
-		^(userSupportDir +/+ subdir +/+ subPaths +/+ keyword).pathMatch
+		^(resourceDir +/+ subdir +/+ subPaths +/+ keyword).pathMatch
 	}
 
 	*kernelDirsFor {|keyword, subPaths|
-		^this.pr_dirsFor(keyword, kernelSubdir, subPaths);
+		^this.pr_dirsFor(keyword, kernelsSubdir, subPaths);
 	}
 	*soundsDirsFor {|keyword, subPaths|
 		^this.pr_dirsFor(keyword, soundsSubdir, subPaths);

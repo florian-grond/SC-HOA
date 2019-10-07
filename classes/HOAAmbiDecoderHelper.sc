@@ -5,8 +5,8 @@
 
 HOAAmbiDecoderHelper {
 
-	var   <>ambiToolboxPath; //,   <userSoundsDir,   <userKernelDir;
-	var   <>speakerArrayName; //,  <userSoundsDir,   <userKernelDir;
+	var   <>ambiToolboxPath; //,   <soundsDir,   <kernelsDir;
+	var   <>speakerArrayName; //,  <soundsDir,   <kernelsDir;
 	var   <>speakerPositions; //,
 	var   <>sweeterPositions; //,
 	var   <>speakerLabels; //
@@ -351,4 +351,4 @@ p.close;					// close the pipe to avoid that nasty buildup \n
 			       path_ADT++"examples/"++this.speakerArrayName++".schelp "++
 			       path_ADT++this.speakerArrayName++"/"++this.speakerArrayName++".schelp""');\n");
         */
-	
+

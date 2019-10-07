@@ -45,10 +45,10 @@ s.scope(5); // let's use 5 as we play back via ITU 5.0
 
 Let's load some 16 channels 3rd order soundfiles, the filenames indicate the channel ordering as well as the normalization (ACN, N3D):
 code::
-~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
-~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro.wav");
-~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
-~hoaSoundFile = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_LePlateau_Backyard.wav");
+~hoaSoundFile = Buffer.read(s, HOA.soundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
+~hoaSoundFile = Buffer.read(s, HOA.soundsDir++"/eigen_ACN_N3D_Montreal_Metro.wav");
+~hoaSoundFile = Buffer.read(s, HOA.soundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
+~hoaSoundFile = Buffer.read(s, HOA.soundsDir++"/eigen_ACN_N3D_Montreal_LePlateau_Backyard.wav");
 ~hoaSoundFile.numChannels;
 ::
 

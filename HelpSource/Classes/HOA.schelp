@@ -10,30 +10,30 @@ It is modeled after the Atk class.
 
 CLASSMETHODS::
 
-METHOD:: userSupportDir
+METHOD:: resourceDir
 
-returns::the path to the HOA support dir. Defaults to:
-code::Platform.userAppSupportDir.dirname ++ "/HOA";::
-
-
-METHOD:: userSoundsDir
-
-returns:: a path to the 'sounds' dir inside the HOA support dir
-
-METHOD:: userKernelDir
-
-returns:: a path to the 'kernel' dir inside the ATK support dir
+returns:: the path to SC-HOA's resource directory. If SC-HOA was installed via Quarks, code::resourceDir:: should be equal to:
+code::Platform.userAppSupportDir +/+ "downloaded-quarks/SC-HOA/resources"::
 
 
-METHOD:: kernelSubdir
-name of subdirectory for kernels within code::userSupportDir::
+METHOD:: soundsDir
+
+returns:: the path to the 'sounds' dir inside the SC-HOA resource directory
+
+METHOD:: kernelsDir
+
+returns:: the path to the 'kernels' dir inside the SC-HOA resource directory
+
+
+METHOD:: kernelsSubdir
+name of subdirectory for kernels within the SC-HOA resource directory
 
 METHOD:: soundsSubdir
-name of subdirectory for sounds within code::userSupportDir::
+name of subdirectory for sounds within the SC-HOA resource directory
 
 
-METHOD:: openUserSupportDir
-runs a unixCmd to open the userAppSupport dir. Uses 'open' (OS X only)
+METHOD:: openResourceDir
+runs a unixCmd to open the SC-HOA resource directory.
 
 
 METHOD:: kernelDirsFor

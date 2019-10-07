@@ -49,9 +49,9 @@ We will first make a SynthDef with a very simple grain playing back a sound samp
 
 First, load a soundfile:
 code::
-~hoaSoundScene = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
-~hoaSoundScene = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro.wav");
-~hoaSoundScene = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
+~hoaSoundScene = Buffer.read(s, HOA.soundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
+~hoaSoundScene = Buffer.read(s, HOA.soundsDir++"/eigen_ACN_N3D_Montreal_Metro.wav");
+~hoaSoundScene = Buffer.read(s, HOA.soundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
 ::
 
 

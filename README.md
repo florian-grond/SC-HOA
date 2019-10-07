@@ -12,7 +12,7 @@ The SuperCollider library was written by [Florian Grond](http://www.grond.at). I
 
 Frontend classes are wrappers that select the correct low-level UGen depending on the intended ambisonics order. The b-format signal is encapsulated in a channel array, which makes the resulting SC code flexible to experiment with different orders e.g. to account for available computational resources. All arguments obey SuperCollider's Multichannel Expansion paradigm.
 
-[^1]: binary files are not included in this repository, see [Installation](#Installation) for details.
+Additional resources for SC-HOA ambisonics are found inside the [resources/](resources/) folder. The included [FIR filters](resources/kernels/FIR/) are taken from [ambitools][1]. The [binraural IRs](resources/kernels/binauralIRs/) and [heaphone EQs](resources/kernels/headphoneEQ/) are taken from the [IEM Plugin Suite](https://git.iem.at/audioplugins/IEMPluginSuite)'s BinauralDecoder.
 
 ## Installation
 
@@ -24,19 +24,6 @@ In order to use this library, you will need a collection of SuperCollider UGens 
 
 > **note:** The HOAUGens were added to the sc3-plugins as of commit https://github.com/supercollider/sc3-plugins/commit/9326e1229a64ca82f76124a7a1a038095be22996
  
-You might need additional resources to make use of SC-HOA (e.g. FIR filters for binaural decoding).
-These files can be obtained by downloading a copy of the [ambitools][1] repository. Make a copy of the folder called `FIR` and place it into your SC-HOA kernels folder.
-
-Depending on your system, you will need to create the SC-HOA kernels folder in the following locations:
-
-* Linux `~/.local/share/HOA/kernels/`
-* macOS `~/Library/Application Support/HOA/kernels/`
-* Windows `C:\Users\_your-username_\AppData\Local\HOA\kernels\`
-
-You can find this path from within SuperCollider by executing the following:
-
-```HOA.userKernelDir```
-
 If you need 3rd order recordings for testing the tutorial and radial filters, feel free to [contact me](http://www.grond.at/html/submenues/submenu_contact.htm).
 
 ## Acknowledgements
