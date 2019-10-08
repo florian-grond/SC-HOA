@@ -1,5 +1,5 @@
 Lebedev50BinauralDecoder {
-	classvar <>hrirFilters;
+	classvar <hrirFilters;
 	classvar <numChannels;
 	classvar <maxOrder;
 
@@ -8,24 +8,27 @@ Lebedev50BinauralDecoder {
 		maxOrder = 5;
 	}
 
-	*loadHrirFilters {|server, path|
+	*loadHrirFilters { |server, path|
+		// if hrirFilters is not Nil, free buffers and set to Nil
+		if(hrirFilters.notNil) { this.freeHrirFilters };
+		path = path ?? { HOA.kernelsDir +/+ "FIR" +/+ "hrir" +/+ "hrir_christophe_lebedev50" };
+		hrirFilters = numChannels.collect { |chan|
+			[$L, $R].collect { |side|
+				Buffer.read(
+					server,
+					path +/+ "hrir_" ++ (chan+1) ++ "_" ++ side ++ ".wav"
+				)
+			}
+		}
+	}
 
-		// make path contain something usable
-		path = if (path.isNil, {
-			HOA.kernelDirsFor("*lebedev50", "FIR/hrir")
-		}, {
-			path.pathMatch;
-		}).first;
-
-		if (path.isNil, {
-			"%: specified path is nil".format(this).error;
-			^this;
-		});
-
-		this.hrirFilters = this.numChannels.collect({|i|	[
-			Buffer.read(server, path ++"/hrir_"++(i+1)++"_L.wav"),
-			Buffer.read(server, path ++"/hrir_"++(i+1)++"_R.wav")
-		] });
+	*freeHrirFilters {
+		hrirFilters.do { |buffers|
+			buffers.do { |buffer|
+				buffer.free
+			}
+		};
+		hrirFilters = nil;
 	}
 
 	*ar { |in, output_gains = 0|

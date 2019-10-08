@@ -24,9 +24,9 @@ substraction yields the right signal for the ears.
 
 
 HOABinaural{
-	classvar <>binauralIRs;
-	classvar <>headPhoneIRs;
-	classvar <>headPhones;
+	classvar <binauralIRs;
+	classvar <headPhoneIRs;
+	classvar <headPhones;
 
 	classvar <numChannels;
 	classvar <maxOrder;
@@ -42,30 +42,69 @@ HOABinaural{
 
 
 	// Read the symmetric b-format extracting each channel of the multichannel file individually
-	*loadbinauralIRs {|server|
-		var path = HOA.kernelDirsFor("", "binauralIRs")[0];
-		binauralIRs = 	[{|i| Buffer.readChannel(server,path++"irsOrd1.wav", channels: i)}!4,
-		                 {|i| Buffer.readChannel(server,path++"irsOrd2.wav", channels: i)}!9,
-		                 {|i| Buffer.readChannel(server,path++"irsOrd3.wav", channels: i)}!16,
-		                 {|i| Buffer.readChannel(server,path++"irsOrd4.wav", channels: i)}!25,
-	 	                 {|i| Buffer.readChannel(server,path++"irsOrd5.wav", channels: i)}!36,
-	 	                 {|i| Buffer.readChannel(server,path++"irsOrd6.wav", channels: i)}!47,
-	 	                 {|i| Buffer.readChannel(server,path++"irsOrd7.wav", channels: i)}!59,
-		];
+	*loadbinauralIRs { |server|
+		var path, orders;
+
+		if(binauralIRs.notNil) { ^binauralIRs };
+
+		path = HOA.kernelsDir +/+ "binauralIRs";
+		orders = (1..maxOrder);
+		binauralIRs = ((orders+1).squared).collect { |channels, index|
+			channels.collect { |chan|
+				Buffer.readChannel(
+					server,
+					path +/+ "irsOrd" ++ orders[index] ++ ".wav",
+					channels: chan
+				)
+			}
+		}
 	}
 
+	*loadHeadphoneCorrections { |server|
+		var pathname, files;
 
-	*loadHeadphoneCorrections {|server|
-		var pathname = PathName.new( HOA.kernelDirsFor("", "headphoneEQ")[0]);
-		// collect all headpone model names
-		headPhones = pathname.files.collect({|item,i| item.fileNameWithoutExtension });
-		headPhoneIRs = pathname.files.collect({|item,i| {|j|Buffer.readChannel(server,item.fullPath, channels: j)}!2; });
+		if(headPhoneIRs.notNil) { ^headPhoneIRs };
+
+		pathname = PathName(HOA.kernelsDir +/+ "headphoneEQ");
+		// keep only files with .wav extension. counterintuitive, but correct.
+		files = pathname.files.takeThese { |file| file.extension != "wav" };
+		headPhones = Array.newClear(files.size);
+		headPhoneIRs = files.collect { |file, index|
+			headPhones.put(index, file.fileNameWithoutExtension);
+			2.collect { |index|
+				Buffer.readChannel(
+					server,
+					file.fullPath,
+					channels: index
+				)
+			}
+		}
 	}
 
-    *listHeadphones {
-		headPhones.do({|item,i|  [i, item].postln     });
+	*listHeadphones {
+		headPhones.do { |item, index|
+			[index, item].postln
+		}
 	}
 
+	*freeBinauralIRs {
+		this.pr_freeBinauralBuffers(binauralIRs);
+		binauralIRs = nil;
+	}
+
+	*freeHeadphoneCorrections {
+		this.pr_freeBinauralBuffers(headPhoneIRs);
+		headPhoneIRs = nil;
+		headPhones = nil;
+	}
+
+	*pr_freeBinauralBuffers { |binauralBuffers|
+		binauralBuffers.do { |buffers|
+			buffers.do { |buffer|
+				buffer.free
+			}
+		}
+	}
 
     *ar { |order, in, input_gains = 0, output_gains = 0, headphoneCorrection = nil|
 		var decoded;

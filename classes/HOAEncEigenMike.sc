@@ -77,14 +77,25 @@ HOAEncEigenMike{
 	}
 
 
+	*loadRadialFilters { |server|
+		var path;
 
-	*loadRadialFilters {|server|
+		if(radialFilters.notNil) { ^radialFilters };
 
-		radialFilters = 	[Buffer.read(server,Platform.userExtensionDir++"/HOA/FIR/spherical_microphones/jconvolver_mic_eigenmike32"++"/order_0.wav"),
-		                         Buffer.read(server,Platform.userExtensionDir++"/HOA/FIR/spherical_microphones/jconvolver_mic_eigenmike32"++"/order_1.wav"),
-		                         Buffer.read(server,Platform.userExtensionDir++"/HOA/FIR/spherical_microphones/jconvolver_mic_eigenmike32"++"/order_2.wav"),
-		                         Buffer.read(server,Platform.userExtensionDir++"/HOA/FIR/spherical_microphones/jconvolver_mic_eigenmike32"++"/order_3.wav"),
-	 	                         Buffer.read(server,Platform.userExtensionDir++"/HOA/FIR/spherical_microphones/jconvolver_mic_eigenmike32"++"/order_4.wav")];
+		path = HOA.kernelsDir +/+ "FIR" +/+ "spherical_microphones" +/+ "jconvolver_mic_eigenmike32";
+		radialFilters = 5.collect { |index|
+			Buffer.read(
+				server,
+				path +/+ "order_" ++ index ++ ".wav"
+			)
+		}
+	}
+
+	*freeRadialFilters {
+		radialFilters.do { |buffer|
+			buffer.free
+		};
+		radialFilters = nil;
 	}
 
 	*ar { |order, in, gain=0, filters = 1|

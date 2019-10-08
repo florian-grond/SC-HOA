@@ -30,24 +30,26 @@ HOADecLebedev26 : HOADecLebedev {
 // virtual class
 
 HOADecLebedev {
-	*loadHrirFilters {|server, path|
+	*loadHrirFilters { |server, path|
+		if(this.hrirFilters.notNil) { this.freeHrirFilters };
+		path = path ?? { HOA.kernelsDir +/+ "FIR" +/+ "hrir" +/+ "hrir_christophe_lebedev50" };
+		this.hrirFilters = this.numChannels.collect { |chan|
+			[$L, $R].collect { |side|
+				Buffer.read(
+					server,
+					path +/+ "hrir_" ++ (chan+1) ++ "_" ++ side ++ ".wav"
+				)
+			}
+		}
+	}
 
-		// make path contain something usable
-		path = if (path.isNil, {
-			HOA.kernelDirsFor("*lebedev50", "FIR/hrir")
-		}, {
-			path.pathMatch;
-		}).first;
-
-		if (path.isNil, {
-			"%: specified path is nil".format(this).error;
-			^this;
-		});
-
-		this.hrirFilters = this.numChannels.collect({|i|	[
-			Buffer.read(server, path ++"/hrir_"++(i+1)++"_L.wav"),
-			Buffer.read(server, path ++"/hrir_"++(i+1)++"_R.wav")
-		] });
+	*freeHrirFilters {
+		this.hrirFilters.do { |buffers|
+			buffers.do { |buffer|
+				buffer.free
+			}
+		};
+		this.hrirFilters = nil;
 	}
 
 	*ar { |order, in, input_gains = 0, output_gains = 0, yes = 1, speakers_radius = 1, hrir_Filters = 0|
