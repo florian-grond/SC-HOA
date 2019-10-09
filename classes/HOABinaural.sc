@@ -132,6 +132,7 @@ HOABinaural{
 			}
 		);
 
+		in = in.asAudioRateInput;
 		numChan = (order+1).squared;
 				mids = midChannels.collect({|item,i| if (item < numChan,{item}) }).removeAllSuchThat({|item| item != nil});
 				sides = sideChannels.collect({|item,i| if (item < numChan,{item}) }).removeAllSuchThat({|item| item != nil});
