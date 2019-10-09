@@ -106,7 +106,7 @@ HOABinaural{
 		}
 	}
 
-    *ar { |order, in, input_gains = 0, output_gains = 0, headphoneCorrection = nil|
+	*ar { |order, in, input_gains = 0, output_gains = 0, headphoneCorrection = nil|
 		var decoded;
 		var maxChannels = min((order+1).squared, (this.maxOrder+1).squared);
 		var mids, mid, sides, side, conv, numChan;
@@ -134,20 +134,24 @@ HOABinaural{
 
 		in = in.asAudioRateInput;
 		numChan = (order+1).squared;
-				mids = midChannels.collect({|item,i| if (item < numChan,{item}) }).removeAllSuchThat({|item| item != nil});
-				sides = sideChannels.collect({|item,i| if (item < numChan,{item}) }).removeAllSuchThat({|item| item != nil});
-				conv = (numChan.collect({|i|   Convolution2.ar(  in[i], 	binauralIRs[order-1][i], 0, 512, 1)       }));
-				mid = mids.collect({|item,i| conv[item]}).sum;
-				side = sides.collect({|item,i| conv[item]}).sum;
-				if( headphoneCorrection == nil,
-			    // return the right - left signal
-				{^[mid - side, mid + side]},
-			    // if with headphone correction then convolve with the respective kernels
-				{^[mid - side, mid + side].collect({|item,i|  Convolution2.ar(  item, headPhoneIRs[headphoneCorrection][i], 0, 2048, 1)      })}
-			     );
+		mids = midChannels.collect({ |item| if(item < numChan, {item}) }).removeAllSuchThat({ |item| item != nil });
+		sides = sideChannels.collect({ |item,i| if(item < numChan, {item}) }).removeAllSuchThat({ |item| item != nil });
+		conv = numChan.collect({ |i|
+			Convolution2.ar(in[i], binauralIRs[order-1][i], 0, 512, 1)
+		});
+		mid = mids.collect({ |item| conv[item] }).sum;
+		side = sides.collect({ |item| conv[item] }).sum;
+		if(headphoneCorrection == nil, {
+				// return the right - left signal
+				^[mid - side, mid + side]
+			}, {
+				// if with headphone correction then convolve with the respective kernels
+				^[mid - side, mid + side].collect({ |item, i|
+					Convolution2.ar(item, headPhoneIRs[headphoneCorrection][i], 0, 2048, 1)
+				})
+			}
+		)
 	}
 
 }
-
-
 
