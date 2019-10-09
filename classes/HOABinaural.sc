@@ -66,8 +66,7 @@ HOABinaural{
 		if(headPhoneIRs.notNil) { ^headPhoneIRs };
 
 		pathname = PathName(HOA.kernelsDir +/+ "headphoneEQ");
-		// keep only files with .wav extension. counterintuitive, but correct.
-		files = pathname.files.takeThese { |file| file.extension != "wav" };
+		files = pathname.files.select { |file| file.extension == "wav" };
 		headPhones = Array.newClear(files.size);
 		headPhoneIRs = files.collect { |file, index|
 			headPhones.put(index, file.fileNameWithoutExtension);
