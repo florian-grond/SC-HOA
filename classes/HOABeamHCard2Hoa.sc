@@ -1,6 +1,6 @@
 HOABeamHCard2Hoa{
 
-	*ar { |order, in, az, ele, cardOrder = 1|
+	*ar { |order, in, az, ele, int_float = 0, cardOrder = 1|
 		// 		az = az.neg; ele = ele.neg; // the Faust Ugens seem to have those reversed
 		case{order == 1}
                 		{ var in1, // declare variables for the b-format array
@@ -9,7 +9,7 @@ HOABeamHCard2Hoa{
 			                     in2, in3, in4 = in;
 			              ^HOABeamHCardio2HOA1.ar(in1, // return the Ugen with the b-format channels
 				                                            in2, in3, in4,
-				                                            azimuth: az, elevation: ele, order:cardOrder)} // and with the args from the *ar method
+				                                            azimuth: az, elevation: ele, int_float: int_float, order:cardOrder)} // and with the args from the *ar method
 		       {order == 2}
                 		{var in1, // declare variables for the b-format array
 			                   in2, in3, in4,
@@ -20,7 +20,7 @@ HOABeamHCard2Hoa{
 			              ^HOABeamHCardio2HOA2.ar(in1, // return the Ugen with the b-format channels
 				                                            in2, in3, in4,
 				                                            in5, in6, in7, in8, in9,
-				                                            azimuth: az, elevation: ele, order:cardOrder)}// and with the args from the *ar method
+				                                            azimuth: az, elevation: ele, int_float: int_float, order:cardOrder)}// and with the args from the *ar method
                {order == 3}
                 		{var in1, // declare variables for the b-format array
 			                   in2,   in3,   in4,
@@ -34,7 +34,7 @@ HOABeamHCard2Hoa{
 				                                           in2, in3, in4,
 				                                           in5, in6, in7, in8, in9,
 				                                           in10, in11, in12, in13, in14, in15, in16,
-				                                            azimuth: az, elevation: ele, order:cardOrder)} // and with the args from the *ar method
+				                                            azimuth: az, elevation: ele, int_float: int_float, order:cardOrder)} // and with the args from the *ar method
                {order == 4}
                 		{var in1, // declare variables for the b-format array
 			                   in2,   in3,   in4,
