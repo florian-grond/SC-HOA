@@ -66,6 +66,7 @@ HOADecLebedev {
 			^nil;
 		});
 
+		in = in.asAudioRateInput;
 
 		decoded = switch(order.asInt,
 			1, {

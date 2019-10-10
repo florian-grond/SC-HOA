@@ -51,6 +51,9 @@ HOAEncLebedev06{
 	}
 
 	*ar { |order = 1, in, gain=0, filters = 1|
+
+		in = in.asAudioRateInput;
+
 		case{order == 1}
                 		{var   in1,   in2,   in3,   in4,   in5,   in6,  encoded;
 
@@ -58,6 +61,8 @@ HOAEncLebedev06{
 
 			                    encoded= HOAEncLebedev061.ar(in1, in2, in3, in4, in5, in6,
 				                                                                      gain:gain);
+
+			in = in.asAudioRateInput;
 
 			if(filters == 0,
 				{ ^encoded },
