@@ -1,60 +1,50 @@
-/*
-
-*/
-
-
-HOASphericalHarmonics{
-
-	classvar acn;
+HOASphericalHarmonics {
 
 	classvar n3D_0_0,
-	         n3D_1_1,
-	         n3D_1_0,
-	         n3D_2_2,
-	         n3D_2_1,
-	         n3D_2_0,
-	         n3D_3_3,
-	         n3D_3_2,
-	         n3D_3_1,
-	         n3D_3_0,
-	         n3D_4_4,
-	         n3D_4_3,
-	         n3D_4_2,
-	         n3D_4_1,
-	         n3D_4_0,
-	         n3D_5_5,
-	         n3D_5_4,
-	         n3D_5_3,
-	         n3D_5_2,
-	         n3D_5_1,
-	         n3D_5_0;
+			 n3D_1_1,
+			 n3D_1_0,
+			 n3D_2_2,
+			 n3D_2_1,
+			 n3D_2_0,
+			 n3D_3_3,
+			 n3D_3_2,
+			 n3D_3_1,
+			 n3D_3_0,
+			 n3D_4_4,
+			 n3D_4_3,
+			 n3D_4_2,
+			 n3D_4_1,
+			 n3D_4_0,
+			 n3D_5_5,
+			 n3D_5_4,
+			 n3D_5_3,
+			 n3D_5_2,
+			 n3D_5_1,
+			 n3D_5_0;
 
 	classvar sn3D_0_0,
-	         sn3D_1_1,
-	         sn3D_1_0,
-	         sn3D_2_2,
-	         sn3D_2_1,
-	         sn3D_2_0,
-	         sn3D_3_3,
-	         sn3D_3_2,
-	         sn3D_3_1,
-	         sn3D_3_0,
-	         sn3D_4_4,
-	         sn3D_4_3,
-	         sn3D_4_2,
-	         sn3D_4_1,
-	         sn3D_4_0,
-	         sn3D_5_5,
-	         sn3D_5_4,
-	         sn3D_5_3,
-	         sn3D_5_2,
-	         sn3D_5_1,
-	         sn3D_5_0;
-
+			 sn3D_1_1,
+			 sn3D_1_0,
+			 sn3D_2_2,
+			 sn3D_2_1,
+			 sn3D_2_0,
+			 sn3D_3_3,
+			 sn3D_3_2,
+			 sn3D_3_1,
+			 sn3D_3_0,
+			 sn3D_4_4,
+			 sn3D_4_3,
+			 sn3D_4_2,
+			 sn3D_4_1,
+			 sn3D_4_0,
+			 sn3D_5_5,
+			 sn3D_5_4,
+			 sn3D_5_3,
+			 sn3D_5_2,
+			 sn3D_5_1,
+			 sn3D_5_0;
 
 	*initClass {
-
-		acn = {}!36;
 
 		n3D_0_0 = 1;
 
@@ -114,116 +104,522 @@ HOASphericalHarmonics{
 	}
 
 
-    *coefN3D { |order, az, ele|
+	/* --------- N3D formula ---------
 
-  // degree = 0
-		acn[ 0] = n3D_0_0; //W
-  // degree = 1
-		acn[ 1] = n3D_1_1 * sin(az) * cos(ele);    //Y
-		acn[ 2] = n3D_1_0 * sin(ele);              //Z
-		acn[ 3] = n3D_1_1 * cos(az) * cos(ele);    //X
-  // degree = 2
-		acn[ 4] = n3D_2_2 * sin(2*az) * pow(cos(ele),2);    // V
-		acn[ 5] = n3D_2_1 * sin(az)   * sin(2*ele);         // T
-		acn[ 6] = n3D_2_0 * ((3 * pow(sin(ele),2))  - 1);     // R
-		acn[ 7] = n3D_2_1 * cos(az)   * sin(2*ele);         // S
-		acn[ 8] = n3D_2_2 * cos(2*az) * pow(cos(ele),2);    // U
-  // degree = 3
-		acn[ 9] = n3D_3_3 * sin(3*az) * pow(cos(ele),3);                         // Q
-		acn[10] = n3D_3_2 * sin(2*az) * pow(cos(ele),2) * sin(ele);              // O
-		acn[11] = n3D_3_1 * (sin(  az) * cos(ele) * ((5*pow(sin(ele),2)) -1));     // M
-		acn[12] = n3D_3_0 * ((5 * pow(sin(ele),2))  - 3) * sin(ele);               // K
-		acn[13] = n3D_3_1 * (cos(  az) * cos(ele) * ((5*pow(sin(ele),2)) -1));     // L
-		acn[14] = n3D_3_2 * cos(2*az) * pow(cos(ele),2) * sin(ele);              // N
-		acn[15] = n3D_3_3 * cos(3*az) * pow(cos(ele),3);                         // P
-  // degree = 4
-		acn[16] = n3D_4_4 *  sin(4*az) * pow(cos(ele),4);                                    //
-		acn[17] = n3D_4_3 *  sin(3*az) * pow(cos(ele),3) * sin(ele);                         //
-		acn[18] = n3D_4_2 * (sin(2*az) * pow(cos(ele),2) * ( (7 * pow(sin(ele),2)) - 1) );       //
-		acn[19] = n3D_4_1 * (sin(  az) * sin(2 * ele) *    ( (7 * pow(sin(ele),2)) - 3) );       //
-		acn[20] = n3D_4_0 * ((35 * pow(sin(ele),4))  - (30 * pow(sin(ele),2)) + 3);            //
-		acn[21] = n3D_4_1 * (cos(  az) * sin(2 * ele) *    (  (7 * pow(sin(ele),2)) - 3 ) );       //
-	    acn[22] = n3D_4_2 * (cos(2*az) * pow(cos(ele),2) * (  (7 * pow(sin(ele),2)) - 1 ) );       //
-		acn[23] = n3D_4_3 *  cos(3*az) * pow(cos(ele),3) * sin(ele);                         //
-		acn[24] = n3D_4_4 *  cos(4*az) * pow(cos(ele),4);                                    //
-  // degree = 5
-		acn[25] = n3D_5_5 *  sin(5*az) * pow(cos(ele),5);
-		acn[26] = n3D_5_4 *  sin(4*az) * pow(cos(ele),4) * sin(ele);
-		acn[27] = n3D_5_3 * (sin(3*az) * pow(cos(ele),3) * ((9* pow(sin(ele),2)) -1));
-		acn[28] = n3D_5_2 * (sin(2*az) * pow(cos(ele),2) * sin(ele) * ((3* pow(sin(ele),2)) -1));
-		acn[29] = n3D_5_1 * (sin(  az) *     cos(ele) * ((21 * pow(sin(ele),4))  - ((14 * pow(sin(ele),2)) + 1)));
-		acn[30] = n3D_5_0 * ((63 * pow(sin(ele),5))  - (70 * pow(sin(ele),3)) + (15*sin(ele)));
-		acn[31] = n3D_5_1 * (cos(  az) *     cos(ele) * ((21 * pow(sin(ele),4))  - ((14 * pow(sin(ele),2)) + 1)));
-		acn[32] = n3D_5_2 * (cos(2*az) * pow(cos(ele),2) * sin(ele) * ((3* pow(sin(ele),2)) -1));
-		acn[33] = n3D_5_3 * (cos(3*az) * pow(cos(ele),3) * ((9* pow(sin(ele),2)) -1));
-		acn[34] = n3D_5_4 *  cos(4*az) * pow(cos(ele),4) * sin(ele);
-		acn[35] = n3D_5_5 *  cos(5*az) * pow(cos(ele),5);
+	// degree = 0
+		n3D_0_0;    //W
+	// degree = 1
+		n3D_1_1 * sin(az) * cos(ele);    //Y
+		n3D_1_0 * sin(ele);              //Z
+		n3D_1_1 * cos(az) * cos(ele);    //X
+	// degree = 2
+		n3D_2_2 * sin(2*az) * pow(cos(ele),2);    // V
+		n3D_2_1 * sin(az)   * sin(2*ele);         // T
+		n3D_2_0 * ((3 * pow(sin(ele),2))  - 1);   // R
+		n3D_2_1 * cos(az)   * sin(2*ele);         // S
+		n3D_2_2 * cos(2*az) * pow(cos(ele),2);    // U
+	// degree = 3
+		n3D_3_3 * sin(3*az) * pow(cos(ele),3);                         // Q
+		n3D_3_2 * sin(2*az) * pow(cos(ele),2) * sin(ele);              // O
+		n3D_3_1 * (sin(  az) * cos(ele) * ((5*pow(sin(ele),2)) -1));   // M
+		n3D_3_0 * ((5 * pow(sin(ele),2))  - 3) * sin(ele);             // K
+		n3D_3_1 * (cos(  az) * cos(ele) * ((5*pow(sin(ele),2)) -1));   // L
+		n3D_3_2 * cos(2*az) * pow(cos(ele),2) * sin(ele);              // N
+		n3D_3_3 * cos(3*az) * pow(cos(ele),3);                         // P
+	// degree = 4
+		n3D_4_4 *  sin(4*az) * pow(cos(ele),4);
+		n3D_4_3 *  sin(3*az) * pow(cos(ele),3) * sin(ele);
+		n3D_4_2 * (sin(2*az) * pow(cos(ele),2) * ( (7 * pow(sin(ele),2)) - 1) );
+		n3D_4_1 * (sin(  az) * sin(2 * ele) *    ( (7 * pow(sin(ele),2)) - 3) );
+		n3D_4_0 * ((35 * pow(sin(ele),4))  - (30 * pow(sin(ele),2)) + 3);
+		n3D_4_1 * (cos(  az) * sin(2 * ele) *    (  (7 * pow(sin(ele),2)) - 3 ) );
+		n3D_4_2 * (cos(2*az) * pow(cos(ele),2) * (  (7 * pow(sin(ele),2)) - 1 ) );
+		n3D_4_3 *  cos(3*az) * pow(cos(ele),3) * sin(ele);
+		n3D_4_4 *  cos(4*az) * pow(cos(ele),4);
+	// degree = 5
+		n3D_5_5 *  sin(5*az) * pow(cos(ele),5);
+		n3D_5_4 *  sin(4*az) * pow(cos(ele),4) * sin(ele);
+		n3D_5_3 * (sin(3*az) * pow(cos(ele),3) * ((9* pow(sin(ele),2)) -1));
+		n3D_5_2 * (sin(2*az) * pow(cos(ele),2) * sin(ele) * ((3* pow(sin(ele),2)) -1));
+		n3D_5_1 * (sin(  az) *     cos(ele) * ((21 * pow(sin(ele),4))  - ((14 * pow(sin(ele),2)) + 1)));
+		n3D_5_0 * ((63 * pow(sin(ele),5))  - (70 * pow(sin(ele),3)) + (15*sin(ele)));
+		n3D_5_1 * (cos(  az) *     cos(ele) * ((21 * pow(sin(ele),4))  - ((14 * pow(sin(ele),2)) + 1)));
+		n3D_5_2 * (cos(2*az) * pow(cos(ele),2) * sin(ele) * ((3* pow(sin(ele),2)) -1));
+		n3D_5_3 * (cos(3*az) * pow(cos(ele),3) * ((9* pow(sin(ele),2)) -1));
+		n3D_5_4 *  cos(4*az) * pow(cos(ele),4) * sin(ele);
+		n3D_5_5 *  cos(5*az) * pow(cos(ele),5);
 
+	------------ N3D formula ------ */
 
-		acn = acn.round(0.00000001);
+	*coefN3D { |order, az, el|
+		switch(order)
+		{0} { ^[ n3D_0_0 ] }
+		{1} { ^this.pr_N3D_order1(az, el) }
+		{2} { ^this.pr_N3D_order2(az, el) }
+		{3} { ^this.pr_N3D_order3(az, el) }
+		{4} { ^this.pr_N3D_order4(az, el) }
+		{5} { ^this.pr_N3D_order5(az, el) }
+		{ "Invalid argument: Order must be an integer within the range 0-5.".warn }
+	}
 
-		case{order == 1} {^acn.copyRange(0,3)}
-		    {order == 2} {^acn.copyRange(0,8)}
-		    {order == 3} {^acn.copyRange(0,15)}
-		    {order == 4} {^acn.copyRange(0,24)}
-		    {order == 5} {^acn.copyRange(0,35)}
+	*pr_N3D_order1 { |az, el|
+		^[
+			// order 0
+			n3D_0_0,
+			// order 1
+			n3D_1_1 * sin(az) * cos(el),
+			n3D_1_0 * sin(el),
+			n3D_1_1 * cos(az) * cos(el)
+		]
+	}
+
+	*pr_N3D_order2 { |az, el|
+
+		// order 1
+		var sin_az = sin(az);
+		var sin_el = sin(el);
+		var cos_az = cos(az);
+		var cos_el = cos(el);
+
+		// order 2
+		var sin_2az = sin(2*az);
+		var pow2_cos_el = pow(cos_el, 2);
+		var sin_2el = sin(2*el);
+		var pow2_sin_el = pow(sin_el, 2);
+		var cos_2az = cos(2*az);
+
+		^[
+			// order 0
+			n3D_0_0,
+			// order 1
+			n3D_1_1 * sin_az * cos_el,
+			n3D_1_0 * sin_el,
+			n3D_1_1 * cos_az * cos_el,
+			// order 2
+			n3D_2_2 * sin_2az * pow2_cos_el,
+			n3D_2_1 * sin_az * sin_2el,
+			n3D_2_0 * ((3 * pow2_sin_el) - 1),
+			n3D_2_1 * cos_az * sin_2el,
+			n3D_2_2 * cos_2az * pow2_cos_el,
+		]
+	}
+
+	*pr_N3D_order3 { |az, el|
+
+		// order 1
+		var sin_az = sin(az);
+		var sin_el = sin(el);
+		var cos_az = cos(az);
+		var cos_el = cos(el);
+
+		// order 2
+		var sin_2az = sin(2*az);
+		var pow2_cos_el = pow(cos_el, 2);
+		var sin_2el = sin(2*el);
+		var pow2_sin_el = pow(sin_el, 2);
+		var cos_2az = cos(2*az);
+
+		// order 3
+		var sin_3az = sin(3*az);
+		var pow3_cos_el = pow(cos_el, 3);
+		var cos_3az = cos(3*az);
+
+		^[
+			// order 0
+			n3D_0_0,
+			// order 1
+			n3D_1_1 * sin_az * cos_el,
+			n3D_1_0 * sin_el,
+			n3D_1_1 * cos_az * cos_el,
+			// order 2
+			n3D_2_2 * sin_2az * pow2_cos_el,
+			n3D_2_1 * sin_az * sin_2el,
+			n3D_2_0 * ((3 * pow2_sin_el) - 1),
+			n3D_2_1 * cos_az * sin_2el,
+			n3D_2_2 * cos_2az * pow2_cos_el,
+			// order 3
+			n3D_3_3 * sin_3az * pow3_cos_el,
+			n3D_3_2 * sin_2az * pow2_cos_el * sin_el,
+			n3D_3_1 * (sin_az * cos_el * ((5 * pow2_sin_el) - 1)),
+			n3D_3_0 * ((5 * pow2_sin_el) - 3) * sin_el,
+			n3D_3_1 * (cos_az * cos_el * ((5 * pow2_sin_el) - 1)),
+			n3D_3_2 * cos_2az * pow2_cos_el * sin_el,
+			n3D_3_3 * cos_3az * pow3_cos_el,
+		]
+	}
+
+	*pr_N3D_order4 { |az, el|
+
+		// order 1
+		var sin_az = sin(az);
+		var sin_el = sin(el);
+		var cos_az = cos(az);
+		var cos_el = cos(el);
+
+		// order 2
+		var sin_2az = sin(2*az);
+		var pow2_cos_el = pow(cos_el, 2);
+		var sin_2el = sin(2*el);
+		var pow2_sin_el = pow(sin_el, 2);
+		var cos_2az = cos(2*az);
+
+		// order 3
+		var sin_3az = sin(3*az);
+		var pow3_cos_el = pow(cos_el, 3);
+		var cos_3az = cos(3*az);
+
+		// order 4
+		var sin_4az = sin(4*az);
+		var pow4_cos_el = pow(cos_el, 4);
+		var pow4_sin_el = pow(sin_el, 4);
+		var cos_4az = cos(4*az);
+
+		^[
+			// order 0
+			n3D_0_0,
+			// order 1
+			n3D_1_1 * sin_az * cos_el,
+			n3D_1_0 * sin_el,
+			n3D_1_1 * cos_az * cos_el,
+			// order 2
+			n3D_2_2 * sin_2az * pow2_cos_el,
+			n3D_2_1 * sin_az * sin_2el,
+			n3D_2_0 * ((3 * pow2_sin_el) - 1),
+			n3D_2_1 * cos_az * sin_2el,
+			n3D_2_2 * cos_2az * pow2_cos_el,
+			// order 3
+			n3D_3_3 * sin_3az * pow3_cos_el,
+			n3D_3_2 * sin_2az * pow2_cos_el * sin_el,
+			n3D_3_1 * (sin_az * cos_el * ((5 * pow2_sin_el) - 1)),
+			n3D_3_0 * ((5 * pow2_sin_el) - 3) * sin_el,
+			n3D_3_1 * (cos_az * cos_el * ((5 * pow2_sin_el) - 1)),
+			n3D_3_2 * cos_2az * pow2_cos_el * sin_el,
+			n3D_3_3 * cos_3az * pow3_cos_el,
+			// order 4
+			n3D_4_4 * sin_4az * pow4_cos_el,
+			n3D_4_3 * sin_3az * pow3_cos_el * sin_el,
+			n3D_4_2 * (sin_2az * pow2_cos_el * ((7 * pow2_sin_el) - 1)),
+			n3D_4_1 * (sin_az * sin_2el * ((7 * pow2_sin_el) - 3)),
+			n3D_4_0 * ((35 * pow4_sin_el) - (30 * pow2_sin_el) + 3),
+			n3D_4_1 * (cos_az * sin_2el * ((7 * pow2_sin_el) - 3)),
+			n3D_4_2 * (cos_2az * pow2_cos_el * ((7 * pow2_sin_el) - 1)),
+			n3D_4_3 * cos_3az * pow3_cos_el * sin_el,
+			n3D_4_4 * cos_4az * pow4_cos_el,
+		]
+	}
+
+	*pr_N3D_order5 { |az, el|
+
+		// order 1
+		var sin_az = sin(az);
+		var sin_el = sin(el);
+		var cos_az = cos(az);
+		var cos_el = cos(el);
+
+		// order 2
+		var sin_2az = sin(2*az);
+		var pow2_cos_el = pow(cos_el, 2);
+		var sin_2el = sin(2*el);
+		var pow2_sin_el = pow(sin_el, 2);
+		var cos_2az = cos(2*az);
+
+		// order 3
+		var sin_3az = sin(3*az);
+		var pow3_cos_el = pow(cos_el, 3);
+		var cos_3az = cos(3*az);
+
+		// order 4
+		var sin_4az = sin(4*az);
+		var pow4_cos_el = pow(cos_el, 4);
+		var pow4_sin_el = pow(sin_el, 4);
+		var cos_4az = cos(4*az);
+
+		// order 5
+		var pow5_cos_el = pow(cos_el, 5);
+
+		^[
+			// order 0
+			n3D_0_0,
+			// order 1
+			n3D_1_1 * sin_az * cos_el,
+			n3D_1_0 * sin_el,
+			n3D_1_1 * cos_az * cos_el,
+			// order 2
+			n3D_2_2 * sin_2az * pow2_cos_el,
+			n3D_2_1 * sin_az * sin_2el,
+			n3D_2_0 * ((3 * pow2_sin_el) - 1),
+			n3D_2_1 * cos_az * sin_2el,
+			n3D_2_2 * cos_2az * pow2_cos_el,
+			// order 3
+			n3D_3_3 * sin_3az * pow3_cos_el,
+			n3D_3_2 * sin_2az * pow2_cos_el * sin_el,
+			n3D_3_1 * (sin_az * cos_el * ((5 * pow2_sin_el) - 1)),
+			n3D_3_0 * ((5 * pow2_sin_el) - 3) * sin_el,
+			n3D_3_1 * (cos_az * cos_el * ((5 * pow2_sin_el) - 1)),
+			n3D_3_2 * cos_2az * pow2_cos_el * sin_el,
+			n3D_3_3 * cos_3az * pow3_cos_el,
+			// order 4
+			n3D_4_4 * sin_4az * pow4_cos_el,
+			n3D_4_3 * sin_3az * pow3_cos_el * sin_el,
+			n3D_4_2 * (sin_2az * pow2_cos_el * ((7 * pow2_sin_el) - 1)),
+			n3D_4_1 * (sin_az * sin_2el * ((7 * pow2_sin_el) - 3)),
+			n3D_4_0 * ((35 * pow4_sin_el) - (30 * pow2_sin_el) + 3),
+			n3D_4_1 * (cos_az * sin_2el * ((7 * pow2_sin_el) - 3)),
+			n3D_4_2 * (cos_2az * pow2_cos_el * ((7 * pow2_sin_el) - 1)),
+			n3D_4_3 * cos_3az * pow3_cos_el * sin_el,
+			n3D_4_4 * cos_4az * pow4_cos_el,
+			// order 5
+			n3D_5_5 * sin(5*az) * pow5_cos_el,
+			n3D_5_4 * sin_4az * pow4_cos_el * sin_el,
+			n3D_5_3 * (sin_3az * pow3_cos_el * ((9* pow2_sin_el) -1)),
+			n3D_5_2 * (sin_2az * pow2_cos_el * sin_el * ((3 * pow2_sin_el) - 1)),
+			n3D_5_1 * (sin_az * cos_el * ((21 * pow4_sin_el) - ((14 * pow2_sin_el) + 1))),
+			n3D_5_0 * ((63 * pow(sin_el, 5)) - (70 * pow(sin_el, 3)) + (15 * sin_el)),
+			n3D_5_1 * (cos_az * cos_el * ((21 * pow4_sin_el) - ((14 * pow2_sin_el) + 1))),
+			n3D_5_2 * (cos_2az * pow2_cos_el * sin_el * ((3 * pow2_sin_el) - 1)),
+			n3D_5_3 * (cos_3az * pow3_cos_el * ((9 * pow2_sin_el) - 1)),
+			n3D_5_4 * cos_4az * pow4_cos_el * sin_el,
+			n3D_5_5 * cos(5*az) * pow5_cos_el,
+		]
 	}
 
 
+	/* ------ SN3D formula ---------
 
-    *coefSN3D { |order, az, ele|
+	The SN3D formula is the same as for N3D, only it uses the 'sn3D_*_*' classvars instead.
 
-  // degree = 0
-		acn[ 0] = n3D_0_0; //W
-  // degree = 1
-		acn[ 1] = sn3D_1_1 * sin(az) * cos(ele);    //Y
-		acn[ 2] = sn3D_1_0 * sin(ele);              //Z
-		acn[ 3] = sn3D_1_1 * cos(az) * cos(ele);    //X
-  // degree = 2
-		acn[ 4] = sn3D_2_2 * sin(2*az) * pow(cos(ele),2);    // V
-		acn[ 5] = sn3D_2_1 * sin(az)   * sin(2*ele);         // T
-		acn[ 6] = sn3D_2_0 * ((3 * pow(sin(ele),2))  - 1);     // R
-		acn[ 7] = sn3D_2_1 * cos(az)   * sin(2*ele);         // S
-		acn[ 8] = sn3D_2_2 * cos(2*az) * pow(cos(ele),2);    // U
-  // degree = 3
-		acn[ 9] = sn3D_3_3 * sin(3*az) * pow(cos(ele),3);                         // Q
-		acn[10] = sn3D_3_2 * sin(2*az) * pow(cos(ele),2) * sin(ele);              // O
-		acn[11] = sn3D_3_1 * (sin(  az) * cos(ele) * ((5*pow(sin(ele),2)) -1));     // M
-		acn[12] = sn3D_3_0 * ((5 * pow(sin(ele),2))  - 3) * sin(ele);               // K
-		acn[13] = sn3D_3_1 * (cos(  az) * cos(ele) * ((5*pow(sin(ele),2)) -1));     // L
-		acn[14] = sn3D_3_2 * cos(2*az) * pow(cos(ele),2) * sin(ele);              // N
-		acn[15] = sn3D_3_3 * cos(3*az) * pow(cos(ele),3);                         // P
-  // degree = 4
-		acn[16] = sn3D_4_4 *  sin(4*az) * pow(cos(ele),4);                                    //
-		acn[17] = sn3D_4_3 *  sin(3*az) * pow(cos(ele),3) * sin(ele);                         //
-		acn[18] = sn3D_4_2 * (sin(2*az) * pow(cos(ele),2) * ( (7 * pow(sin(ele),2)) - 1) );       //
-		acn[19] = sn3D_4_1 * (sin(  az) * sin(2 * ele) *    ( (7 * pow(sin(ele),2)) - 3) );       //
-		acn[20] = sn3D_4_0 * ((35 * pow(sin(ele),4))  - (30 * pow(sin(ele),2)) + 3);            //
-		acn[21] = sn3D_4_1 * (cos(  az) * sin(2 * ele) *    (  (7 * pow(sin(ele),2)) - 3 ) );       //
-	    acn[22] = sn3D_4_2 * (cos(2*az) * pow(cos(ele),2) * (  (7 * pow(sin(ele),2)) - 1 ) );       //
-		acn[23] = sn3D_4_3 *  cos(3*az) * pow(cos(ele),3) * sin(ele);                         //
-		acn[24] = sn3D_4_4 *  cos(4*az) * pow(cos(ele),4);                                    //
-  // degree = 5
-		acn[25] = sn3D_5_5 *  sin(5*az) * pow(cos(ele),5);
-		acn[26] = sn3D_5_4 *  sin(4*az) * pow(cos(ele),4) * sin(ele);
-		acn[27] = sn3D_5_3 * (sin(3*az) * pow(cos(ele),3) * ((9* pow(sin(ele),2)) -1));
-		acn[28] = sn3D_5_2 * (sin(2*az) * pow(cos(ele),2) * sin(ele) * ((3* pow(sin(ele),2)) -1));
-		acn[29] = sn3D_5_1 * (sin(  az) *     cos(ele) * ((21 * pow(sin(ele),4))  - ((14 * pow(sin(ele),2)) + 1)));
-		acn[30] = sn3D_5_0 * ((63 * pow(sin(ele),5))  - (70 * pow(sin(ele),3)) + (15*sin(ele)));
-		acn[31] = sn3D_5_1 * (cos(  az) *     cos(ele) * ((21 * pow(sin(ele),4))  - ((14 * pow(sin(ele),2)) + 1)));
-		acn[32] = sn3D_5_2 * (cos(2*az) * pow(cos(ele),2) * sin(ele) * ((3* pow(sin(ele),2)) -1));
-		acn[33] = sn3D_5_3 * (cos(3*az) * pow(cos(ele),3) * ((9* pow(sin(ele),2)) -1));
-		acn[34] = sn3D_5_4 *  cos(4*az) * pow(cos(ele),4) * sin(ele);
-		acn[35] = sn3D_5_5 *  cos(5*az) * pow(cos(ele),5);
+	--------- SN3D formula ------ */
 
-	    acn = acn.round(0.00000001);
+	*coefSN3D { |order, az, el|
+		switch(order)
+		{0} { ^[ n3D_0_0 ] }
+		{1} { ^this.pr_SN3D_order1(az, el) }
+		{2} { ^this.pr_SN3D_order2(az, el) }
+		{3} { ^this.pr_SN3D_order3(az, el) }
+		{4} { ^this.pr_SN3D_order4(az, el) }
+		{5} { ^this.pr_SN3D_order5(az, el) }
+		{ "Invalid argument: Order must be an integer within the range 0-5.".warn }
+	}
 
+	*pr_SN3D_order1 { |az, el|
+		^[
+			// order 0
+			n3D_0_0,
+			// order 1
+			sn3D_1_1 * sin(az) * cos(el),
+			sn3D_1_0 * sin(el),
+			sn3D_1_1 * cos(az) * cos(el)
+		]
+	}
 
-		case{order == 1} {^acn.copyRange(0,3)}
-		    {order == 2} {^acn.copyRange(0,8)}
-		    {order == 3} {^acn.copyRange(0,15)}
-		    {order == 4} {^acn.copyRange(0,24)}
-		    {order == 5} {^acn.copyRange(0,35)}
+	*pr_SN3D_order2 { |az, el|
+
+		// order 1
+		var sin_az = sin(az);
+		var sin_el = sin(el);
+		var cos_az = cos(az);
+		var cos_el = cos(el);
+
+		// order 2
+		var sin_2az = sin(2*az);
+		var pow2_cos_el = pow(cos_el, 2);
+		var sin_2el = sin(2*el);
+		var pow2_sin_el = pow(sin_el, 2);
+		var cos_2az = cos(2*az);
+
+		^[
+			// order 0
+			n3D_0_0,
+			// order 1
+			sn3D_1_1 * sin_az * cos_el,
+			sn3D_1_0 * sin_el,
+			sn3D_1_1 * cos_az * cos_el,
+			// order 2
+			sn3D_2_2 * sin_2az * pow2_cos_el,
+			sn3D_2_1 * sin_az * sin_2el,
+			sn3D_2_0 * ((3 * pow2_sin_el) - 1),
+			sn3D_2_1 * cos_az * sin_2el,
+			sn3D_2_2 * cos_2az * pow2_cos_el,
+		]
+	}
+
+	*pr_SN3D_order3 { |az, el|
+
+		// order 1
+		var sin_az = sin(az);
+		var sin_el = sin(el);
+		var cos_az = cos(az);
+		var cos_el = cos(el);
+
+		// order 2
+		var sin_2az = sin(2*az);
+		var pow2_cos_el = pow(cos_el, 2);
+		var sin_2el = sin(2*el);
+		var pow2_sin_el = pow(sin_el, 2);
+		var cos_2az = cos(2*az);
+
+		// order 3
+		var sin_3az = sin(3*az);
+		var pow3_cos_el = pow(cos_el, 3);
+		var cos_3az = cos(3*az);
+
+		^[
+			// order 0
+			n3D_0_0,
+			// order 1
+			sn3D_1_1 * sin_az * cos_el,
+			sn3D_1_0 * sin_el,
+			sn3D_1_1 * cos_az * cos_el,
+			// order 2
+			sn3D_2_2 * sin_2az * pow2_cos_el,
+			sn3D_2_1 * sin_az * sin_2el,
+			sn3D_2_0 * ((3 * pow2_sin_el) - 1),
+			sn3D_2_1 * cos_az * sin_2el,
+			sn3D_2_2 * cos_2az * pow2_cos_el,
+			// order 3
+			sn3D_3_3 * sin_3az * pow3_cos_el,
+			sn3D_3_2 * sin_2az * pow2_cos_el * sin_el,
+			sn3D_3_1 * (sin_az * cos_el * ((5 * pow2_sin_el) - 1)),
+			sn3D_3_0 * ((5 * pow2_sin_el) - 3) * sin_el,
+			sn3D_3_1 * (cos_az * cos_el * ((5 * pow2_sin_el) - 1)),
+			sn3D_3_2 * cos_2az * pow2_cos_el * sin_el,
+			sn3D_3_3 * cos_3az * pow3_cos_el,
+		]
+	}
+
+	*pr_SN3D_order4 { |az, el|
+
+		// order 1
+		var sin_az = sin(az);
+		var sin_el = sin(el);
+		var cos_az = cos(az);
+		var cos_el = cos(el);
+
+		// order 2
+		var sin_2az = sin(2*az);
+		var pow2_cos_el = pow(cos_el, 2);
+		var sin_2el = sin(2*el);
+		var pow2_sin_el = pow(sin_el, 2);
+		var cos_2az = cos(2*az);
+
+		// order 3
+		var sin_3az = sin(3*az);
+		var pow3_cos_el = pow(cos_el, 3);
+		var cos_3az = cos(3*az);
+
+		// order 4
+		var sin_4az = sin(4*az);
+		var pow4_cos_el = pow(cos_el, 4);
+		var pow4_sin_el = pow(sin_el, 4);
+		var cos_4az = cos(4*az);
+
+		^[
+			// order 0
+			n3D_0_0,
+			// order 1
+			sn3D_1_1 * sin_az * cos_el,
+			sn3D_1_0 * sin_el,
+			sn3D_1_1 * cos_az * cos_el,
+			// order 2
+			sn3D_2_2 * sin_2az * pow2_cos_el,
+			sn3D_2_1 * sin_az * sin_2el,
+			sn3D_2_0 * ((3 * pow2_sin_el) - 1),
+			sn3D_2_1 * cos_az * sin_2el,
+			sn3D_2_2 * cos_2az * pow2_cos_el,
+			// order 3
+			sn3D_3_3 * sin_3az * pow3_cos_el,
+			sn3D_3_2 * sin_2az * pow2_cos_el * sin_el,
+			sn3D_3_1 * (sin_az * cos_el * ((5 * pow2_sin_el) - 1)),
+			sn3D_3_0 * ((5 * pow2_sin_el) - 3) * sin_el,
+			sn3D_3_1 * (cos_az * cos_el * ((5 * pow2_sin_el) - 1)),
+			sn3D_3_2 * cos_2az * pow2_cos_el * sin_el,
+			sn3D_3_3 * cos_3az * pow3_cos_el,
+			// order 4
+			sn3D_4_4 * sin_4az * pow4_cos_el,
+			sn3D_4_3 * sin_3az * pow3_cos_el * sin_el,
+			sn3D_4_2 * (sin_2az * pow2_cos_el * ((7 * pow2_sin_el) - 1)),
+			sn3D_4_1 * (sin_az * sin_2el * ((7 * pow2_sin_el) - 3)),
+			sn3D_4_0 * ((35 * pow4_sin_el) - (30 * pow2_sin_el) + 3),
+			sn3D_4_1 * (cos_az * sin_2el * ((7 * pow2_sin_el) - 3)),
+			sn3D_4_2 * (cos_2az * pow2_cos_el * ((7 * pow2_sin_el) - 1)),
+			sn3D_4_3 * cos_3az * pow3_cos_el * sin_el,
+			sn3D_4_4 * cos_4az * pow4_cos_el,
+		]
+	}
+
+	*pr_SN3D_order5 { |az, el|
+
+		// order 1
+		var sin_az = sin(az);
+		var sin_el = sin(el);
+		var cos_az = cos(az);
+		var cos_el = cos(el);
+
+		// order 2
+		var sin_2az = sin(2*az);
+		var pow2_cos_el = pow(cos_el, 2);
+		var sin_2el = sin(2*el);
+		var pow2_sin_el = pow(sin_el, 2);
+		var cos_2az = cos(2*az);
+
+		// order 3
+		var sin_3az = sin(3*az);
+		var pow3_cos_el = pow(cos_el, 3);
+		var cos_3az = cos(3*az);
+
+		// order 4
+		var sin_4az = sin(4*az);
+		var pow4_cos_el = pow(cos_el, 4);
+		var pow4_sin_el = pow(sin_el, 4);
+		var cos_4az = cos(4*az);
+
+		// order 5
+		var pow5_cos_el = pow(cos_el, 5);
+
+		^[
+			// order 0
+			n3D_0_0,
+			// order 1
+			sn3D_1_1 * sin_az * cos_el,
+			sn3D_1_0 * sin_el,
+			sn3D_1_1 * cos_az * cos_el,
+			// order 2
+			sn3D_2_2 * sin_2az * pow2_cos_el,
+			sn3D_2_1 * sin_az * sin_2el,
+			sn3D_2_0 * ((3 * pow2_sin_el) - 1),
+			sn3D_2_1 * cos_az * sin_2el,
+			sn3D_2_2 * cos_2az * pow2_cos_el,
+			// order 3
+			sn3D_3_3 * sin_3az * pow3_cos_el,
+			sn3D_3_2 * sin_2az * pow2_cos_el * sin_el,
+			sn3D_3_1 * (sin_az * cos_el * ((5 * pow2_sin_el) - 1)),
+			sn3D_3_0 * ((5 * pow2_sin_el) - 3) * sin_el,
+			sn3D_3_1 * (cos_az * cos_el * ((5 * pow2_sin_el) - 1)),
+			sn3D_3_2 * cos_2az * pow2_cos_el * sin_el,
+			sn3D_3_3 * cos_3az * pow3_cos_el,
+			// order 4
+			sn3D_4_4 * sin_4az * pow4_cos_el,
+			sn3D_4_3 * sin_3az * pow3_cos_el * sin_el,
+			sn3D_4_2 * (sin_2az * pow2_cos_el * ((7 * pow2_sin_el) - 1)),
+			sn3D_4_1 * (sin_az * sin_2el * ((7 * pow2_sin_el) - 3)),
+			sn3D_4_0 * ((35 * pow4_sin_el) - (30 * pow2_sin_el) + 3),
+			sn3D_4_1 * (cos_az * sin_2el * ((7 * pow2_sin_el) - 3)),
+			sn3D_4_2 * (cos_2az * pow2_cos_el * ((7 * pow2_sin_el) - 1)),
+			sn3D_4_3 * cos_3az * pow3_cos_el * sin_el,
+			sn3D_4_4 * cos_4az * pow4_cos_el,
+			// order 5
+			sn3D_5_5 * sin(5*az) * pow5_cos_el,
+			sn3D_5_4 * sin_4az * pow4_cos_el * sin_el,
+			sn3D_5_3 * (sin_3az * pow3_cos_el * ((9* pow2_sin_el) -1)),
+			sn3D_5_2 * (sin_2az * pow2_cos_el * sin_el * ((3 * pow2_sin_el) - 1)),
+			sn3D_5_1 * (sin_az * cos_el * ((21 * pow4_sin_el) - ((14 * pow2_sin_el) + 1))),
+			sn3D_5_0 * ((63 * pow(sin_el, 5)) - (70 * pow(sin_el, 3)) + (15 * sin_el)),
+			sn3D_5_1 * (cos_az * cos_el * ((21 * pow4_sin_el) - ((14 * pow2_sin_el) + 1))),
+			sn3D_5_2 * (cos_2az * pow2_cos_el * sin_el * ((3 * pow2_sin_el) - 1)),
+			sn3D_5_3 * (cos_3az * pow3_cos_el * ((9 * pow2_sin_el) - 1)),
+			sn3D_5_4 * cos_4az * pow4_cos_el * sin_el,
+			sn3D_5_5 * cos(5*az) * pow5_cos_el,
+		]
 	}
 
 
@@ -509,49 +905,6 @@ HOASphericalHarmonics{
 			}
 
 
-
-
-*/
-
-
-
-		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
  // spherical to cartesian
   // r = 1;
   x = 1 * cos(az) * cos(ele);
@@ -676,44 +1029,7 @@ HOASphericalHarmonics{
   acn[34) =     sn3D_5_4 * z * ( pow(x,4) - (6*pow(x,2)*pow(y,2)) + pow(y,4) );
   acn[35) =     sn3D_5_5 * x * ( pow(x,4) - (10*pow(x,2)*pow(y,2)) + (5*pow(y,4)) ) ;
 
-
-
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 */
+
+}
+
