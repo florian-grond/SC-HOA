@@ -43,6 +43,8 @@ Lebedev50BinauralDecoder {
 			^nil;
 		});
 
+		in = in.asAudioRateInput;
+
 		decoded = in.collect{|item,i|
 			[	// left channel
 				Convolution2.ar( item, this.hrirFilters[i][0], 0, 1024, 1),
