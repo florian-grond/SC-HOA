@@ -58,9 +58,13 @@ s.makeWindow;
 s.boot;
 )
 
-// Rotate an audio scene around pitch yaw and roll
-( ~order = 2; // try different orders up to 5 and watch the scope window.
+// Encode an audio scene while changing its azimuth and elevation
+(
+// try different orders up to 5 and watch the scope window.
+~order = 2;
 s.scope((~order+1).pow(2));
-{HOAEncPan.ar(~order, WhiteNoise.ar(1), MouseX.kr(0, 360), MouseY.kr(-90, 90 ) )}.play;
+{
+    HOAEncoder.ar(~order, WhiteNoise.ar(1), MouseX.kr(-pi, pi), MouseY.kr(-0.5pi, 0.5pi))
+}.play
 )
 ::
