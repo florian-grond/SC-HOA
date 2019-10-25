@@ -151,7 +151,7 @@ HOASphericalHarmonics {
 
 	------------ N3D formula ------ */
 
-	*coefN3D { |order, az, el|
+	*coefN3D { |order, az=0, el=0|
 		switch(order)
 		{0} { ^[ n3D_0_0 ] }
 		{1} { ^this.pr_N3D_order1(az, el) }
@@ -390,7 +390,7 @@ HOASphericalHarmonics {
 
 	--------- SN3D formula ------ */
 
-	*coefSN3D { |order, az, el|
+	*coefSN3D { |order, az=0, el=0|
 		switch(order)
 		{0} { ^[ n3D_0_0 ] }
 		{1} { ^this.pr_SN3D_order1(az, el) }
