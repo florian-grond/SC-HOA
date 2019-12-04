@@ -78,6 +78,8 @@ HOAEncLebedev26{
 		var path;
 
 		if(radialFilters.notNil) { ^radialFilters };
+		if(server.isNil) { Error("%: invalid server argument: Nil".format(thisMethod)).throw };
+		if(server.serverRunning.not) { "%: Server not booted".format(thisMethod).warn; ^this };
 
 		path = HOA.kernelsDir +/+ "FIR" +/+ "spherical_microphones" +/+ "jconvolver_mic_lebedev50";
 		radialFilters = 4.collect { |index|
@@ -85,7 +87,8 @@ HOAEncLebedev26{
 				server,
 				path +/+ "order_" ++ index ++ ".wav"
 			)
-		}
+		};
+		ServerQuit.add(server: server, object: this);
 	}
 
 	*freeRadialFilters {
@@ -93,6 +96,13 @@ HOAEncLebedev26{
 			buffer.free
 		};
 		radialFilters = nil;
+	}
+
+	*doOnServerQuit { |server|
+		if(radialFilters.notNil) {
+			this.freeRadialFilters
+		};
+		ServerQuit.remove(server: server, object: this);
 	}
 
 	*ar { |order, in, gain=0, filters = 1|
