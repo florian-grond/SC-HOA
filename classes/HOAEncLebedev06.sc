@@ -33,8 +33,7 @@ HOAEncLebedev06{
 		var path;
 
 		if(radialFilters.notNil) { ^radialFilters };
-		if(server.isNil) { Error("%: invalid server argument: Nil".format(thisMethod)).throw };
-		if(server.serverRunning.not) { "%: Server not booted".format(thisMethod).warn; ^this };
+		HOA.pr_checkServerBooted(server);
 
 		path = HOA.kernelsDir +/+ "FIR" +/+ "spherical_microphones" +/+ "jconvolver_mic_lebedev50";
 		radialFilters = 2.collect { |index|

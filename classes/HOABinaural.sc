@@ -46,8 +46,7 @@ HOABinaural{
 		var path, orders;
 
 		if(binauralIRs.notNil) { ^binauralIRs };
-		if(server.isNil) { Error("%: invalid server argument: Nil".format(thisMethod)).throw };
-		if(server.serverRunning.not) { "%: Server not booted".format(thisMethod).warn; ^this };
+		HOA.pr_checkServerBooted(server);
 
 		path = HOA.kernelsDir +/+ "binauralIRs";
 		orders = (1..maxOrder);
@@ -67,8 +66,7 @@ HOABinaural{
 		var pathname, files;
 
 		if(headPhoneIRs.notNil) { ^headPhoneIRs };
-		if(server.isNil) { Error("%: invalid server argument: Nil".format(thisMethod)).throw };
-		if(server.serverRunning.not) { "%: Server not booted".format(thisMethod).warn; ^this };
+		HOA.pr_checkServerBooted(server);
 
 		pathname = PathName(HOA.kernelsDir +/+ "headphoneEQ");
 		files = pathname.files.select { |file| file.extension == "wav" };
