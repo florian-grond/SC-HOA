@@ -31,6 +31,7 @@ HOADecLebedev26 : HOADecLebedev {
 
 HOADecLebedev {
 	*loadHrirFilters { |server, path|
+		HOA.pr_checkServerBooted(server);
 		if(this.hrirFilters.notNil) { this.freeHrirFilters };
 		path = path ?? { HOA.kernelsDir +/+ "FIR" +/+ "hrir" +/+ "hrir_christophe_lebedev50" };
 		this.hrirFilters = this.numChannels.collect { |chan|

@@ -46,6 +46,7 @@ HOABinaural{
 		var path, orders;
 
 		if(binauralIRs.notNil) { ^binauralIRs };
+		HOA.pr_checkServerBooted(server);
 
 		path = HOA.kernelsDir +/+ "binauralIRs";
 		orders = (1..maxOrder);
@@ -57,13 +58,15 @@ HOABinaural{
 					channels: chan
 				)
 			}
-		}
+		};
+		ServerQuit.add(server: server, object: this);
 	}
 
 	*loadHeadphoneCorrections { |server|
 		var pathname, files;
 
 		if(headPhoneIRs.notNil) { ^headPhoneIRs };
+		HOA.pr_checkServerBooted(server);
 
 		pathname = PathName(HOA.kernelsDir +/+ "headphoneEQ");
 		files = pathname.files.select { |file| file.extension == "wav" };
@@ -77,7 +80,8 @@ HOABinaural{
 					channels: index
 				)
 			}
-		}
+		};
+		ServerQuit.add(server: server, object: this);
 	}
 
 	*listHeadphones {
@@ -103,6 +107,16 @@ HOABinaural{
 				buffer.free
 			}
 		}
+	}
+
+	*doOnServerQuit { |server|
+		if(binauralIRs.notNil) {
+			this.freeBinauralIRs
+		};
+		if(headPhoneIRs.notNil) {
+			this.freeHeadphoneCorrections
+		};
+		ServerQuit.remove(server: server, object: this);
 	}
 
 	*ar { |order, in, input_gains = 0, output_gains = 0, headphoneCorrection = nil|

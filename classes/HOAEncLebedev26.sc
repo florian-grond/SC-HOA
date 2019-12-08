@@ -78,6 +78,7 @@ HOAEncLebedev26{
 		var path;
 
 		if(radialFilters.notNil) { ^radialFilters };
+		HOA.pr_checkServerBooted(server);
 
 		path = HOA.kernelsDir +/+ "FIR" +/+ "spherical_microphones" +/+ "jconvolver_mic_lebedev50";
 		radialFilters = 4.collect { |index|
@@ -85,7 +86,8 @@ HOAEncLebedev26{
 				server,
 				path +/+ "order_" ++ index ++ ".wav"
 			)
-		}
+		};
+		ServerQuit.add(server: server, object: this);
 	}
 
 	*freeRadialFilters {
@@ -93,6 +95,13 @@ HOAEncLebedev26{
 			buffer.free
 		};
 		radialFilters = nil;
+	}
+
+	*doOnServerQuit { |server|
+		if(radialFilters.notNil) {
+			this.freeRadialFilters
+		};
+		ServerQuit.remove(server: server, object: this);
 	}
 
 	*ar { |order, in, gain=0, filters = 1|

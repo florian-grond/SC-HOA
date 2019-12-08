@@ -57,4 +57,12 @@ HOA {
 		^(n.sqrt - 1)
 	}
 
+	*pr_checkServerBooted { |server|
+		if(server.isNil) {
+			Error("%: invalid server argument: Nil".format(thisMethod)).throw
+		};
+		if(server.serverRunning.not) {
+			Error("%: Server not booted".format(thisMethod)).throw
+		}
+	}
 }

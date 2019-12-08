@@ -9,6 +9,7 @@ Lebedev50BinauralDecoder {
 	}
 
 	*loadHrirFilters { |server, path|
+		HOA.pr_checkServerBooted(server);
 		// if hrirFilters is not Nil, free buffers and set to Nil
 		if(hrirFilters.notNil) { this.freeHrirFilters };
 		path = path ?? { HOA.kernelsDir +/+ "FIR" +/+ "hrir" +/+ "hrir_christophe_lebedev50" };
