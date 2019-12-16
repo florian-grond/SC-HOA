@@ -103,7 +103,7 @@ HOADecLebedev {
 			}
 		);
 
-		^this.pr_applyHrir(decoded);
+		^this.pr_applyHrir(decoded, hrir_Filters);
 	}
 
 	*pr_applyHrir {|decoded, hrir_Filters|

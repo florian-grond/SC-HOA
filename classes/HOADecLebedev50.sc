@@ -89,6 +89,6 @@ HOADecLebedev50 : HOADecLebedev {
 			}
 		);
 
-		^this.pr_applyHrir(decoded);
+		^this.pr_applyHrir(decoded, hrir_Filters);
 	}
 }
