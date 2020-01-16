@@ -42,9 +42,9 @@ code::
 ~order = 3; // al material is 3rd order
 ~hoaNumChannels = (~order+1).pow(2);
 )
-~hoaSoundScene = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
-~hoaSoundScene = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_Montreal_Metro.wav");
-~hoaSoundScene = Buffer.read(s, HOA.userSoundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
+~hoaSoundScene = Buffer.read(s, HOA.soundsDir++"/eigen_ACN_N3D_Montreal_Metro_cello.wav");
+~hoaSoundScene = Buffer.read(s, HOA.soundsDir++"/eigen_ACN_N3D_Montreal_Metro.wav");
+~hoaSoundScene = Buffer.read(s, HOA.soundsDir++"/eigen_ACN_N3D_CIRMMT_Foyer_short.wav");
 ::
 
 

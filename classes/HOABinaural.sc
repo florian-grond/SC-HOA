@@ -24,9 +24,9 @@ substraction yields the right signal for the ears.
 
 
 HOABinaural{
-	classvar <>binauralIRs;
-	classvar <>headPhoneIRs;
-	classvar <>headPhones;
+	classvar <binauralIRs;
+	classvar <headPhoneIRs;
+	classvar <headPhones;
 
 	classvar <numChannels;
 	classvar <maxOrder;
@@ -42,32 +42,84 @@ HOABinaural{
 
 
 	// Read the symmetric b-format extracting each channel of the multichannel file individually
-	*loadbinauralIRs {|server|
-		var path = HOA.kernelDirsFor("", "binauralIRs")[0];
-		binauralIRs = 	[{|i| Buffer.readChannel(server,path++"irsOrd1.wav", channels: i)}!4,
-		                 {|i| Buffer.readChannel(server,path++"irsOrd2.wav", channels: i)}!9,
-		                 {|i| Buffer.readChannel(server,path++"irsOrd3.wav", channels: i)}!16,
-		                 {|i| Buffer.readChannel(server,path++"irsOrd4.wav", channels: i)}!25,
-	 	                 {|i| Buffer.readChannel(server,path++"irsOrd5.wav", channels: i)}!36,
-	 	                 {|i| Buffer.readChannel(server,path++"irsOrd6.wav", channels: i)}!47,
-	 	                 {|i| Buffer.readChannel(server,path++"irsOrd7.wav", channels: i)}!59,
-		];
+	*loadbinauralIRs { |server|
+		var path, orders;
+
+		if(binauralIRs.notNil) { ^binauralIRs };
+		HOA.pr_checkServerBooted(server);
+
+		path = HOA.kernelsDir +/+ "binauralIRs";
+		orders = (1..maxOrder);
+		binauralIRs = ((orders+1).squared).collect { |channels, index|
+			channels.collect { |chan|
+				Buffer.readChannel(
+					server,
+					path +/+ "irsOrd" ++ orders[index] ++ ".wav",
+					channels: chan
+				)
+			}
+		};
+		ServerQuit.add(server: server, object: this);
 	}
 
+	*loadHeadphoneCorrections { |server|
+		var pathname, files;
 
-	*loadHeadphoneCorrections {|server|
-		var pathname = PathName.new( HOA.kernelDirsFor("", "headphoneEQ")[0]);
-		// collect all headpone model names
-		headPhones = pathname.files.collect({|item,i| item.fileNameWithoutExtension });
-		headPhoneIRs = pathname.files.collect({|item,i| {|j|Buffer.readChannel(server,item.fullPath, channels: j)}!2; });
+		if(headPhoneIRs.notNil) { ^headPhoneIRs };
+		HOA.pr_checkServerBooted(server);
+
+		pathname = PathName(HOA.kernelsDir +/+ "headphoneEQ");
+		files = pathname.files.select { |file| file.extension == "wav" };
+		headPhones = Array.newClear(files.size);
+		headPhoneIRs = files.collect { |file, index|
+			headPhones.put(index, file.fileNameWithoutExtension);
+			2.collect { |index|
+				Buffer.readChannel(
+					server,
+					file.fullPath,
+					channels: index
+				)
+			}
+		};
+		ServerQuit.add(server: server, object: this);
 	}
 
-    *listHeadphones {
-		headPhones.do({|item,i|  [i, item].postln     });
+	*listHeadphones {
+		headPhones.do { |item, index|
+			[index, item].postln
+		}
 	}
 
+	*freeBinauralIRs {
+		this.pr_freeBinauralBuffers(binauralIRs);
+		binauralIRs = nil;
+	}
 
-    *ar { |order, in, input_gains = 0, output_gains = 0, headphoneCorrection = nil|
+	*freeHeadphoneCorrections {
+		this.pr_freeBinauralBuffers(headPhoneIRs);
+		headPhoneIRs = nil;
+		headPhones = nil;
+	}
+
+	*pr_freeBinauralBuffers { |binauralBuffers|
+		binauralBuffers.do { |buffers|
+			buffers.do { |buffer|
+				buffer.free
+			}
+		}
+	}
+
+	*doOnServerQuit { |server|
+		if(binauralIRs.notNil) {
+			this.freeBinauralIRs
+		};
+		if(headPhoneIRs.notNil) {
+			this.freeHeadphoneCorrections
+		};
+		ServerQuit.remove(server: server, object: this);
+	}
+
+	*ar { |order, in, input_gains = 0, output_gains = 0, headphoneCorrection = nil|
 		var decoded;
 		var maxChannels = min((order+1).squared, (this.maxOrder+1).squared);
 		var mids, mid, sides, side, conv, numChan;
@@ -93,21 +145,26 @@ HOABinaural{
 			}
 		);
 
+		in = in.asAudioRateInput;
 		numChan = (order+1).squared;
-				mids = midChannels.collect({|item,i| if (item < numChan,{item}) }).removeAllSuchThat({|item| item != nil});
-				sides = sideChannels.collect({|item,i| if (item < numChan,{item}) }).removeAllSuchThat({|item| item != nil});
-				conv = (numChan.collect({|i|   Convolution2.ar(  in[i], 	binauralIRs[order-1][i], 0, 512, 1)       }));
-				mid = mids.collect({|item,i| conv[item]}).sum;
-				side = sides.collect({|item,i| conv[item]}).sum;
-				if( headphoneCorrection == nil,
-			    // return the right - left signal
-				{^[mid - side, mid + side]},
-			    // if with headphone correction then convolve with the respective kernels
-				{^[mid - side, mid + side].collect({|item,i|  Convolution2.ar(  item, headPhoneIRs[headphoneCorrection][i], 0, 2048, 1)      })}
-			     );
+		mids = midChannels.collect({ |item| if(item < numChan, {item}) }).removeAllSuchThat({ |item| item != nil });
+		sides = sideChannels.collect({ |item,i| if(item < numChan, {item}) }).removeAllSuchThat({ |item| item != nil });
+		conv = numChan.collect({ |i|
+			Convolution2.ar(in[i], binauralIRs[order-1][i], 0, 512, 1)
+		});
+		mid = mids.collect({ |item| conv[item] }).sum;
+		side = sides.collect({ |item| conv[item] }).sum;
+		if(headphoneCorrection == nil, {
+				// return the right - left signal
+				^[mid - side, mid + side]
+			}, {
+				// if with headphone correction then convolve with the respective kernels
+				^[mid - side, mid + side].collect({ |item, i|
+					Convolution2.ar(item, headPhoneIRs[headphoneCorrection][i], 0, 2048, 1)
+				})
+			}
+		)
 	}
 
 }
-
-
 

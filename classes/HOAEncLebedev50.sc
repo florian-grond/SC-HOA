@@ -123,16 +123,40 @@ HOAEncLebedev50{
 	}
 
 
-	*loadRadialFilters {|server|
-		radialFilters = 	[Buffer.read(server,Platform.userExtensionDir++"/HOA/FIR/spherical_microphones/jconvolver_mic_lebedev50"++"/order_0.wav"),
-		                         Buffer.read(server,Platform.userExtensionDir++"/HOA/FIR/spherical_microphones/jconvolver_mic_lebedev50"++"/order_1.wav"),
-		                         Buffer.read(server,Platform.userExtensionDir++"/HOA/FIR/spherical_microphones/jconvolver_mic_lebedev50"++"/order_2.wav"),
-		                         Buffer.read(server,Platform.userExtensionDir++"/HOA/FIR/spherical_microphones/jconvolver_mic_lebedev50"++"/order_3.wav"),
-	 	                         Buffer.read(server,Platform.userExtensionDir++"/HOA/FIR/spherical_microphones/jconvolver_mic_lebedev50"++"/order_4.wav"),
-	 	                         Buffer.read(server,Platform.userExtensionDir++"/HOA/FIR/spherical_microphones/jconvolver_mic_lebedev50"++"/order_5.wav")];
+	*loadRadialFilters { |server|
+		var path;
+
+		if(radialFilters.notNil) { ^radialFilters };
+		HOA.pr_checkServerBooted(server);
+
+		path = HOA.kernelsDir +/+ "FIR" +/+ "spherical_microphones" +/+ "jconvolver_mic_lebedev50";
+		radialFilters = 6.collect { |index|
+			Buffer.read(
+				server,
+				path +/+ "order_" ++ index ++ ".wav"
+			)
+		};
+		ServerQuit.add(server: server, object: this);
 	}
 
-*ar { |order, in, gain=0, filters = 1|
+	*freeRadialFilters {
+		radialFilters.do { |buffer|
+			buffer.free
+		};
+		radialFilters = nil;
+	}
+
+	*doOnServerQuit { |server|
+		if(radialFilters.notNil) {
+			this.freeRadialFilters
+		};
+		ServerQuit.remove(server: server, object: this);
+	}
+
+	*ar { |order, in, gain=0, filters = 1|
+
+		in = in.asAudioRateInput;
+
 		case{order == 1}
                 		{var   in1,   in2,   in3,   in4,   in5,   in6,   in7,   in8,   in9, in10,
 			                   in11, in12, in13, in14, in15, in16, in17, in18, in19, in20,
