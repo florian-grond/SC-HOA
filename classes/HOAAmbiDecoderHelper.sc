@@ -6,6 +6,7 @@
 HOAAmbiDecoderHelper {
 
 	var   <>ambiToolboxPath; //,   <userSoundsDir,   <userKernelDir;
+	var   <>jsonSpeakerLayoutPath; //,   <userSoundsDir,   <userKernelDir;
 	var   <>speakerArrayName; //,  <userSoundsDir,   <userKernelDir;
 	var   <>speakerPositions; //,
 	var   <>sweeterPositions; //,
@@ -25,6 +26,16 @@ HOAAmbiDecoderHelper {
 		this.decoderPath =  this.ambiToolboxPath;
 
 	}
+
+
+    setJsonSpeakerLayoutPath{|path|
+		this.jsonSpeakerLayoutPath = path;
+		// File.mkdir(this.ambiToolboxPath);
+		// This is to get the dir name;
+		// this.decoderPath =  this.ambiToolboxPath;
+
+	}
+
 
     setSpeakerArrayName{|name|
         this.speakerArrayName = name;
@@ -76,6 +87,40 @@ HOAAmbiDecoderHelper {
 		this.sweeterPositions = this.speakerPositions.deepCopy;
 		this.speakerPositions.do({|item,i| this.sweeterPositions[i] = this.speakerPositions[i]  -  this.sweetSpot;    });
 	}
+
+
+	makeJsonSpeakerPositionFile
+	{this.jsonSpeakerPositionFile(this.jsonSpeakerLayoutPath++"/"++this.speakerArrayName++".m")}
+
+	jsonSpeakerPositionFile{|path|
+		var file;
+
+		file = File.open(path ,"w");
+
+		file.write("function [ val ] =" ++ this.speakerArrayName++"() \n");
+        file.write("val.name = '"++this.speakerArrayName++"';\n\n\n");
+
+        file.write("S=[\n");
+
+        //sweeterPositions.do({|item,i|
+		//	file.write(  "\t"++"\t"++item.x.trunc(0.0001).asString++"\t"++item.y.trunc(0.0001).asString++"\t"++item.z.trunc(0.0001).asString++"\n"  )    });
+
+		sweeterPositions.do({|item,i|
+			file.write(  "\t"++"\t"++item[0].trunc(0.0001).asString++"\t"++item[1].trunc(0.0001).asString++"\t"++item[2].trunc(0.0001).asString++"\n"  )    });
+
+
+        file.write("];\n\n\n");
+
+        file.write("    [val.az val.el val.r] = cart2sph(S(:,1),S(:,2),S(:,3)); \n");
+        file.write("    [val.x val.y val.z] = sph2cart(val.az, val.el, 1); \n\n\n");
+
+        file.write("val.id = {");
+		speakerLabels.do({|item,i|  file.write("'"++item.asString++"'"); if(i<(speakerPositions.size-1),  {file.write(",")});         } );
+        file.write("}; \n\n\n end");
+        file.close;
+	}
+
+
 
 	makeAmbiDecoderSpeakerPositionFile
 	{this.speakerPositionFile(this.ambiToolboxPath++"examples/"++this.speakerArrayName++".m")}
