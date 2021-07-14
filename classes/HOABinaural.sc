@@ -85,7 +85,7 @@ HOABinaural{
 	buffNumbersNRT[6].do({|item,i| score.add([ 0.0, ['/b_allocReadChannel', buffNumbersNRT[6][i], path++"irsOrd7.wav", 0, 0, i ]],);  });
 			},
 			{ // else only load the specified order
-buffNumbersNRT[order-1].do({|item,i| score.add([ 0.0, ['/b_allocReadChannel', buffNumbersNRT[order-1][i], path++"irsOrd1.wav", 0, 0, i ]],);  });
+	buffNumbersNRT[order-1].do({|item,i| score.add([ 0.0, ['/b_allocReadChannel', buffNumbersNRT[order-1][i], path++"irsOrd"++(order).asString++".wav", 0, 0, i ]],);  });
 			}
 		)
 	}
