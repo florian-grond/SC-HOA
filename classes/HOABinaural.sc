@@ -28,6 +28,7 @@ HOABinaural{
 	classvar <>headPhoneIRs;
 	classvar <>headPhones;
     classvar <>buffNumbersNRT;
+	classvar <>lastBuffID;
 
 	classvar <numChannels;
 	classvar <maxOrder;
@@ -58,11 +59,13 @@ HOABinaural{
 
 
 	// Read the symmetric b-format extracting each channel of the multichannel file individually
-	*loadbinauralIRs4Score {|score, order = nil|
+	*loadbinauralIRs4Score1 {|score, order = nil|
 		var path = HOA.kernelDirsFor("", "binauralIRs")[0];
 
-		["order:", order].postln;
+		// ["order:", order].postln;
 
+	if(order == nil,
+			{
 	// allocate on the default server consecutive buffer numbers
     buffNumbersNRT = [   { Server.default.bufferAllocator.alloc(1)}!4,
 		                 { Server.default.bufferAllocator.alloc(1)}!9,
@@ -72,6 +75,20 @@ HOABinaural{
 	 	                 { Server.default.bufferAllocator.alloc(1)}!49,
 	 	                 { Server.default.bufferAllocator.alloc(1)}!64,
 		             ];
+		},
+			{
+					// allocate on the default server consecutive buffer numbers
+    buffNumbersNRT = [   { nil}!4,
+		                 { nil}!9,
+		                 { nil}!16,
+		                 { nil}!25,
+	 	                 { nil}!36,
+	 	                 { nil}!49,
+	 	                 { nil}!64,
+		             ];
+
+	buffNumbersNRT[order-1].do({|item,i| buffNumbersNRT[order-1][i] = Server.default.bufferAllocator.alloc(1) });
+		});
 
 		if(order == nil,
 			{// if no order is specified load all
@@ -90,11 +107,63 @@ HOABinaural{
 		)
 	}
 
-/*
 
-	~score.add([ 0.0, [ '/b_allocReadChannel', ~bufnumScene, ~sndPathScene, 0, 0, channel ]], );
+	// Read the symmetric b-format extracting each channel of the multichannel file individually
+	*loadbinauralIRs4Score2 {|score, order = nil, startingBuffID = 0|
+		var path = HOA.kernelDirsFor("", "binauralIRs")[0];
 
-*/
+		// ["order:", order].postln;
+
+
+		if(order == nil,
+			{
+	// allocate on the default server consecutive buffer numbers
+	// allocate on the default server consecutive buffer numbers
+		buffNumbersNRT = [   { |i| (i +   0) + startingBuffID }!4,
+		                     { |i| (i +   4) + startingBuffID }!9,
+		                     { |i| (i +  13) + startingBuffID }!16,
+		                     { |i| (i +  29) + startingBuffID }!25,
+	 	                     { |i| (i +  54) + startingBuffID }!36,
+	 	                     { |i| (i +  90) + startingBuffID }!49,
+	 	                     { |i| (i + 139) + startingBuffID }!64,
+		             ];
+
+				lastBuffID = buffNumbersNRT.flat.last;
+		},
+			{
+					// allocate on the default server consecutive buffer numbers
+    buffNumbersNRT = [   { nil}!4,
+		                 { nil}!9,
+		                 { nil}!16,
+		                 { nil}!25,
+	 	                 { nil}!36,
+	 	                 { nil}!49,
+	 	                 { nil}!64,
+		             ];
+	buffNumbersNRT[order-1].do({|item,i| buffNumbersNRT[order-1][i] = (i +   0) + startingBuffID });
+
+				lastBuffID = buffNumbersNRT[order-1].last;
+		});
+
+
+
+		if(order == nil,
+			{// if no order is specified load all
+	// load all the IRs for each order 	i = the channel in the b_allocReadChannel cmd
+	buffNumbersNRT[0].do({|item,i| score.add([ 0.0, ['/b_allocReadChannel', buffNumbersNRT[0][i], path++"irsOrd1.wav", 0, 0, i ]],);  });
+	buffNumbersNRT[1].do({|item,i| score.add([ 0.0, ['/b_allocReadChannel', buffNumbersNRT[1][i], path++"irsOrd2.wav", 0, 0, i ]],);  });
+	buffNumbersNRT[2].do({|item,i| score.add([ 0.0, ['/b_allocReadChannel', buffNumbersNRT[2][i], path++"irsOrd3.wav", 0, 0, i ]],);  });
+	buffNumbersNRT[3].do({|item,i| score.add([ 0.0, ['/b_allocReadChannel', buffNumbersNRT[3][i], path++"irsOrd4.wav", 0, 0, i ]],);  });
+	buffNumbersNRT[4].do({|item,i| score.add([ 0.0, ['/b_allocReadChannel', buffNumbersNRT[4][i], path++"irsOrd5.wav", 0, 0, i ]],);  });
+	buffNumbersNRT[5].do({|item,i| score.add([ 0.0, ['/b_allocReadChannel', buffNumbersNRT[5][i], path++"irsOrd6.wav", 0, 0, i ]],);  });
+	buffNumbersNRT[6].do({|item,i| score.add([ 0.0, ['/b_allocReadChannel', buffNumbersNRT[6][i], path++"irsOrd7.wav", 0, 0, i ]],);  });
+			},
+			{ // else only load the specified order
+	buffNumbersNRT[order-1].do({|item,i| score.add([ 0.0, ['/b_allocReadChannel', buffNumbersNRT[order-1][i], path++"irsOrd"++(order).asString++".wav", 0, 0, i ]],);  });
+			}
+		)
+	}
+
 
 
 	*loadHeadphoneCorrections {|server|
@@ -149,7 +218,7 @@ HOABinaural{
 	}
 
 
-	*ar4Score { |order, in, input_gains = 0, output_gains = 0, headphoneCorrection = nil|
+	*ar4Score { |order, in, input_gains = 0, output_gains = 0|
 		var maxChannels = min((order+1).squared, (this.maxOrder+1).squared);
 		var mids, mid, sides, side, conv, numChan;
 
@@ -163,6 +232,7 @@ HOABinaural{
 			^nil;
 		});
 
+		/*
 		if(headphoneCorrection != nil,
 			{
 				if(headphoneCorrection > headPhones.size, {
@@ -173,6 +243,7 @@ HOABinaural{
 				);
 			}
 		);
+       */
 
 		numChan = (order+1).squared;
 				mids = midChannels.collect({|item,i| if (item < numChan,{item}) }).removeAllSuchThat({|item| item != nil});
