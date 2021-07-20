@@ -37,10 +37,22 @@ HOABinaural{
 
 
 	*initClass {
+		var startingBuffID;
 		numChannels = 50;
 		maxOrder = 7;
 		midChannels = [ 0, 2, 3, 6, 7, 8, 12, 13, 14, 15, 20, 21, 22, 23, 24, 30, 31, 32, 33, 34, 35, 42, 43, 44, 45, 46, 47, 48, 56, 57, 58, 59, 60, 61, 62, 63 ];
 		sideChannels = [ 1, 4, 5, 9, 10, 11, 16, 17, 18, 19, 25, 26, 27, 28, 29, 36, 37, 38, 39, 40, 41, 49, 50, 51, 52, 53, 54, 55 ];
+
+		startingBuffID = 0;
+
+		buffNumbersNRT = [   { |i| (i +   0) + startingBuffID }!4,
+		                     { |i| (i +   4) + startingBuffID }!9,
+		                     { |i| (i +  13) + startingBuffID }!16,
+		                     { |i| (i +  29) + startingBuffID }!25,
+	 	                     { |i| (i +  54) + startingBuffID }!36,
+	 	                     { |i| (i +  90) + startingBuffID }!49,
+	 	                     { |i| (i + 139) + startingBuffID }!64,
+		             ];
 	}
 
 
@@ -77,7 +89,7 @@ HOABinaural{
 		             ];
 		},
 			{
-					// allocate on the default server consecutive buffer numbers
+			// all are nil
     buffNumbersNRT = [   { nil}!4,
 		                 { nil}!9,
 		                 { nil}!16,
@@ -86,7 +98,7 @@ HOABinaural{
 	 	                 { nil}!49,
 	 	                 { nil}!64,
 		             ];
-
+    // except the specific oder we want to use
 	buffNumbersNRT[order-1].do({|item,i| buffNumbersNRT[order-1][i] = Server.default.bufferAllocator.alloc(1) });
 		});
 
@@ -112,13 +124,6 @@ HOABinaural{
 	*loadbinauralIRs4Score2 {|score, order = nil, startingBuffID = 0|
 		var path = HOA.kernelDirsFor("", "binauralIRs")[0];
 
-		// ["order:", order].postln;
-
-
-		if(order == nil,
-			{
-	// allocate on the default server consecutive buffer numbers
-	// allocate on the default server consecutive buffer numbers
 		buffNumbersNRT = [   { |i| (i +   0) + startingBuffID }!4,
 		                     { |i| (i +   4) + startingBuffID }!9,
 		                     { |i| (i +  13) + startingBuffID }!16,
@@ -129,23 +134,6 @@ HOABinaural{
 		             ];
 
 				lastBuffID = buffNumbersNRT.flat.last;
-		},
-			{
-					// allocate on the default server consecutive buffer numbers
-    buffNumbersNRT = [   { nil}!4,
-		                 { nil}!9,
-		                 { nil}!16,
-		                 { nil}!25,
-	 	                 { nil}!36,
-	 	                 { nil}!49,
-	 	                 { nil}!64,
-		             ];
-	buffNumbersNRT[order-1].do({|item,i| buffNumbersNRT[order-1][i] = (i +   0) + startingBuffID });
-
-				lastBuffID = buffNumbersNRT[order-1].last;
-		});
-
-
 
 		if(order == nil,
 			{// if no order is specified load all
