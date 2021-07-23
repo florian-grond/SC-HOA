@@ -4,6 +4,7 @@
   schelp: "Guides/HOAguide",
   dependencies: [ "MathLib" ],
   url: "https://github.com/florian-grond/SC-HOA/tree/master/HOA",
+  version: "1.3.4",
   since: "2017",
   license: "GPL",
   copyright: "Florian Grond, Pierre Lecomte"
