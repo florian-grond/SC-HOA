@@ -69,7 +69,7 @@ HOADecLebedev {
 
 		in = in.asAudioRateInput;
 
-		decoded = switch(order.asInt,
+		decoded = switch(order.asInteger,
 			1, {
 				HOADecLebedev061.ar(
 					in[0], in[1], in[2], in[3],
