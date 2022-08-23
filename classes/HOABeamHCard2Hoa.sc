@@ -1,89 +1,22 @@
-HOABeamHCard2Hoa{
+HOABeamHCard2Hoa {
 
 	*ar { |order, in, az, ele, int_float = 0, cardOrder = 1|
-		// 		az = az.neg; ele = ele.neg; // the Faust Ugens seem to have those reversed
-		case{order == 1}
-                		{ var in1, // declare variables for the b-format array
-			                    in2, in3, in4;
-                               #in1, // distribute the channels from the array
-			                     in2, in3, in4 = in;
-			              ^HOABeamHCardio2HOA1.ar(in1, // return the Ugen with the b-format channels
-				                                            in2, in3, in4,
-				                                            azimuth: az, elevation: ele, int_float: int_float, order:cardOrder)} // and with the args from the *ar method
-		       {order == 2}
-                		{var in1, // declare variables for the b-format array
-			                   in2, in3, in4,
-			                   in5, in6, in7, in8, in9;
-                             #in1, // distribute the channels from the array
-			                   in2, in3, in4,
-			                   in5, in6, in7, in8, in9 = in;
-			              ^HOABeamHCardio2HOA2.ar(in1, // return the Ugen with the b-format channels
-				                                            in2, in3, in4,
-				                                            in5, in6, in7, in8, in9,
-				                                            azimuth: az, elevation: ele, int_float: int_float, order:cardOrder)}// and with the args from the *ar method
-               {order == 3}
-                		{var in1, // declare variables for the b-format array
-			                   in2,   in3,   in4,
-			                   in5,   in6,   in7,   in8,   in9,
-			                   in10, in11, in12, in13, in14, in15, in16;
-                              #in1, // distribute the channels from the array
-			                    in2, in3, in4,
-			                    in5, in6, in7, in8, in9,
-			                    in10, in11, in12, in13, in14, in15, in16 = in;
-			             ^HOABeamHCardio2HOA3.ar(in1,  // return the Ugen with the b-format channels
-				                                           in2, in3, in4,
-				                                           in5, in6, in7, in8, in9,
-				                                           in10, in11, in12, in13, in14, in15, in16,
-				                                            azimuth: az, elevation: ele, int_float: int_float, order:cardOrder)} // and with the args from the *ar method
-               {order == 4}
-                		{var in1, // declare variables for the b-format array
-			                   in2,   in3,   in4,
-			                   in5,   in6,   in7,   in8,   in9,
-			                   in10, in11, in12, in13, in14, in15, in16,
-			                   in17, in18, in19, in20, in21, in22, in23, in24, in25;
-                              #in1, // distribute the channels from the array
-			                    in2, in3, in4,
-			                    in5, in6, in7, in8, in9,
-			                    in10, in11, in12, in13, in14, in15, in16,
-			                    in17, in18, in19, in20, in21, in22, in23, in24, in25 = in;
-				"order 4 is not implemented for HOABeamHCardio2HOA. \n returning unaltered bformat.".postln;
-			^[ in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25 ]
-		/*
-			^HOABeamHCardio2HOA4.ar(in1,  // return the Ugen with the b-format channels
-				                                           in2, in3, in4,
-				                                           in5, in6, in7, in8, in9,
-				                                           in10, in11, in12, in13, in14, in15, in16,
-				                                           in17, in18, in19, in20, in21, in22, in23, in24, in25,
-				                                            azimuth: az, elevation: ele, order:cardOrder)
-		*/
-			} // and with the args from the *ar method
-               {order == 5}
-                		{var in1, // declare variables for the b-format array
-			                   in2,   in3,   in4,
-			                   in5,   in6,   in7,   in8,   in9,
-			                   in10, in11, in12, in13, in14, in15, in16,
-			                   in17, in18, in19, in20, in21, in22, in23, in24, in25,
-			                   in26, in27, in28, in29, in30, in31, in32, in33, in34, in35, in36;
-                              #in1, // distribute the channels from the array
-			                    in2, in3, in4,
-			                    in5, in6, in7, in8, in9,
-			                    in10, in11, in12, in13, in14, in15, in16,
-			                    in17, in18, in19, in20, in21, in22, in23, in24, in25,
-			                    in26, in27, in28, in29, in30, in31, in32, in33, in34, in35, in36 = in;
-				"order 5 is not implemented for HOABeamHCardio2HOA. \n returning unaltered bformat.".postln;
-			^[ in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25, in26, in27, in28, in29, in30, in31, in32, in33, in34, in35, in36]
-
-			/*
-			^HOABeamHCardio2HOA5.ar(in1,  // return the Ugen with the b-format channels
-				                                           in2, in3, in4,
-				                                           in5, in6, in7, in8, in9,
-				                                           in10, in11, in12, in13, in14, in15, in16,
-				                                           in17, in18, in19, in20, in21, in22, in23, in24, in25,
-				                                           in26, in27, in28, in29, in30, in31, in32, in33, in34, in35, in36,
-				                                            azimuth: az, elevation: ele, order:cardOrder) // and with the args from the *ar method
-				{"this order is not implemented".postln
-			*/
-		}
+		// 	az = az.neg; ele = ele.neg; // the Faust Ugens seem to have those reversed
+		// HOABeamHCardio2HOA1: azimuth(0.0), elevation(0.0), int_float(0.0), order(0.0)
+		var parameters = [az, ele, int_float, cardOrder];
+		^switch(order,
+			1, { HOABeamHCardio2HOA1.ar(*in.keep(4) ++ parameters) },
+			2, { HOABeamHCardio2HOA2.ar(*in.keep(9) ++ parameters) },
+			3, { HOABeamHCardio2HOA3.ar(*in.keep(16) ++ parameters) },
+			4, {
+				"order 4 is not implemented for HOABeamHCardio2HOA. \n returning unaltered bformat.".warn;
+				in
+			},
+			5, { "order 5 is not implemented for HOABeamHCardio2HOA. \n returning unaltered bformat.".warn;
+				in
+			},
+			{ Error("this order is not implemented for HOABeamHCard2Hoa: " ++ order).throw }
+		)
 	}
-
 }
+
